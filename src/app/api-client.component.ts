@@ -3,7 +3,7 @@ import {TwAPIService} from './twapi.service'
 import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
 import { User } from './domain/user';
 import { Watch } from './domain/watch';
-
+import { Measure } from './domain/measure';
 
 @Component({
   moduleId: module.id,
@@ -15,6 +15,7 @@ import { Watch } from './domain/watch';
 export class ApiClientAppComponent {
   title = 'api-client works!';
   tests:Test[] = [];
+  static niark:Watch;
 
   constructor(private twapi:TwAPIService){
 
@@ -101,7 +102,7 @@ export class ApiClientAppComponent {
 			twapi.upsertWatch(new Watch(null, "JLC")).then(
 				response => {
 					if (response.id != null) {
-						tAddWatch.stop(true);
+						tAddWatch.stop(true, response);
 					} else {
 						tAddWatch.stop(false);
 					}
@@ -109,6 +110,96 @@ export class ApiClientAppComponent {
 			)
 	});
 	this.tests.push(tAddWatch);
+
+	let tUpdateWatch = new Test("Update Watch",
+		function(data:any){
+			console.log("outside", data);
+			if (data != null) {
+				twapi.upsertWatch(data).then(
+					response => {
+						if (response.id != null) {
+							tUpdateWatch.stop(true, response);
+						} else {
+							tUpdateWatch.stop(false);
+						}
+					}
+				)
+			}else{
+				tUpdateWatch.stop(false);
+			}
+		}
+	);
+	this.tests.push(tUpdateWatch);
+
+	let tAddBaseMeasure = new Test('Add Base Measure', 
+		function(watch:Watch){
+
+			if(watch != null){
+
+				twapi.upsertMeasure(watch, new Measure(null, Date.now()+10, Date.now()+2)).then(
+					response => {
+						if (response != null && response.measures.length == 1) {
+							tAddBaseMeasure.stop(true, response);
+						} else {
+							tAddBaseMeasure.stop(false);
+						}
+					}
+				)
+
+			}else{
+				tAddBaseMeasure.stop(false);
+			}
+	});
+	this.tests.push(tAddBaseMeasure);
+
+	let tAddAccuracyMeasure = new Test('Add accuracy measure',
+		function(watch:Watch){
+
+			if (watch != null) {
+
+				watch.measures[watch.measures.length - 1].addAccuracyMeasure(Date.now()+20, Date.now()+5);
+				twapi.upsertMeasure(watch, watch.measures[watch.measures.length - 1]).then(
+					response => {
+						if (response != null && response.measures.length == 1) {
+							tAddAccuracyMeasure.stop(true, response);
+						} else {
+							tAddAccuracyMeasure.stop(false);
+						}
+					}
+				)
+
+			} else {
+				tAddAccuracyMeasure.stop(false);
+			}
+
+	});
+	this.tests.push(tAddAccuracyMeasure);
+
+
+	let tDeleteMeasure = new Test('Delete measure',
+		function(watch: Watch) {
+
+
+
+			if (watch != null) {
+
+				twapi.deleteMeasure(watch, watch.measures[watch.measures.length - 1]).then(
+					response => {
+						console.log('response delete', response);
+						if (response != null && response.measures.length == 0) {
+							tDeleteMeasure.stop(true, response);
+						} else {
+							tDeleteMeasure.stop(false);
+						}
+					}
+				)
+
+			} else {
+				tDeleteMeasure.stop(false);
+			}
+
+		});
+	this.tests.push(tDeleteMeasure);
 
 	let tDeleteAccountTest = new Test('Delete Account', 
 		function(){
@@ -130,9 +221,13 @@ export class ApiClientAppComponent {
 	tEmailTaken.next = tSignup;
 	tSignup.next = tLoginNewAccount;
 	tLoginNewAccount.next = tAddWatch;
-	tAddWatch.next = tDeleteAccountTest;
+	tAddWatch.next = tUpdateWatch;
+	tUpdateWatch.next = tAddBaseMeasure;
+	tAddBaseMeasure.next = tAddAccuracyMeasure;
+	tAddAccuracyMeasure.next = tDeleteMeasure;
+	tDeleteMeasure.next = tDeleteAccountTest;
 
-	tLogin.test();
+	tLogin.test(null);
 
   }
 }
@@ -143,23 +238,23 @@ export class Test{
 	status:boolean = false;
 	startTime:number;
 	ellapsedTime:number;
-	test:any;
+	test: (data:any) => void;
 	next:Test;
 
-	constructor(title: string, test: any) {
+	constructor(title: string, test: (data?: any) => void) {
 		this.title = title;
-		this.test = function(){
+		this.test = function(data){
 			this.startTime = Date.now();
-			test();
+			test(data);
 		};
 	}
 
-	stop(success:boolean){
+	stop(success:boolean, toNextTest:any = null){
 		this.status = success;
 		this.running = false;
 		this.ellapsedTime = Date.now() - this.startTime;
 		if(this.next != null){
-			this.next.test();
+			this.next.test(toNextTest);
 		}
 	}
 }

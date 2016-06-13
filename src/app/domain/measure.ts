@@ -7,12 +7,12 @@ export class Measure{
 	accuracyReferenceTime:number;
 	accuracy:number;
 	accuracyAge:number;
+	percentile:number;
 	status: MeasureStatus = MeasureStatus.None;
 
-
 	constructor(id: number, measureUserTime: number, measureReferenceTime: number, 
-		status: MeasureStatus, accuracyUserTime?: number, accuracyReferenceTime?: number, 
-		accuracy?: number, accuracyAge?: number){
+		status?: number, accuracyUserTime?: number, accuracyReferenceTime?: number, 
+		accuracy?: number, accuracyAge?: number, percentile?: number){
 
 		this.id = id
 		this.measureUserTime = measureUserTime;
@@ -21,6 +21,7 @@ export class Measure{
 		this.accuracyReferenceTime = accuracyReferenceTime;
 		this.accuracy = accuracy;
 		this.accuracyAge = accuracyAge;
+		this.percentile = percentile;
 
 		if(status >= 1){
 			this.status |= MeasureStatus.BaseMeasure;
@@ -34,14 +35,36 @@ export class Measure{
 			this.status |= MeasureStatus.ArchivedMeasure;
 		}
 
-		//Checks if optional args are provided
-		//http://stackoverflow.com/a/29990025/1871890
-		if(accuracy != null && accuracyAge != null){
-			if(Math.abs(accuracy) > 30){
+		this.computePostAccuracyStatus(accuracy, accuracyAge);
+	}
+
+
+	addBaseMeasure(referenceTime:number, userTime:number){
+		this.measureReferenceTime = referenceTime;
+		this.measureUserTime = userTime;
+		this.status |= MeasureStatus.BaseMeasure;
+	}
+
+	addAccuracyMeasure(referenceTime: number, userTime: number) {
+		this.accuracyReferenceTime = referenceTime;
+		this.accuracyUserTime = userTime;
+		this.status |= MeasureStatus.AccuracyMeasure;
+	}
+
+	addAccuracy(accuracy:number, accuracyAge:number, percentile:number){
+		this.accuracy = accuracy;
+		this.accuracyAge = accuracyAge;
+		this.percentile = percentile;
+		this.computePostAccuracyStatus(accuracy, accuracyAge);
+	}
+
+	private computePostAccuracyStatus(accuracy:number, accuracyAge:number){
+		if (accuracy != null && accuracyAge != null) {
+			if (Math.abs(accuracy) > 30) {
 				this.status |= MeasureStatus.ShouldBeServiced;
 			}
 
-			if(accuracyAge > 30){
+			if (accuracyAge > 30) {
 				this.status |= MeasureStatus.ShouldBeRenewed;
 			}
 		}

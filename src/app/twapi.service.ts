@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Http, HTTP_PROVIDERS, RequestOptions, Headers }  from '@angular/http';
 import { User }  from './domain/user';
 import { Watch }  from './domain/watch';
-import { Measure }  from './domain/measure';
+import { Measure, MeasureStatus }  from './domain/measure';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -59,13 +59,79 @@ export class TwAPIService {
 
 	upsertWatch(watch: Watch): Promise<Watch> {
 
-		
+		if(watch.id == null){
 			return this.insertWatch(watch);
-		
-
+		}else{
+			return this.updateWatch(watch);
+		}
 	}
 
-	insertWatch(watch: Watch):Promise<Watch>{
+	upsertMeasure(watch: Watch, measure: Measure): Promise<Watch> {
+		if(measure.id == null){
+			return this.insertMeasure(watch, measure);
+		}else{
+			return this.updateMeasure(watch, measure);
+		}
+	}
+
+	deleteMeasure(watch: Watch, measure: Measure): Promise<Watch> {
+
+		let deleteOptions = new RequestOptions({ headers: this.headers });
+		deleteOptions.body = JSON.stringify({measureId:measure.id});
+
+		return this.http.delete(
+			this.baseUrl + "measures",
+			deleteOptions
+		).toPromise().then(
+			response => {
+
+				watch.measures = watch.measures.filter(
+					function(filter: Measure) {
+						return filter.id != measure.id;
+					}
+				);
+				return watch;
+			}
+		).catch(this.handleError);
+	}
+
+	private updateMeasure(watch: Watch, measure: Measure): Promise<Watch> {
+		return this.http.put(
+			this.baseUrl + "measures",
+			JSON.stringify({
+				measureId: measure.id,
+				referenceTime: measure.accuracyReferenceTime,
+				userTime: measure.accuracyUserTime
+			}),
+			this.options
+		).toPromise().then(
+			response => {
+				let json = response.json();
+				measure.addAccuracy(json.accuracy, json.accuracyAge, json.percentile);
+				return watch;
+			}
+		).catch(this.handleError);
+	}
+
+	private insertMeasure(watch: Watch, measure: Measure): Promise<Watch> {
+		return this.http.post(
+			this.baseUrl + "measures",
+			JSON.stringify({
+				watchId: watch.id,
+				referenceTime: measure.measureReferenceTime,
+				userTime: measure.measureUserTime
+			}),
+			this.options
+		).toPromise().then(
+			response => {
+				measure.id = response.json().measureId;
+				watch.measures.push(measure);
+				return watch;
+			}
+		).catch(this.handleError);
+	}
+
+	private insertWatch(watch: Watch):Promise<Watch>{
 		return this.http.post(
 			this.baseUrl + "watches",
 			JSON.stringify({
@@ -85,8 +151,23 @@ export class TwAPIService {
 		
 	}
 
-	updateWatch(watch:Watch){
-		//return this.put();
+	private updateWatch(watch: Watch): Promise<Watch> {
+		return this.http.put(
+			this.baseUrl + "watches",
+			JSON.stringify({
+				id: watch.id,
+				brand: watch.brand,
+				name: watch.name,
+				yearOfBuy: watch.yearOfBuy,
+				serial: watch.serial,
+				caliber: watch.caliber
+			}),
+			this.options
+		).toPromise().then(
+			response => {
+				return watch;
+			}
+		).catch(this.handleError);
 	}
 
 	private buildUser(jsonUser:any):User{

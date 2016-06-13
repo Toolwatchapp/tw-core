@@ -4,16 +4,16 @@ export class Watch{
 	id:number;
 	brand:string;
 	historySize:number;
-	measures:Measure[] = [];
+	measures:Measure[];
 	name:string;
 	yearOfBuy:number;
 	serial:string;
 	caliber:string;
 	status: WatchStatus = WatchStatus.None
 
-	constructor(id: number, brand: string, historySize: number,
-		measures: Measure[], name?: string, yearOfBuy?: number,
-		serial?: string, caliber?: string) {
+	constructor(id: number, brand: string, historySize: number = 0,
+		measures: Measure[] = [], name: string = "", yearOfBuy: number = 0,
+		serial: string = "", caliber: string = "") {
 
 		this.id = id;
 		this.brand = brand;

@@ -14,6 +14,7 @@ export class TwAPIService {
 	private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 	private options: RequestOptions = new RequestOptions({ headers: this.headers });
 	private baseUrl:string = "http://localhost/api/";
+	private static apikey:string;
 
 	constructor(private http: Http) {}
 
@@ -29,9 +30,71 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	signup(email: string, password: string, name?: string, lastname?: string, country?: string): Promise<User> {
 
+		return this.http.post(
+			this.baseUrl + "users",
+			JSON.stringify({
+				email: email, 
+				password: password,
+				name: name,
+				lastname: lastname,
+				country:country
+			}),
+			this.options
+		).toPromise().then(
+			response => this.buildUser(response.json())
+		).catch(this.handleError);
+	}
+
+	deleteAccount():Promise<boolean>{
+
+		return this.http.delete(
+			this.baseUrl + "users",
+			this.options
+		).toPromise().then(
+			response => true
+		).catch(this.handleError);
+	}
+
+	upsertWatch(watch: Watch): Promise<Watch> {
+
+		
+			return this.insertWatch(watch);
+		
+
+	}
+
+	insertWatch(watch: Watch):Promise<Watch>{
+		return this.http.post(
+			this.baseUrl + "watches",
+			JSON.stringify({
+				brand: watch.brand,
+				name:watch.name,
+				yearOfBuy:watch.yearOfBuy,
+				serial: watch.serial,
+				caliber:watch.caliber
+			}),
+			this.options
+		).toPromise().then(
+			response => {
+				watch.id = response.json().id;
+				return watch;
+			}
+		).catch(this.handleError);
+		
+	}
+
+	updateWatch(watch:Watch){
+		//return this.put();
+	}
 
 	private buildUser(jsonUser:any):User{
+		if(jsonUser.key !== undefined){
+			TwAPIService.apikey = jsonUser.key;
+			this.headers.delete('X-API-KEY');
+			this.headers.append('X-API-KEY', TwAPIService.apikey);
+		}
 		return new User(
 			jsonUser.userId,
 			jsonUser.email,
@@ -50,26 +113,22 @@ export class TwAPIService {
 				jsonWatch.watchId,
 				jsonWatch.brand,
 				jsonWatch.historySize,
-				this.buildMeasures(jsonWatch.measures),
+				jsonWatch.measures.map(function(jsonMeasure) {
+					return new Measure(
+						jsonMeasure.id,
+						jsonMeasure.measureUserTime,
+						jsonMeasure.measureReferenceTime,
+						jsonMeasure.status,
+						jsonMeasure.accuracyUserTime,
+						jsonMeasure.accuracyReferenceTime,
+						jsonMeasure.accuracy,
+						jsonMeasure.accuracyAge)
+				}),
 				jsonWatch.name,
 				jsonWatch.yearOfBuy,
 				jsonWatch.serial,
 				jsonWatch.caliber
 			)
-		});
-	}
-
-	private buildMeasures(jsonMeasures:any):Measure[]{
-		return jsonMeasures.map(function(jsonMeasure) {
-			return new Measure(
-				jsonMeasure.id,
-				jsonMeasure.measureUserTime,
-				jsonMeasure.measureReferenceTime,
-				jsonMeasure.status,
-				jsonMeasure.accuracyUserTime,
-				jsonMeasure.accuracyReferenceTime,
-				jsonMeasure.accuracy,
-				jsonMeasure.accuracyAge)
 		});
 	}
 
@@ -79,6 +138,7 @@ export class TwAPIService {
 		let errMsg = (error.message) ? error.message :
 			error.status ? `${error.status} - ${error.statusText}` : 'Server error';
 		console.error(errMsg); // log to console instead
+		return error;
 	}
 
 }

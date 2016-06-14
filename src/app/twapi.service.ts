@@ -9,15 +9,31 @@ import { Measure, MeasureStatus }  from './domain/measure';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
+/**
+ * Exposes the Toolwatch API.
+ * Returns promeses on domain objects
+ */
 export class TwAPIService {
 
+	//Defines headers and request options
 	private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 	private options: RequestOptions = new RequestOptions({ headers: this.headers });
+	
 	private baseUrl:string = "http://localhost/api/";
 	private static apikey:string;
 
+	/**
+	 * Inject http service
+	 * @param {Http} private http 
+	 */
 	constructor(private http: Http) {}
 
+	/**
+	 * Log a user using email and password
+	 * @param  {string}        email   
+	 * @param  {string}        password
+	 * @return {Promise<User>}         
+	 */
 	login(email: string, password: string): Promise<User> {
 
 		let creds = { email: email, password: password };
@@ -30,6 +46,15 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	/**
+	 * Registers a new user
+	 * @param  {string}        email   
+	 * @param  {string}        password
+	 * @param  {string}        name    
+	 * @param  {string}        lastname
+	 * @param  {string}        country 
+	 * @return {Promise<User>}         
+	 */
 	signup(email: string, password: string, name?: string, lastname?: string, country?: string): Promise<User> {
 
 		return this.http.post(
@@ -47,6 +72,10 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	/**
+	 * Deletes the account currently logged in.
+	 * @return {Promise<boolean>}
+	 */
 	deleteAccount():Promise<boolean>{
 
 		return this.http.delete(
@@ -57,6 +86,11 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	/**
+	 * Update or insert a watch
+	 * @param  {Watch}          watch
+	 * @return {Promise<Watch>}      
+	 */
 	upsertWatch(watch: Watch): Promise<Watch> {
 
 		if(watch.id == null){
@@ -66,6 +100,12 @@ export class TwAPIService {
 		}
 	}
 
+	/**
+	 * Deletes a watch and update the user accordingly
+	 * @param  {User}          user  
+	 * @param  {Watch}         watch 
+	 * @return {Promise<User>}       
+	 */
 	deleteWatch(user:User, watch:Watch):Promise<User>{
 		let deleteOptions = new RequestOptions({ headers: this.headers });
 		deleteOptions.body = JSON.stringify({ watchId: watch.id });
@@ -87,6 +127,12 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	/**
+	 * Insert or update a measure and the related watch
+	 * @param  {Watch}          watch  
+	 * @param  {Measure}        measure
+	 * @return {Promise<Watch>}        
+	 */
 	upsertMeasure(watch: Watch, measure: Measure): Promise<Watch> {
 		if(measure.id == null){
 			return this.insertMeasure(watch, measure);
@@ -95,6 +141,12 @@ export class TwAPIService {
 		}
 	}
 
+	/**
+	 * Delete a measure and the update the related watch
+	 * @param  {Watch}          watch  
+	 * @param  {Measure}        measure
+	 * @return {Promise<Watch>}        
+	 */
 	deleteMeasure(watch: Watch, measure: Measure): Promise<Watch> {
 
 		let deleteOptions = new RequestOptions({ headers: this.headers });
@@ -116,15 +168,30 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	/**
+	 * Retrieve atomic clock time adjusted for network latency
+	 * @param  {()=>void} statusCallback Called at each partial complete
+	 * @param  {number = 0} precison How many calls we want to aveage
+	 * @return {Promise<Date>} 
+	 */
 	accurateTime(statusCallback?:()=>void, 
 		precison:number = 10): Promise<Date>{
 
+		//Stores each Promise in array
 		let promises:Promise<number>[] = [];
-
 		for (var i = 0; i < precison; ++i) {
 			promises.push(this.fetchTime(statusCallback));
 		}
 
+		/**
+		 * Promise.all() is the Promise equivalent of thread.join().
+		 * It'll wait for all promises to be received. 
+		 *
+		 * Returns a date adjusted w/ the median offset between 
+		 * atomic clock and js time. 
+		 * The offset received in each promise also accounts for
+		 * the network roundtrip time.
+		 */
 		return Promise.all(promises).then((results:any[]) => {
 			results.sort(function(a: any, b: any) { return a - b; });
 
@@ -141,6 +208,10 @@ export class TwAPIService {
 		});
 	}
 
+	/**
+	 * Fetch offset between atomic clock and js time
+	 * @param {() => void} statusCallback
+	 */
 	private fetchTime(statusCallback?: () => void)
 		: Promise<number> {
 
@@ -162,6 +233,12 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	/**
+	 * Update a measure and the watch it belongs to
+	 * @param  {Watch}          watch  
+	 * @param  {Measure}        measure
+	 * @return {Promise<Watch>}        
+	 */
 	private updateMeasure(watch: Watch, measure: Measure): Promise<Watch> {
 		return this.http.put(
 			this.baseUrl + "measures",
@@ -180,6 +257,12 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	/**
+	 * Insert a measure and the watch it belongs to
+	 * @param  {Watch}          watch  
+	 * @param  {Measure}        measure
+	 * @return {Promise<Watch>}        
+	 */
 	private insertMeasure(watch: Watch, measure: Measure): Promise<Watch> {
 		return this.http.post(
 			this.baseUrl + "measures",
@@ -198,6 +281,11 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	/**
+	 * Insert a watch
+	 * @param  {Watch}          watch
+	 * @return {Promise<Watch>}      
+	 */
 	private insertWatch(watch: Watch):Promise<Watch>{
 		return this.http.post(
 			this.baseUrl + "watches",
@@ -218,6 +306,11 @@ export class TwAPIService {
 		
 	}
 
+	/**
+	 * Update a watch
+	 * @param  {Watch}          watch
+	 * @return {Promise<Watch>}      
+	 */
 	private updateWatch(watch: Watch): Promise<Watch> {
 		return this.http.put(
 			this.baseUrl + "watches",
@@ -237,6 +330,11 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	/**
+	 * Builds an User from json response
+	 * @param  {any}  jsonUser
+	 * @return {User}         
+	 */
 	private buildUser(jsonUser:any):User{
 		if(jsonUser.key !== undefined){
 			TwAPIService.apikey = jsonUser.key;
@@ -255,6 +353,11 @@ export class TwAPIService {
 		);
 	}
 
+	/**
+	 * Builds a watch from json response
+	 * @param  {any}     jsonWatches
+	 * @return {Watch[]}            
+	 */
 	private buildWatches(jsonWatches:any):Watch[]{
 		return jsonWatches.map(function(jsonWatch) {
 			return new Watch(
@@ -280,6 +383,10 @@ export class TwAPIService {
 		});
 	}
 
+	/**
+	 * Log error to console
+	 * @param {any} error [description]
+	 */
 	private handleError(error: any) {
 		// In a real world app, we might use a remote logging infrastructure
 		// We'd also dig deeper into the error to get a better message

@@ -66,6 +66,27 @@ export class TwAPIService {
 		}
 	}
 
+	deleteWatch(user:User, watch:Watch):Promise<User>{
+		let deleteOptions = new RequestOptions({ headers: this.headers });
+		deleteOptions.body = JSON.stringify({ watchId: watch.id });
+
+		return this.http.delete(
+			this.baseUrl + "watches",
+			deleteOptions
+		).toPromise().then(
+			response => {
+
+				user.watches = user.watches.filter(
+					function(filter: Watch) {
+						return filter.id != watch.id;
+					}
+				);
+
+				return user;
+			}
+		).catch(this.handleError);
+	}
+
 	upsertMeasure(watch: Watch, measure: Measure): Promise<Watch> {
 		if(measure.id == null){
 			return this.insertMeasure(watch, measure);
@@ -91,6 +112,52 @@ export class TwAPIService {
 					}
 				);
 				return watch;
+			}
+		).catch(this.handleError);
+	}
+
+	accurateTime(statusCallback?:()=>void, 
+		precison:number = 10): Promise<Date>{
+
+		let promises:Promise<number>[] = [];
+
+		for (var i = 0; i < precison; ++i) {
+			promises.push(this.fetchTime(statusCallback));
+		}
+
+		return Promise.all(promises).then((results:any[]) => {
+			results.sort(function(a: any, b: any) { return a - b; });
+
+			let half: number = Math.floor(results.length / 2);
+			let medianOffset;
+
+			if (results.length % 2) {
+				medianOffset = results[half];
+			} else {
+				medianOffset = (results[half - 1] + results[half]) / 2.0;
+			}
+
+			return new Date(Date.now() - medianOffset);
+		});
+	}
+
+	private fetchTime(statusCallback?: () => void)
+		: Promise<number> {
+
+		let beforeTime: number = Date.now();
+		return this.http.get(
+			this.baseUrl + "time",
+			this.options).toPromise().then(
+			response => {
+
+				if (statusCallback !== undefined){
+					statusCallback();
+				}
+
+				let now: number = Date.now();
+				let timeDiff = (now - beforeTime) / 2;
+				let serverTime = response.json().time - timeDiff;
+				return Date.now() - serverTime;
 			}
 		).catch(this.handleError);
 	}

@@ -179,13 +179,10 @@ export class ApiClientAppComponent {
 	let tDeleteMeasure = new Test('Delete measure',
 		function(watch: Watch) {
 
-
-
 			if (watch != null) {
 
 				twapi.deleteMeasure(watch, watch.measures[watch.measures.length - 1]).then(
 					response => {
-						console.log('response delete', response);
 						if (response != null && response.measures.length == 0) {
 							tDeleteMeasure.stop(true, response);
 						} else {
@@ -200,6 +197,51 @@ export class ApiClientAppComponent {
 
 		});
 	this.tests.push(tDeleteMeasure);
+
+	let tDeleteWatch = new Test('Delete Watch', 
+		function(watch:Watch){
+			if (watch != null) {
+
+				let user:User = new User(1, '', '', '', '', '', '', [watch]);
+
+				twapi.deleteWatch(user, watch).then(
+					response => {
+						if (response != null && response.watches.length == 0) {
+							tDeleteWatch.stop(true, response);
+						} else {
+							tDeleteWatch.stop(false);
+						}
+					}
+				)
+
+			} else {
+				tDeleteWatch.stop(false);
+			}
+	});
+	this.tests.push(tDeleteWatch);
+
+	let tTime = new Test('Get Time', 
+		function(){
+			let x=0;
+			twapi.accurateTime(
+				function(){
+					x++;
+					console.log(x/10*100, "%");
+				}
+			).then(
+				response => {
+					if(x == 10){
+						tTime.stop(true);
+					}
+					else{
+						tTime.stop(false);
+					}
+				}
+			);
+		}
+	);
+	this.tests.push(tTime);
+
 
 	let tDeleteAccountTest = new Test('Delete Account', 
 		function(){
@@ -225,7 +267,9 @@ export class ApiClientAppComponent {
 	tUpdateWatch.next = tAddBaseMeasure;
 	tAddBaseMeasure.next = tAddAccuracyMeasure;
 	tAddAccuracyMeasure.next = tDeleteMeasure;
-	tDeleteMeasure.next = tDeleteAccountTest;
+	tDeleteMeasure.next = tDeleteWatch;
+	tDeleteWatch.next = tTime;
+	tTime.next = tDeleteAccountTest;
 
 	tLogin.test(null);
 

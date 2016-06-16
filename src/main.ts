@@ -2,11 +2,14 @@
 
 import { bootstrap } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';
-import { ApiClientAppComponent, environment } from './app/';
+import { environment } from './app/';
+import { ApiClientAppComponent } from './app/components/api-client.component';
+
 
 if (environment.production) {
   enableProdMode();
 }
+
 
 bootstrap(ApiClientAppComponent);
 

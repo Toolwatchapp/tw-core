@@ -1,6 +1,6 @@
 {
-  "name": "api-client",
-  "version": "0.0.0",
+  "name": "tw-api",
+  "version": "0.1.0",
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
@@ -9,9 +9,27 @@
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
     "pree2e": "webdriver-manager update",
-    "e2e": "protractor",
-    "build": "rm -rf dist && tsc -p src"
+    "e2e": "protractor"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/repo"
+  },
+  "author": {
+    "name": "Mathieu Nayrolles",
+    "email": "mathieu.nayrolles@gmail.com"
+  },
+  "keywords": [
+    "angular",
+    "angular2"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/username/repo/issues"
+  },
+  "main": "./dist/main.js",
+  "typings": "./dist/main.d.ts",
+  "main": "main.js",
   "private": true,
   "dependencies": {
     "@angular/common": "2.0.0-rc.1",

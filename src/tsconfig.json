@@ -19,7 +19,6 @@
   "files": [
     "main.ts",
     "typings.d.ts",
-    "app/twapi.service.ts",
-    "app/twapi.service.spec.ts"
+    "app/services/twapi.service.ts"
   ]
 }

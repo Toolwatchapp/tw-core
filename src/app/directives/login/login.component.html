@@ -1,0 +1,43 @@
+<form 
+  #loginForm="ngForm"
+  (ngSubmit)="onSubmit()"
+>     
+      <div [hidden]="success" class="form-group">
+        {{ 'credentials' | translate:{value: param} }}
+      </div>
+
+      <div class="form-group">
+
+        <label for="email">
+          {{ 'email' | translate:{value: param} }}
+        </label>
+        <input type="email" class="form-control" required
+        [(ngModel)]="email" 
+        ngControl="email"
+        #emailu="ngForm"
+        >
+
+        <div [hidden]="emailu.valid || emailu.pristine" class="alert alert-danger">
+          {{ 'email-required' | translate:{value: param} }}
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label for="password">
+          {{ 'password' | translate:{value: param} }}
+        </label>
+        <input type="password" class="form-control" required
+        [(ngModel)]="password" 
+        ngControl="password"
+        #passwordu="ngForm"
+        >     
+
+        <div [hidden]="passwordu.valid || passwordu.pristine" class="alert alert-danger">
+          {{ 'password-required' | translate:{value: param} }}
+        </div> 
+      </div>
+      <button type="submit" class="btn btn-default">
+        {{ 'login' | translate:{value: param} }}
+      </button>
+</form>

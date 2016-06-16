@@ -1,0 +1,8 @@
+{
+	"email": "email",
+	"password": "password",
+	"login": "log in",
+	"email-required": "A valid email is required",
+	"password-required": "A password is required",
+	"credentials": "Your email/password is invalid."
+}

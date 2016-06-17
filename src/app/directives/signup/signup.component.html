@@ -1,0 +1,92 @@
+<form 
+  (ngSubmit)="onSubmit()"
+>     
+      <div [hidden]="success" class="form-group">
+        {{ 'account-exists' | translate:{value: param} }}
+      </div>
+
+      <div class="form-group">
+
+        <label for="email">
+          {{ 'email' | translate:{value: param} }}
+        </label>
+        <input type="email" class="form-control" required
+        [(ngModel)]="email" 
+        ngControl="email"
+        #emailu="ngForm"
+        >
+
+        <div [hidden]="emailu.valid || emailu.pristine" class="alert alert-danger">
+          {{ 'email-required' | translate:{value: param} }}
+        </div>
+      </div>
+
+      <div class="form-group">
+
+        <label for="emailRepeat">
+          {{ 'email-repeat' | translate:{value: param} }}
+        </label>
+        <input type="email" class="form-control" required
+        [(ngModel)]="emailRepeat" 
+        ngControl="email"
+        #emailRepeatu="ngForm"
+        >
+
+        <div [hidden]="emailRepeatu.valid || emailRepeatu.pristine || email!==emailRepeat" class="alert alert-danger">
+          {{ 'email-match' | translate:{value: param} }}
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label for="password">
+          {{ 'password' | translate:{value: param} }}
+        </label>
+        <input type="password" class="form-control" required
+        [(ngModel)]="password" 
+        ngControl="password"
+        #passwordu="ngForm"
+        >     
+
+        <div [hidden]="passwordu.valid || passwordu.pristine" class="alert alert-danger">
+          {{ 'password-required' | translate:{value: param} }}
+        </div> 
+      </div>
+
+       <div class="form-group">
+        <label for="passwordRepeat">
+          {{ 'password-repeat' | translate:{value: param} }}
+        </label>
+        <input type="password" class="form-control" required
+        [(ngModel)]="passwordRepeat" 
+        ngControl="password"
+        #passwordRepeatu="ngForm"
+        >     
+
+        <div [hidden]="passwordRepeatu.valid || passwordRepeatu.pristine || password!==passwordRepeat" class="alert alert-danger">
+          {{ 'password-match' | translate:{value: param} }}
+        </div> 
+      </div>
+
+      <div class="form-group">
+        <label for="firstname">
+          {{ 'firstname' | translate:{value: param} }}
+        </label>
+        <input type="firstname" class="form-control"
+        [(ngModel)]="firstname" 
+        >     
+      </div>
+
+      <div class="form-group">
+        <label for="lastname">
+          {{ 'lastname' | translate:{value: param} }}
+        </label>
+        <input type="lastname" class="form-control"
+        [(ngModel)]="lastname" 
+        >     
+      </div>
+
+      <button type="submit" class="btn btn-default">
+        {{ 'signup' | translate:{value: param} }}
+      </button>
+</form>

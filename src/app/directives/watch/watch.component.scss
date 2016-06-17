@@ -7,10 +7,37 @@
   width: 20em;
 }
 
-.clock-moon-cadran{
-  width: 100%;
-  height: 100%;
-  background: url(app/assets/images/clock-cadran.png) no-repeat center;
+.logo{
+  top: 20%;
+  position: absolute;
+  width: 32%;
+  height: 10%;
+  left: 33%;
+  background: url(app/assets/images/white-logo.png) no-repeat center;
+  background-size: 100%;
+}
+
+.date{
+  background-color: #21446f;
+  height: 20px;
+  font-family: 'Nunito', sans-serif;
+  position: absolute;
+  top: 47.5%;
+  color: #c5c5c5;
+  text-transform: uppercase;
+}
+
+.month{
+  width: 40px;
+  left: 15%;
+  padding-left: 2%;
+}
+
+.day{
+  width: 45px;
+  right: 15%;
+  padding-right: 1%;
+  padding-left: 2%;
 }
 
 .clock:after {
@@ -24,7 +51,7 @@
   width: 3%;
   height: 3%;
   z-index: 10;
-    -webkit-box-shadow: 5px 5px 5px -1px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 5px 5px 5px -1px rgba(0,0,0,0.75);
   -moz-box-shadow: 5px 5px 5px -1px rgba(0,0,0,0.75);
   box-shadow: 5px 5px 5px -1px rgba(0,0,0,0.75);
 }

@@ -1,19 +1,31 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
+import { MoonPhasesComponent } from './moon-phases/moon-phases.component';
 
 @Component({
   selector: 'app-watch',
   templateUrl: 'app/directives/watch/watch.component.html',
-  styleUrls: ['app/directives/watch/watch.component.css']
+  styleUrls: ['app/directives/watch/watch.component.css'],
+  directives: [MoonPhasesComponent]
 })
 export class WatchComponent implements OnInit {
 
-  constructor(private elementRef: ElementRef) {}
+  month:string;
+  day:string;
+  monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  constructor(private elementRef: ElementRef) {
+
+	var d:Date = new Date();
+	this.month = this.monthNames[d.getMonth()];
+	this.day = this.dayNames[d.getDay()] + " " + d.getDay();
+  }
 
   ngAfterViewInit() {
 	  this.initLocalClocks();
   }
 
   initLocalClocks() {
+
 	// Get the local time using JS
 	var date = new Date;
 	var seconds = date.getSeconds();
@@ -36,14 +48,11 @@ export class WatchComponent implements OnInit {
 		}
 	];
 
-	console.log(this.elementRef.nativeElement.querySelector('.seconds'));
-
 	//Loop through each of these hands to set their angle
 	for (var j = 0; j < hands.length; j++) {
 		var element = this.elementRef.nativeElement.querySelector(
 			'.' + hands[j].hand
 		);
-		console.log(element);
 
 		element.style.webkitTransform = 'rotateZ(' + hands[j].angle + 'deg)';
 		element.style.transform = 'rotateZ(' + hands[j].angle + 'deg)';
@@ -52,5 +61,7 @@ export class WatchComponent implements OnInit {
 
   ngOnInit() {
   }
+
+
 
 }

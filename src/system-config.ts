@@ -3,10 +3,14 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
+  'ng2-translate' : 'vendor/ng2-translate'
 };
 
 /** User packages configuration. */
 const packages: any = {
+  'ng2-translate': {
+    format: 'cjs'
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,6 +33,11 @@ const barrels: string[] = [
   // App specific barrels.
   'app',
   'app/shared',
+  'app/login',
+  'app/components/login',
+  'app/directives/signup/signup',
+  'app/directives/signup',
+  'app/directives/watch',
   /** @cli-barrel */
 ];
 

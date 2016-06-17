@@ -4,5 +4,13 @@
 	"login": "log in",
 	"email-required": "A valid email is required",
 	"password-required": "A password is required",
-	"credentials": "Your email/password is invalid."
+	"credentials": "Your email/password are invalid.",
+	"account-exists": "This email is already linked to an account.",
+	"email-repeat": "Confirm email",
+	"email-match": "Emails must match.",
+	"password-repeat": "Confirm password.",
+	"password-match": "Passwords must match.",
+	"firstname":"Firstname",
+	"lastname":"Lirstname",
+	"signup": "Create an account"
 }

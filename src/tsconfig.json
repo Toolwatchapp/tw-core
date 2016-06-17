@@ -19,6 +19,9 @@
   "files": [
     "main.ts",
     "typings.d.ts",
-    "app/services/twapi.service.ts"
+    "app/services/twapi.service.ts",
+    "app/directives/login/login.component.ts",
+    "app/directives/signup/signup.component.ts",
+    "app/directives/watch/watch.component.ts"
   ]
 }

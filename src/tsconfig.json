@@ -22,6 +22,7 @@
     "app/services/twapi.service.ts",
     "app/directives/login/login.component.ts",
     "app/directives/signup/signup.component.ts",
-    "app/directives/watch/watch.component.ts"
+    "app/directives/watch/watch.component.ts",
+    "app/directives/watch/moon-phases/moon-phases.component.ts"
   ]
 }

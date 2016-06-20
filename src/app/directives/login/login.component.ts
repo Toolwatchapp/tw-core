@@ -1,40 +1,84 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Output, OnInit, EventEmitter } from '@angular/core';
 import {TRANSLATE_PROVIDERS, TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
-import {  FormBuilder, Validators, Control, ControlGroup, FORM_DIRECTIVES, NgForm }    from '@angular/common';
+import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators}  from '@angular/common';
 import {TwAPIService} from './../../services/twapi.service'
 import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
+import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
+import { GlobalValidator } from './../global-validator';
+
 @Component({
   selector: 'app-login',
   templateUrl: 'app/directives/login/login.component.html',
   styleUrls: ['app/directives/login/login.component.css'],
   pipes: [TranslatePipe],
-  providers: [TwAPIService, HTTP_PROVIDERS]
+  providers: [TwAPIService, HTTP_PROVIDERS],
+  directives: [FORM_DIRECTIVES, MD_BUTTON_DIRECTIVES]
 })
+/**
+ * Login component. Provides a login form with controlled and
+ * emits a User ($event userLogged) on successful login.
+ */
 export class LoginComponent implements OnInit {
 
-  email:string;
-  password:string;
+  loginForm: ControlGroup;
+  email:Control;
+  password: Control;
+  submitAttempt:boolean = false;
+  credientials = false;
+  error = false;
+  @Output() userLogged = new EventEmitter();
 
-  form: ControlGroup;
-  success:boolean = true;
-
+  /**
+   * Constructor w/ service injection
+   * @param {TranslateService} private translate [description]
+   * @param {TwAPIService}     private twapi     [description]
+   * @param {FormBuilder}      private builder   [description]
+   */
   constructor(private translate: TranslateService, 
-  	private twapi: TwAPIService) { 
-  	//use navigator lang if available
-	var userLang = navigator.language.split('-')[0]; 
-	userLang = /(fr|en)/gi.test(userLang) ? userLang : 'en';
-	translate.setDefaultLang('en');
-	translate.use(userLang);
+    private twapi: TwAPIService, private builder: FormBuilder) { 
+  	
+    //Lang definition
+	  var userLang = navigator.language.split('-')[0]; 
+	  userLang = /(fr|en)/gi.test(userLang) ? userLang : 'en';
+	  translate.setDefaultLang('en');
+	  translate.use(userLang);
+
+    //Form constraints
+    this.password = new Control('', Validators.required);
+    this.email = new Control('', Validators.compose([Validators.required, GlobalValidator.mailFormat]));
+
+    this.loginForm = builder.group({
+      email: this.email,
+      password: this.password
+    });
   }
 
-  onSubmit(){
-  	console.log(this.email, this.password);
-  	this.twapi.login(this.email, this.password).then(
-  		response => {
+  /**
+   * Form submit
+   * @param {string}} user [description]
+   */
+  onSubmit(user:{email:string, password:string}){
 
-  			this.success = typeof response == "User";
-  		}
-  	)
+    this.submitAttempt = true;
+    this.error = false;
+    this.credientials = false;
+
+    //Form constraints are ok
+    if(this.loginForm.valid){
+      this.twapi.login(user.email, user.password).then(
+        res => { this.userLogged.emit(res) },
+        error => {
+          switch (error.status) {
+            case 401:
+              this.credientials = true;
+              break;
+            default:
+              this.error = true;
+              break;
+          }
+        }
+      );
+    }
   }
 
   ngOnInit() {

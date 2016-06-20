@@ -16,7 +16,7 @@ if (environment.production) {
 }
 
 
-bootstrap(WatchComponent, [
+bootstrap(LoginComponent, [
     HTTP_PROVIDERS,
     provide(TranslateLoader, {
         useFactory: (http: Http) => new TranslateStaticLoader(http, 'app/assets/i18n', '.json'),

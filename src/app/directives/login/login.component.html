@@ -1,42 +1,55 @@
 <form 
-  (ngSubmit)="onSubmit()"
+  [ngFormModel] = "loginForm"
+  (ngSubmit)="onSubmit(loginForm.value)"
 >     
-      <div [hidden]="success" class="form-group">
-        {{ 'credentials' | translate:{value: param} }}
+      <!-- GENERAL ERROR MESSAGES -->
+      <div class="error-message" [hidden]="!credientials">
+          {{ 'credentials' | translate:{value: param} }}
       </div>
 
-      <div class="form-group">
+      <div class="error-message" [hidden]="!error">
+          {{ 'error' | translate:{value: param} }}
+      </div>
+      <!-- END GENERAL ERROR MESSAGES -->
+
+      <!-- EMAIL GROUP -->
+      <div  class="form-group"
+      [ngClass]="{ 'has-error' : !email.valid && submitAttempt }"
+      >
 
         <label for="email">
           {{ 'email' | translate:{value: param} }}
         </label>
-        <input type="email" class="form-control" required
-        [(ngModel)]="email" 
-        ngControl="email"
-        #emailu="ngForm"
-        >
-
-        <div [hidden]="emailu.valid || emailu.pristine" class="alert alert-danger">
+        <em *ngIf="!email.valid && submitAttempt">
           {{ 'email-required' | translate:{value: param} }}
-        </div>
+        </em>
+        <input 
+          id="email" 
+          type="text" 
+          class="form-control" 
+          placeholder="{{ 'email' | translate:{value: param} }}" 
+          ngControl="email"
+        >
       </div>
+      <!-- END EMAIL GROUP -->
 
-
-      <div class="form-group">
+      <!-- PASSWORD GROUP -->
+      <div class="form-group"
+      [ngClass]="{ 'has-error' : !password.valid && submitAttempt }">
         <label for="password">
           {{ 'password' | translate:{value: param} }}
         </label>
-        <input type="password" class="form-control" required
-        [(ngModel)]="password" 
-        ngControl="password"
-        #passwordu="ngForm"
-        >     
-
-        <div [hidden]="passwordu.valid || passwordu.pristine" class="alert alert-danger">
+        <em *ngIf="!password.valid && submitAttempt">
           {{ 'password-required' | translate:{value: param} }}
-        </div> 
+        </em>
+        <input 
+          type="password" 
+          class="form-control" 
+          placeholder="{{ 'password' | translate:{value: param} }}" 
+          ngControl="password"
+        >     
       </div>
-      <button type="submit" class="btn btn-default">
-        {{ 'login' | translate:{value: param} }}
-      </button>
+      <!-- END PASSWORD GROUP -->
+
+      <button md-raised-button color="primary" type="submit"> {{ 'login' | translate:{value: param} }}</button>
 </form>

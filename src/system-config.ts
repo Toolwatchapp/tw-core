@@ -3,13 +3,29 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
-  'ng2-translate' : 'vendor/ng2-translate'
+  'ng2-translate': 'vendor/ng2-translate',
+  '@angular2-material': 'vendor/@angular2-material'
 };
 
 /** User packages configuration. */
 const packages: any = {
   'ng2-translate': {
     format: 'cjs'
+  },
+  '@angular2-material/core': {
+    format: 'cjs',
+    defaultExtension: 'js',
+    main: 'core.js'
+  },
+  '@angular2-material/checkbox': {
+    format: 'cjs',
+    defaultExtension: 'js',
+    main: 'checkbox.js'
+  },
+  '@angular2-material/button': {
+    format: 'cjs',
+      defaultExtension: 'js',
+      main: 'button.js'
   }
 };
 
@@ -38,6 +54,7 @@ const barrels: string[] = [
   'app/directives/signup/signup',
   'app/directives/signup',
   'app/directives/watch',
+  'app/directives/watch/moon-phases',
   /** @cli-barrel */
 ];
 

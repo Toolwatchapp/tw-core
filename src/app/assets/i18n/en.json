@@ -12,5 +12,6 @@
 	"password-match": "Passwords must match.",
 	"firstname":"Firstname",
 	"lastname":"Lirstname",
-	"signup": "Create an account"
+	"signup": "Create an account",
+	"error": "Something went wrong, please retry later."
 }

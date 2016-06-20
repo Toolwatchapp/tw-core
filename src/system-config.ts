@@ -26,6 +26,11 @@ const packages: any = {
     format: 'cjs',
       defaultExtension: 'js',
       main: 'button.js'
+  },
+  '@angular2-material/list': {
+    format: 'cjs',
+    defaultExtension: 'js',
+    main: 'list.js'
   }
 };
 

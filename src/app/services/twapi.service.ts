@@ -208,9 +208,11 @@ export class TwAPIService {
 				country:country
 			}),
 			this.options
-		).toPromise().then(
-			response => ModelFactory.buildUser(response.json())
-		).catch(this.handleError);
+		)
+		.map((res) => { return ModelFactory.buildUser(res.json()); })
+		.toPromise().then(
+			res => res
+		);
 	}
 
 	/**
@@ -307,6 +309,24 @@ export class TwAPIService {
 				return watch;
 			}
 		).catch(this.handleError);
+	}
+
+	getBrands(): Promise<[{ name: string, icon: string, models:string}]> {
+		return this.http.get(
+			'/app/assets/json/watch-brand.json')
+		.map(res => res.json())
+		.toPromise().then(
+			brands => brands
+		);
+	}
+
+	getModels(brand:string): Promise<[string]> {
+		return this.http.get(
+			'/app/assets/json/watch-models/'+brand+".json")
+			.map(res => res.json())
+			.toPromise().then(
+			models => models
+		);
 	}
 
 	/**

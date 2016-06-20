@@ -34,15 +34,14 @@ var TwAPIService = (function () {
     TwAPIService.prototype.login = function (email, password) {
         var _this = this;
         var creds = { email: email, password: password };
-        return this.http.put(this.baseUrl + "users", JSON.stringify(creds), this.options).toPromise().then(function (response) {
-            var jsonUser = response.json();
-            if (jsonUser.key !== undefined) {
-                TwAPIService.apikey = jsonUser.key;
-                _this.headers.delete('X-API-KEY');
-                _this.headers.append('X-API-KEY', TwAPIService.apikey);
-            }
-            return model_factory_1.ModelFactory.buildUser(response.json());
-        }).catch(this.handleError);
+        return this.http.put(this.baseUrl + "users", JSON.stringify(creds), this.options)
+            .map(function (res) { return model_factory_1.ModelFactory.buildUser(res.json()); })
+            .toPromise().then(function (res) {
+            TwAPIService.apikey = res.key;
+            _this.headers.delete('X-API-KEY');
+            _this.headers.append('X-API-KEY', TwAPIService.apikey);
+            return res;
+        });
     };
     /**
      * Registers a new user
@@ -60,7 +59,9 @@ var TwAPIService = (function () {
             name: name,
             lastname: lastname,
             country: country
-        }), this.options).toPromise().then(function (response) { return model_factory_1.ModelFactory.buildUser(response.json()); }).catch(this.handleError);
+        }), this.options)
+            .map(function (res) { return model_factory_1.ModelFactory.buildUser(res.json()); })
+            .toPromise().then(function (res) { return res; });
     };
     /**
      * Deletes the account currently logged in.
@@ -127,6 +128,16 @@ var TwAPIService = (function () {
             });
             return watch;
         }).catch(this.handleError);
+    };
+    TwAPIService.prototype.getBrands = function () {
+        return this.http.get('/app/assets/json/watch-brand.json')
+            .map(function (res) { return res.json(); })
+            .toPromise().then(function (brands) { return brands; });
+    };
+    TwAPIService.prototype.getModels = function (brand) {
+        return this.http.get('/app/assets/json/watch-models/' + brand + ".json")
+            .map(function (res) { return res.json(); })
+            .toPromise().then(function (models) { return models; });
     };
     /**
      * Retrieve atomic clock time adjusted for network latency
@@ -252,13 +263,128 @@ var TwAPIService = (function () {
      * @param {any} error [description]
      */
     TwAPIService.prototype.handleError = function (error) {
+        console.log("handleError");
         // In a real world app, we might use a remote logging infrastructure
         // We'd also dig deeper into the error to get a better message
         var errMsg = (error.message) ? error.message :
             error.status ? error.status + " - " + error.statusText : 'Server error';
         console.error(errMsg); // log to console instead
-        return error;
+        return new Error(error);
     };
+    /**
+     * All the HTTP code used by the toolwatch API are defined here.
+     * Http codes can be to refine the error types
+     */
+    TwAPIService.HTTP_CONTINUE = 100;
+    TwAPIService.HTTP_SWITCHING_PROTOCOLS = 101;
+    TwAPIService.HTTP_PROCESSING = 102; // RFC2518
+    // Success
+    /**
+     * The request has succeeded
+     */
+    TwAPIService.HTTP_OK = 200;
+    /**
+     * The server successfully created a new resource
+     */
+    TwAPIService.HTTP_CREATED = 201;
+    TwAPIService.HTTP_ACCEPTED = 202;
+    TwAPIService.HTTP_NON_AUTHORITATIVE_INFORMATION = 203;
+    /**
+     * The server successfully processed the request, though no content is returned
+     */
+    TwAPIService.HTTP_NO_CONTENT = 204;
+    TwAPIService.HTTP_RESET_CONTENT = 205;
+    TwAPIService.HTTP_PARTIAL_CONTENT = 206;
+    TwAPIService.HTTP_MULTI_STATUS = 207; // RFC4918
+    TwAPIService.HTTP_ALREADY_REPORTED = 208; // RFC5842
+    TwAPIService.HTTP_IM_USED = 226; // RFC3229
+    // Redirection
+    TwAPIService.HTTP_MULTIPLE_CHOICES = 300;
+    TwAPIService.HTTP_MOVED_PERMANENTLY = 301;
+    TwAPIService.HTTP_FOUND = 302;
+    TwAPIService.HTTP_SEE_OTHER = 303;
+    /**
+     * The resource has not been modified since the last request
+     */
+    TwAPIService.HTTP_NOT_MODIFIED = 304;
+    TwAPIService.HTTP_USE_PROXY = 305;
+    TwAPIService.HTTP_RESERVED = 306;
+    TwAPIService.HTTP_TEMPORARY_REDIRECT = 307;
+    TwAPIService.HTTP_PERMANENTLY_REDIRECT = 308; // RFC7238
+    // Client Error
+    /**
+     * The request cannot be fulfilled due to multiple errors
+     */
+    TwAPIService.HTTP_BAD_REQUEST = 400;
+    /**
+     * The user is unauthorized to access the requested resource
+     */
+    TwAPIService.HTTP_UNAUTHORIZED = 401;
+    TwAPIService.HTTP_PAYMENT_REQUIRED = 402;
+    /**
+     * The requested resource is unavailable at this present time
+     */
+    TwAPIService.HTTP_FORBIDDEN = 403;
+    /**
+     * The requested resource could not be found
+     *
+     * Note: This is sometimes used to mask if there was an UNAUTHORIZED (401) or
+     * FORBIDDEN (403) error, for security reasons
+     */
+    TwAPIService.HTTP_NOT_FOUND = 404;
+    /**
+     * The request method is not supported by the following resource
+     */
+    TwAPIService.HTTP_METHOD_NOT_ALLOWED = 405;
+    /**
+     * The request was not acceptable
+     */
+    TwAPIService.HTTP_NOT_ACCEPTABLE = 406;
+    TwAPIService.HTTP_PROXY_AUTHENTICATION_REQUIRED = 407;
+    TwAPIService.HTTP_REQUEST_TIMEOUT = 408;
+    /**
+     * The request could not be completed due to a conflict with the current state
+     * of the resource
+     */
+    TwAPIService.HTTP_CONFLICT = 409;
+    TwAPIService.HTTP_GONE = 410;
+    TwAPIService.HTTP_LENGTH_REQUIRED = 411;
+    TwAPIService.HTTP_PRECONDITION_FAILED = 412;
+    TwAPIService.HTTP_REQUEST_ENTITY_TOO_LARGE = 413;
+    TwAPIService.HTTP_REQUEST_URI_TOO_LONG = 414;
+    TwAPIService.HTTP_UNSUPPORTED_MEDIA_TYPE = 415;
+    TwAPIService.HTTP_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
+    TwAPIService.HTTP_EXPECTATION_FAILED = 417;
+    TwAPIService.HTTP_I_AM_A_TEAPOT = 418; // RFC2324
+    TwAPIService.HTTP_UNPROCESSABLE_ENTITY = 422; // RFC4918
+    TwAPIService.HTTP_LOCKED = 423; // RFC4918
+    TwAPIService.HTTP_FAILED_DEPENDENCY = 424; // RFC4918
+    TwAPIService.HTTP_RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL = 425; // RFC2817
+    TwAPIService.HTTP_UPGRADE_REQUIRED = 426; // RFC2817
+    TwAPIService.HTTP_PRECONDITION_REQUIRED = 428; // RFC6585
+    TwAPIService.HTTP_TOO_MANY_REQUESTS = 429; // RFC6585
+    TwAPIService.HTTP_REQUEST_HEADER_FIELDS_TOO_LARGE = 431; // RFC6585
+    // Server Error
+    /**
+     * The server encountered an unexpected error
+     *
+     * Note: This is a generic error message when no specific message
+     * is suitable
+     */
+    TwAPIService.HTTP_INTERNAL_SERVER_ERROR = 500;
+    /**
+     * The server does not recognise the request method
+     */
+    TwAPIService.HTTP_NOT_IMPLEMENTED = 501;
+    TwAPIService.HTTP_BAD_GATEWAY = 502;
+    TwAPIService.HTTP_SERVICE_UNAVAILABLE = 503;
+    TwAPIService.HTTP_GATEWAY_TIMEOUT = 504;
+    TwAPIService.HTTP_VERSION_NOT_SUPPORTED = 505;
+    TwAPIService.HTTP_VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL = 506; // RFC2295
+    TwAPIService.HTTP_INSUFFICIENT_STORAGE = 507; // RFC4918
+    TwAPIService.HTTP_LOOP_DETECTED = 508; // RFC5842
+    TwAPIService.HTTP_NOT_EXTENDED = 510; // RFC2774
+    TwAPIService.HTTP_NETWORK_AUTHENTICATION_REQUIRED = 511;
     TwAPIService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])

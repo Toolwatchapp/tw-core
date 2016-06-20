@@ -1,4 +1,4 @@
-import { Control } from '@angular/common';
+import { Control, ControlGroup } from '@angular/common';
 
 export class GlobalValidator {
 
@@ -11,6 +11,18 @@ export class GlobalValidator {
         }
 
         return null;
+    }
+
+    static match(from: string, to: string, returnValue: ValidationResult) {
+
+		return (group: ControlGroup): ValidationResult => {
+			let fromGroup = group.controls[from];
+			let toGroup = group.controls[to];
+
+			if (fromGroup.value !== toGroup.value) {
+				return returnValue;
+			}
+		}
     }
 }
 

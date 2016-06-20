@@ -2,9 +2,36 @@
  * User Configuration.
  **********************************************************************************************/
 /** Map relative paths to URLs. */
-var map = {};
+var map = {
+    'ng2-translate': 'vendor/ng2-translate',
+    '@angular2-material': 'vendor/@angular2-material'
+};
 /** User packages configuration. */
-var packages = {};
+var packages = {
+    'ng2-translate': {
+        format: 'cjs'
+    },
+    '@angular2-material/core': {
+        format: 'cjs',
+        defaultExtension: 'js',
+        main: 'core.js'
+    },
+    '@angular2-material/checkbox': {
+        format: 'cjs',
+        defaultExtension: 'js',
+        main: 'checkbox.js'
+    },
+    '@angular2-material/button': {
+        format: 'cjs',
+        defaultExtension: 'js',
+        main: 'button.js'
+    },
+    '@angular2-material/list': {
+        format: 'cjs',
+        defaultExtension: 'js',
+        main: 'list.js'
+    }
+};
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /***********************************************************************************************
  * Everything underneath this line is managed by the CLI.
@@ -23,6 +50,12 @@ var barrels = [
     // App specific barrels.
     'app',
     'app/shared',
+    'app/login',
+    'app/components/login',
+    'app/directives/signup/signup',
+    'app/directives/signup',
+    'app/directives/watch',
+    'app/directives/watch/moon-phases',
 ];
 var cliSystemConfigPackages = {};
 barrels.forEach(function (barrelName) {

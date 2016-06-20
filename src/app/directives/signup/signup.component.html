@@ -1,92 +1,152 @@
 <form 
-  (ngSubmit)="onSubmit()"
+  [ngFormModel] = "signupForm"
+  (ngSubmit)="onSubmit(signupForm.value)"
 >     
-      <div [hidden]="success" class="form-group">
-        {{ 'account-exists' | translate:{value: param} }}
+  
+      <!-- GENERAL ERROR MESSAGES -->
+      <div class="error-message" [hidden]="!emailTaken">
+          {{ 'account-exists' | translate:{value: param} }}
       </div>
 
-      <div class="form-group">
+      <div class="error-message" [hidden]="!error">
+          {{ 'error' | translate:{value: param} }}
+      </div>
+      <!-- END GENERAL ERROR MESSAGES -->
+
+      <!-- EMAIL GROUP -->
+      <div  class="form-group"
+      [ngClass]="{ 'has-error' : !email.valid && submitAttempt }"
+      >
 
         <label for="email">
           {{ 'email' | translate:{value: param} }}
         </label>
-        <input type="email" class="form-control" required
-        [(ngModel)]="email" 
-        ngControl="email"
-        #emailu="ngForm"
-        >
-
-        <div [hidden]="emailu.valid || emailu.pristine" class="alert alert-danger">
+        <em *ngIf="!email.valid && submitAttempt">
           {{ 'email-required' | translate:{value: param} }}
-        </div>
+        </em>
+        <input 
+          id="email" 
+          type="text" 
+          class="form-control" 
+          placeholder="{{ 'email' | translate:{value: param} }}" 
+          ngControl="email"
+        >
       </div>
 
-      <div class="form-group">
+      <div  class="form-group"
+      [ngClass]="{ 'has-error' : !emailRepeat.valid && submitAttempt }"
+      >
 
-        <label for="emailRepeat">
+        <label for="email-repeat">
           {{ 'email-repeat' | translate:{value: param} }}
         </label>
-        <input type="email" class="form-control" required
-        [(ngModel)]="emailRepeat" 
-        ngControl="email"
-        #emailRepeatu="ngForm"
-        >
-
-        <div [hidden]="emailRepeatu.valid || emailRepeatu.pristine || email!==emailRepeat" class="alert alert-danger">
+        <em *ngIf="!emailRepeat.valid && submitAttempt">
+          {{ 'email-required' | translate:{value: param} }}
+        </em>
+        <em *ngIf="signupForm.hasError('emailMatch') && submitAttempt">
           {{ 'email-match' | translate:{value: param} }}
-        </div>
+        </em>
+        <input 
+          id="email-repeat" 
+          type="text" 
+          class="form-control" 
+          placeholder="{{ 'email-repeat' | translate:{value: param} }}" 
+          ngControl="emailRepeat"
+        >
       </div>
+      <!-- END EMAIL GROUP -->
 
-
-      <div class="form-group">
+      <!-- PASSWORD GROUP -->
+      <div class="form-group"
+      [ngClass]="{ 'has-error' : !password.valid && submitAttempt }">
         <label for="password">
           {{ 'password' | translate:{value: param} }}
         </label>
-        <input type="password" class="form-control" required
-        [(ngModel)]="password" 
-        ngControl="password"
-        #passwordu="ngForm"
-        >     
-
-        <div [hidden]="passwordu.valid || passwordu.pristine" class="alert alert-danger">
+        <em *ngIf="!password.valid && submitAttempt">
           {{ 'password-required' | translate:{value: param} }}
-        </div> 
+        </em>
+        <input 
+          type="password" 
+          class="form-control" 
+          placeholder="{{ 'password' | translate:{value: param} }}" 
+          ngControl="password"
+        >     
       </div>
 
-       <div class="form-group">
+      <div class="form-group"
+      [ngClass]="{ 'has-error' : !passwordRepeat.valid && submitAttempt }">
         <label for="passwordRepeat">
           {{ 'password-repeat' | translate:{value: param} }}
         </label>
-        <input type="password" class="form-control" required
-        [(ngModel)]="passwordRepeat" 
-        ngControl="password"
-        #passwordRepeatu="ngForm"
-        >     
-
-        <div [hidden]="passwordRepeatu.valid || passwordRepeatu.pristine || password!==passwordRepeat" class="alert alert-danger">
+        <em *ngIf="!passwordRepeat.valid && submitAttempt">
+          {{ 'password-required' | translate:{value: param} }}
+        </em>
+        <em *ngIf="signupForm.hasError('passwordMatch') && submitAttempt">
           {{ 'password-match' | translate:{value: param} }}
-        </div> 
-      </div>
-
-      <div class="form-group">
-        <label for="firstname">
-          {{ 'firstname' | translate:{value: param} }}
-        </label>
-        <input type="firstname" class="form-control"
-        [(ngModel)]="firstname" 
+        </em>
+        <input 
+          type="password" 
+          class="form-control" 
+          placeholder="{{ 'password-repeat' | translate:{value: param} }}" 
+          ngControl="passwordRepeat"
         >     
       </div>
+      <!-- END PASSWORD GROUP -->
 
+      <!-- Country GROUP -->
       <div class="form-group">
-        <label for="lastname">
-          {{ 'lastname' | translate:{value: param} }}
+        <label for="country">
+          {{ 'country' | translate:{value: param} }}
         </label>
-        <input type="lastname" class="form-control"
-        [(ngModel)]="lastname" 
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="{{ 'country' | translate:{value: param} }}" 
+          [(ngModel)]=query (keyup)=filter(query)
         >     
+        <div class="suggestions" *ngIf="filteredList.length > 0">
+          <ul *ngFor="let country of filteredList">
+            <li>
+              <a (click)="select(country)">{{ country }}</a>
+            </li>
+          </ul>
+        </div>
       </div>
+      <!-- END country GROUP -->
 
-      <button type="submit" class="btn btn-default">
-        {{ 'signup' | translate:{value: param} }}
-      </button>
+      <!-- FIRSTNAME GROUP -->
+      <div  class="form-group">
+
+        <label for="firstName">
+          {{ 'firstName' | translate:{value: param} }}
+        </label>
+        <input 
+          id="firstName" 
+          type="text" 
+          class="form-control" 
+          placeholder="{{ 'firstName' | translate:{value: param} }}"
+          ngControl="firstName"
+        >
+      </div>
+      <!-- END FIRSTNAME GROUP -->
+
+      <!-- LASTNAME GROUP -->
+      <div  class="form-group">
+
+        <label for="lastName">
+          {{ 'lastName' | translate:{value: param} }}
+        </label>
+        <input 
+          id="lastName" 
+          type="text" 
+          class="form-control" 
+          placeholder="{{ 'lastName' | translate:{value: param} }}"
+          ngControl="lastName"
+        >
+      </div>
+      <!-- END LASTNAME GROUP -->
+
+
+      <button md-raised-button color="primary" type="submit"> {{ 'signup' | translate:{value: param} }}</button>
+
 </form>

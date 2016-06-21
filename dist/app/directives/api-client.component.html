@@ -1,0 +1,30 @@
+<h1>
+  {{title}}
+</h1>
+
+<ul>
+	
+	<li *ngFor="let test of tests">
+		
+		<span [hidden]="test.running">
+			
+			<span [hidden]="!test.status">
+				<img style="-webkit-user-select: none;width: 20px;" src="http://www.clipartbest.com/cliparts/dc7/ed7/dc7ed74Gi.png">
+			</span>
+			<span [hidden]="test.status">
+				<img _ngcontent-ajx-1="" src="https://cdn1.iconfinder.com/data/icons/ui-icons-2/512/wrong-01-512.png" style="-webkit-user-select: none;width: 15px;margin-left: 3px;">
+			</span>
+
+		</span>
+        <span [hidden]="!test.running">
+        	
+        	<img style="-webkit-user-select: none;width: 20px;" src="https://sire.uniandes.edu.co/pagos/javax.faces.resource/ajax-loader.gif.xhtml?ln=images">
+
+        </span>
+        {{test.title}}
+
+        <span [hidden]="test.running">
+         [{{test.ellapsedTime}} ms]
+        </span>
+	</li>
+</ul>

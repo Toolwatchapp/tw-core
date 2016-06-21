@@ -1,6 +1,7 @@
 "use strict";
 var user_model_1 = require('./user.model');
 var watch_model_1 = require('./watch.model');
+var blog_post_model_1 = require('./blog-post.model');
 var measure_model_1 = require('./measure.model');
 var ModelFactory = (function () {
     function ModelFactory() {
@@ -23,6 +24,16 @@ var ModelFactory = (function () {
             return new watch_model_1.Watch(jsonWatch.watchId, jsonWatch.brand, jsonWatch.historySize, jsonWatch.measures.map(function (jsonMeasure) {
                 return new measure_model_1.Measure(jsonMeasure.id, jsonMeasure.measureUserTime, jsonMeasure.measureReferenceTime, jsonMeasure.status, jsonMeasure.accuracyUserTime, jsonMeasure.accuracyReferenceTime, jsonMeasure.accuracy, jsonMeasure.accuracyAge);
             }), jsonWatch.name, jsonWatch.yearOfBuy, jsonWatch.serial, jsonWatch.caliber);
+        });
+    };
+    /**
+     * Builds Json post from json response
+     * @param  {any}        jsonPosts [description]
+     * @return {BlogPost[]}           [description]
+     */
+    ModelFactory.buildPosts = function (jsonPosts) {
+        return jsonPosts.posts.map(function (jsonPost) {
+            return new blog_post_model_1.BlogPost(jsonPost.id, jsonPost.title, new Date(jsonPost.date), jsonPost.excerpt, jsonPost.url);
         });
     };
     return ModelFactory;

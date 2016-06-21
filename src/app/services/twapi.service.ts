@@ -1,5 +1,3 @@
-///<reference path="../../../typings/browser.d.ts"/>
-
 import { Injectable } from '@angular/core';
 import { Http, HTTP_PROVIDERS, RequestOptions, Headers, Response }  from '@angular/http';
 import { User }  from './../models/user.model';

@@ -1,0 +1,153 @@
+<form 
+  [ngFormModel] = "watchForm"
+>     
+  
+      <!-- GENERAL ERROR MESSAGES -->
+    <div class="error-message" [hidden]="!error">
+          {{ 'error' | translate:{value: param} }}
+    </div>
+      <!-- END GENERAL ERROR MESSAGES -->
+
+    <!-- BRAND GROUP -->
+    <div  class="form-group"
+    [ngClass]="{ 'has-error' : !brand.valid && submitAttempt }"
+    >
+        <label for="brand">
+          {{ 'brand' | translate:{value: param} }}
+        </label>
+        <em *ngIf="!brand.valid && submitAttempt">
+          {{ 'brand-required' | translate:{value: param} }}
+        </em>
+        <input 
+          id="brand" 
+          type="text" 
+          class="form-control" 
+          placeholder="{{ 'brand' | translate:{value: param} }}" 
+          ngControl="brand"
+          [(ngModel)]=watchModel.brand 
+          (keyup)=filterBrand(watchModel.brand)
+        >
+        <div class="suggestions" *ngIf="filteredBrandList.length > 0">
+          <ul *ngFor="let brand of filteredBrandList">
+            <li>
+              <a (click)="selectBrand(brand.name)">{{ brand.name }}</a>
+              <img src="/app/assets/ico_watches/{{ brand.icon }}"/>
+            </li>
+          </ul>
+        </div>
+    </div>
+    <!-- END BRAND GROUP -->
+
+    <!-- MODEL GROUP -->
+    <div  class="form-group"
+    [ngClass]="{ 'has-error' : !model.valid && submitAttempt }"
+    >
+        <label for="model">
+          {{ 'model' | translate:{value: param} }}
+        </label>
+        <input 
+          id="model" 
+          type="text" 
+          class="form-control" 
+          placeholder="{{ 'model' | translate:{value: param} }}" 
+          ngControl="model"
+          [(ngModel)]=watchModel.name 
+          (keyup)=filterModel(watchModel.name)
+        >
+        <div class="suggestions" *ngIf="filteredModelList.length > 0">
+          <ul *ngFor="let model of filteredModelList">
+            <li>
+              <a (click)="selectModel(model)">{{ model }}</a>
+            </li>
+          </ul>
+        </div>
+    </div>
+    <!-- END MODEL GROUP -->
+
+    <!-- Caliber GROUP -->
+    <div  class="form-group"
+    [ngClass]="{ 'has-error' : !caliber.valid && submitAttempt }"
+    >
+        <label for="caliber">
+          {{ 'caliber' | translate:{value: param} }}
+        </label>
+        <input 
+          id="caliber" 
+          type="text" 
+          class="form-control" 
+          placeholder="{{ 'caliber' | translate:{value: param} }}" 
+          ngControl="caliber"
+          [(ngModel)]=watchModel.caliber 
+        >
+    </div>
+    <!-- END Caliber GROUP -->
+
+    <!-- YEAR GROUP -->
+    <div  class="form-group"
+    [ngClass]="{ 'has-error' : !year.valid && submitAttempt }"
+    >
+        <label for="year">
+          {{ 'year' | translate:{value: param} }}
+        </label>
+        <em *ngIf="!year.valid && submitAttempt">
+          {{ 'year-required' | translate:{value: param} }}
+        </em>
+        <input 
+          id="year" 
+          type="text" 
+          class="form-control" 
+          placeholder="{{ 'year' | translate:{value: param} }}" 
+          ngControl="year"
+          [(ngModel)]=watchModel.year 
+        >
+    </div>
+    <!-- YEAR Caliber GROUP -->
+
+    <!-- Serial GROUP -->
+    <div  class="form-group"
+    [ngClass]="{ 'has-error' : !serial.valid && submitAttempt }"
+    >
+        <label for="serial">
+          {{ 'serial' | translate:{value: param} }}
+        </label>
+        <input 
+          id="serial" 
+          type="text" 
+          class="form-control" 
+          placeholder="{{ 'serial' | translate:{value: param} }}" 
+          ngControl="serial"
+          [(ngModel)]=watchModel.serial 
+        >
+    </div>
+    <!-- Serial Caliber GROUP -->
+
+    <div  class="form-group">
+
+    	<div [hidden]="watchModel.id!==null">
+    		<button
+	    	md-raised-button 
+	    	(click)="onSubmit()"
+	    	color="primary" type="submit"> 
+	    	{{ 'add-watch' | translate:{value: param} }}
+	    	</button>
+    	</div>
+
+
+		<div [hidden]="watchModel.id===null">
+	    	<button
+	    	md-raised-button color="accent" type="submit"
+	    	(click)="onSubmit()"
+	    	> 
+	    	{{ 'update-watch' | translate:{value: param} }}
+	    	</button>
+
+	    	<button
+	    	md-raised-button color="warn"
+	    	(click)="onDelete()"> 
+	    	{{ 'delete-watch' | translate:{value: param} }}
+	    	</button>
+    	</div>
+
+
+    </div>
+</form>

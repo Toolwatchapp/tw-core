@@ -1,0 +1,108 @@
+.clock {
+  border-radius: 50%;
+  background: #4d77a7 url(app/assets/images/clock-face-bg.png) no-repeat center;
+  background-size: 98%;
+  height: 20em;
+  position: relative;
+  width: 20em; }
+
+.logo {
+  top: 20%;
+  position: absolute;
+  width: 32%;
+  height: 10%;
+  left: 33%;
+  background: url(app/assets/images/white-logo.png) no-repeat center;
+  background-size: 100%; }
+
+.date {
+  background-color: #21446f;
+  height: 20px;
+  font-family: 'Nunito', sans-serif;
+  position: absolute;
+  top: 47.5%;
+  color: #c5c5c5;
+  text-transform: uppercase; }
+
+.month {
+  width: 40px;
+  left: 15%;
+  padding-left: 2%; }
+
+.day {
+  width: 45px;
+  right: 15%;
+  padding-right: 1%;
+  padding-left: 2%; }
+
+.clock:after {
+  background: white;
+  border-radius: 50%;
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 3%;
+  height: 3%;
+  z-index: 10;
+  -webkit-box-shadow: 5px 5px 5px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 5px 5px 5px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 5px 5px 5px -1px rgba(0, 0, 0, 0.75); }
+
+.minutes-container, .hours-container, .seconds-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0; }
+
+@keyframes rotate {
+  100% {
+    transform: rotateZ(360deg); } }
+
+.hours-container {
+  animation: rotate 43200s infinite linear; }
+
+.minutes-container {
+  animation: rotate 3600s infinite linear; }
+
+.seconds-container {
+  animation: rotate 60s infinite linear; }
+
+.hours {
+  background: white;
+  height: 30%;
+  left: 48.75%;
+  position: absolute;
+  top: 30%;
+  transform-origin: 50% 70%;
+  width: 2.5%;
+  -webkit-box-shadow: 5px 0px 5px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 5px 0px 5px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 5px 0px 5px -1px rgba(0, 0, 0, 0.75); }
+
+.minutes {
+  background: white;
+  height: 50%;
+  left: 49%;
+  position: absolute;
+  top: 10%;
+  transform-origin: 50% 80%;
+  width: 2%;
+  -webkit-box-shadow: 5px 0px 5px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 5px 0px 5px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 5px 0px 5px -1px rgba(0, 0, 0, 0.75); }
+
+.seconds {
+  background: white;
+  height: 45%;
+  left: 49.5%;
+  position: absolute;
+  top: 14%;
+  transform-origin: 50% 80%;
+  width: 1%;
+  z-index: 8;
+  -webkit-box-shadow: 5px 0px 5px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 5px 0px 5px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 5px 0px 5px -1px rgba(0, 0, 0, 0.75); }

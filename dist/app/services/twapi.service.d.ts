@@ -1,8 +1,8 @@
-/// <reference path="../../../typings/browser.d.ts" />
 import { Http } from '@angular/http';
 import { User } from './../models/user.model';
 import { Watch } from './../models/watch.model';
 import { Measure } from './../models/measure.model';
+import { BlogPost } from './../models/blog-post.model';
 import 'rxjs/add/operator/toPromise';
 export declare class TwAPIService {
     private http;
@@ -174,6 +174,7 @@ export declare class TwAPIService {
      * @return {Promise<Watch>}
      */
     deleteMeasure(watch: Watch, measure: Measure): Promise<Watch>;
+    getBlogPosts(): Promise<BlogPost[]>;
     /**
      * Return known brands
      * @return {Promise}

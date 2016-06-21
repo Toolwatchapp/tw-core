@@ -267,7 +267,7 @@ export class TwAPIService {
 
 				return user;
 			}
-		).catch(this.handleError);
+		);
 	}
 
 	/**
@@ -311,6 +311,10 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	/**
+	 * Return known brands
+	 * @return {Promise} 
+	 */
 	getBrands(): Promise<[{ name: string, icon: string, models:string}]> {
 		return this.http.get(
 			'/app/assets/json/watch-brand.json')
@@ -320,6 +324,11 @@ export class TwAPIService {
 		);
 	}
 
+	/**
+	 * Returns model of a given brand
+	 * @param  {string}  brand
+	 * @return {Promise}      
+	 */
 	getModels(brand:string): Promise<[string]> {
 		return this.http.get(
 			'/app/assets/json/watch-models/'+brand+".json")
@@ -463,8 +472,7 @@ export class TwAPIService {
 				watch.id = response.json().id;
 				return watch;
 			}
-		).catch(this.handleError);
-		
+		);
 	}
 
 	/**
@@ -488,7 +496,7 @@ export class TwAPIService {
 			response => {
 				return watch;
 			}
-		).catch(this.handleError);
+		);
 	}
 
 

@@ -1,6 +1,5 @@
 <form 
   [ngFormModel] = "watchForm"
-  (ngSubmit)="onSubmit()"
 >     
   
       <!-- GENERAL ERROR MESSAGES -->
@@ -13,7 +12,6 @@
     <div  class="form-group"
     [ngClass]="{ 'has-error' : !brand.valid && submitAttempt }"
     >
-
         <label for="brand">
           {{ 'brand' | translate:{value: param} }}
         </label>
@@ -32,8 +30,8 @@
         <div class="suggestions" *ngIf="filteredBrandList.length > 0">
           <ul *ngFor="let brand of filteredBrandList">
             <li>
-              <a (click)="selectBrand(brand)">{{ brand.name }}</a>
-              <img src="/app/assets/ico_watches/{{ brand.ico }}"/>
+              <a (click)="selectBrand(brand.name)">{{ brand.name }}</a>
+              <img src="/app/assets/ico_watches/{{ brand.icon }}"/>
             </li>
           </ul>
         </div>
@@ -44,7 +42,6 @@
     <div  class="form-group"
     [ngClass]="{ 'has-error' : !model.valid && submitAttempt }"
     >
-
         <label for="model">
           {{ 'model' | translate:{value: param} }}
         </label>
@@ -54,8 +51,8 @@
           class="form-control" 
           placeholder="{{ 'model' | translate:{value: param} }}" 
           ngControl="model"
-          [(ngModel)]=watchModel.model 
-          (keyup)=filterModel(watchModel.model)
+          [(ngModel)]=watchModel.name 
+          (keyup)=filterModel(watchModel.name)
         >
         <div class="suggestions" *ngIf="filteredModelList.length > 0">
           <ul *ngFor="let model of filteredModelList">
@@ -71,7 +68,6 @@
     <div  class="form-group"
     [ngClass]="{ 'has-error' : !caliber.valid && submitAttempt }"
     >
-
         <label for="caliber">
           {{ 'caliber' | translate:{value: param} }}
         </label>
@@ -90,11 +86,10 @@
     <div  class="form-group"
     [ngClass]="{ 'has-error' : !year.valid && submitAttempt }"
     >
-
         <label for="year">
           {{ 'year' | translate:{value: param} }}
         </label>
-        <em *ngIf="!brand.valid && submitAttempt">
+        <em *ngIf="!year.valid && submitAttempt">
           {{ 'year-required' | translate:{value: param} }}
         </em>
         <input 
@@ -112,7 +107,6 @@
     <div  class="form-group"
     [ngClass]="{ 'has-error' : !serial.valid && submitAttempt }"
     >
-
         <label for="serial">
           {{ 'serial' | translate:{value: param} }}
         </label>
@@ -132,6 +126,7 @@
     	<div [hidden]="watchModel.id!==null">
     		<button
 	    	md-raised-button 
+	    	(click)="onSubmit()"
 	    	color="primary" type="submit"> 
 	    	{{ 'add-watch' | translate:{value: param} }}
 	    	</button>
@@ -140,7 +135,9 @@
 
 		<div [hidden]="watchModel.id===null">
 	    	<button
-	    	md-raised-button color="accent" type="submit"> 
+	    	md-raised-button color="accent" type="submit"
+	    	(click)="onSubmit()"
+	    	> 
 	    	{{ 'update-watch' | translate:{value: param} }}
 	    	</button>
 

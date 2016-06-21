@@ -174,11 +174,20 @@ export declare class TwAPIService {
      * @return {Promise<Watch>}
      */
     deleteMeasure(watch: Watch, measure: Measure): Promise<Watch>;
+    /**
+     * Return known brands
+     * @return {Promise}
+     */
     getBrands(): Promise<[{
         name: string;
         icon: string;
         models: string;
     }]>;
+    /**
+     * Returns model of a given brand
+     * @param  {string}  brand
+     * @return {Promise}
+     */
     getModels(brand: string): Promise<[string]>;
     /**
      * Retrieve atomic clock time adjusted for network latency

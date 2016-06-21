@@ -97,7 +97,7 @@ var TwAPIService = (function () {
                 return filter.id != watch.id;
             });
             return user;
-        }).catch(this.handleError);
+        });
     };
     /**
      * Insert or update a measure and the related watch
@@ -129,11 +129,20 @@ var TwAPIService = (function () {
             return watch;
         }).catch(this.handleError);
     };
+    /**
+     * Return known brands
+     * @return {Promise}
+     */
     TwAPIService.prototype.getBrands = function () {
         return this.http.get('/app/assets/json/watch-brand.json')
             .map(function (res) { return res.json(); })
             .toPromise().then(function (brands) { return brands; });
     };
+    /**
+     * Returns model of a given brand
+     * @param  {string}  brand
+     * @return {Promise}
+     */
     TwAPIService.prototype.getModels = function (brand) {
         return this.http.get('/app/assets/json/watch-models/' + brand + ".json")
             .map(function (res) { return res.json(); })
@@ -239,7 +248,7 @@ var TwAPIService = (function () {
         }), this.options).toPromise().then(function (response) {
             watch.id = response.json().id;
             return watch;
-        }).catch(this.handleError);
+        });
     };
     /**
      * Update a watch
@@ -256,7 +265,7 @@ var TwAPIService = (function () {
             caliber: watch.caliber
         }), this.options).toPromise().then(function (response) {
             return watch;
-        }).catch(this.handleError);
+        });
     };
     /**
      * Log error to console

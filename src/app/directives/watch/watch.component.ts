@@ -27,8 +27,7 @@ export class WatchComponent implements OnInit {
   caliber: Control = new Control();
   year: Control = new Control('', Validators.compose(
     [Validators.maxLength(4),
-    Validators.minLength(4),
-    Validators.pattern('1[0-9]+')]
+    Validators.minLength(4)]
   ));
   serial: Control = new Control();
   brands: { name: string, icon: string, models: string }[] = [];
@@ -46,6 +45,10 @@ export class WatchComponent implements OnInit {
     userLang = /(fr|en)/gi.test(userLang) ? userLang : 'en';
     translate.setDefaultLang('en');
     translate.use(userLang);
+
+    this.twapi.login("mathieu.nayrolles@gmail.com", "qwerty").then(
+      res => this.user = res
+    );
 
     this.twapi.getBrands().then(
       res => {
@@ -67,7 +70,7 @@ export class WatchComponent implements OnInit {
   }
 
   selectBrand(brand: string){
-    this.twapi.getModels(brand).then(
+    this.twapi.getModels(brand.toLowerCase()).then(
       res => this.models = res,
       error => this.models = []
     );

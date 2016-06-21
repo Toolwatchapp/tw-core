@@ -15,6 +15,9 @@ import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
   providers: [TwAPIService, HTTP_PROVIDERS],
   directives: [FORM_DIRECTIVES, MD_BUTTON_DIRECTIVES]
 })
+/**
+ * From to add, delete and update watches
+ */
 export class WatchComponent implements OnInit {
 
   @Input() watchModel: Watch;
@@ -37,6 +40,12 @@ export class WatchComponent implements OnInit {
   error:boolean = false;
   submitAttempt:boolean = false;
 
+  /**
+   * Constructor with DI
+   * @param {TranslateService} private translate [description]
+   * @param {TwAPIService}     private twapi     [description]
+   * @param {FormBuilder}      private builder   [description]
+   */
   constructor(private translate: TranslateService,
     private twapi: TwAPIService, private builder: FormBuilder) {
     //use navigator lang if available
@@ -46,16 +55,14 @@ export class WatchComponent implements OnInit {
     translate.setDefaultLang('en');
     translate.use(userLang);
 
-    this.twapi.login("mathieu.nayrolles@gmail.com", "qwerty").then(
-      res => this.user = res
-    );
-
+    //Get the known brands
     this.twapi.getBrands().then(
       res => {
         this.brands = res;
       }
     );
 
+    //Construct form
     this.watchForm = builder.group({
       brand: this.brand,
       model: this.model,
@@ -64,11 +71,16 @@ export class WatchComponent implements OnInit {
       serial: this.serial
     });
 
+    //Create an empty watch if none was passed
     if(this.watchModel === undefined){
       this.watchModel = new Watch(null, null);
     }
   }
 
+  /**
+   * [selectBrand description]
+   * @param {string} brand [description]
+   */
   selectBrand(brand: string){
     this.twapi.getModels(brand.toLowerCase()).then(
       res => this.models = res,

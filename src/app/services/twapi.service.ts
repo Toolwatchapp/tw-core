@@ -6,6 +6,7 @@ import { User }  from './../models/user.model';
 import { Watch }  from './../models/watch.model';
 import { Measure, MeasureStatus }  from './../models/measure.model';
 import { ModelFactory }  from './../models/model.factory';
+import { BlogPost } from './../models/blog-post.model'
 
 import 'rxjs/add/operator/toPromise';
 
@@ -309,6 +310,16 @@ export class TwAPIService {
 				return watch;
 			}
 		).catch(this.handleError);
+	}
+
+	getBlogPosts(): Promise<BlogPost[]>{
+		return this.http.get(
+			"https://blog.toolwatch.io/?json=1"
+		)
+		.map((res) => { return ModelFactory.buildPosts(res.json()); })
+		.toPromise().then(
+			res => res
+		);
 	}
 
 	/**

@@ -1,9 +1,10 @@
 import { User, }  from './user.model';
 import { Watch }  from './watch.model';
+import { BlogPost }  from './blog-post.model';
 import { Measure, MeasureStatus }  from './measure.model';
 import { Injectable } from '@angular/core';
 
-export class ModelFactory{
+export class ModelFactory {
 
 
 	/**
@@ -52,6 +53,24 @@ export class ModelFactory{
 				jsonWatch.serial,
 				jsonWatch.caliber
 			)
+		});
+	}
+
+	/**
+	 * Builds Json post from json response
+	 * @param  {any}        jsonPosts [description]
+	 * @return {BlogPost[]}           [description]
+	 */
+	static buildPosts(jsonPosts: any): BlogPost[]{
+		return jsonPosts.posts.map(function(jsonPost) {
+
+			return new BlogPost(
+				jsonPost.id, 
+				jsonPost.title, 
+				new Date(jsonPost.date), 
+				jsonPost.excerpt,
+				jsonPost.url
+			);
 		});
 	}
 }

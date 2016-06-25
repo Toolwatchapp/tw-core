@@ -9,8 +9,15 @@ export declare class Watch {
     serial: string;
     caliber: string;
     status: WatchStatus;
+    next: WatchAction;
+    waiting: number;
     constructor(id: number, brand: string, historySize?: number, measures?: Measure[], name?: string, yearOfBuy?: number, serial?: string, caliber?: string);
     currentMeasure(): Measure;
+}
+export declare enum WatchAction {
+    Measure = 0,
+    Waiting = 1,
+    Accuracy = 2,
 }
 export declare enum WatchStatus {
     None = 0,

@@ -55,13 +55,6 @@ export class WatchComponent implements OnInit {
     translate.setDefaultLang('en');
     translate.use(userLang);
 
-    //Get the known brands
-    this.twapi.getBrands().then(
-      res => {
-        this.brands = res;
-      }
-    );
-
     //Construct form
     this.watchForm = builder.group({
       brand: this.brand,
@@ -76,6 +69,16 @@ export class WatchComponent implements OnInit {
       this.watchModel = new Watch(null, null);
     }
   }
+
+  ngAfterViewInit() {
+    //Get the known brands
+    this.twapi.getBrands().then(
+      res => {
+        this.brands = res;
+      }
+    );
+  }
+
 
   /**
    * [selectBrand description]
@@ -115,7 +118,10 @@ export class WatchComponent implements OnInit {
 
     if (this.watchForm.valid) {
       this.twapi.upsertWatch(this.watchModel).then(
-        res => this.watchSaved.emit(res),
+        res => {
+          this.user.watches.push(res);
+          this.watchSaved.emit(this.user)
+        },
         error => this.error = true
       );
     }

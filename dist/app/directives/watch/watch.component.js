@@ -24,7 +24,6 @@ var WatchComponent = (function () {
      * @param {FormBuilder}      private builder   [description]
      */
     function WatchComponent(translate, twapi, builder) {
-        var _this = this;
         this.translate = translate;
         this.twapi = twapi;
         this.builder = builder;
@@ -47,10 +46,6 @@ var WatchComponent = (function () {
         userLang = /(fr|en)/gi.test(userLang) ? userLang : 'en';
         translate.setDefaultLang('en');
         translate.use(userLang);
-        //Get the known brands
-        this.twapi.getBrands().then(function (res) {
-            _this.brands = res;
-        });
         //Construct form
         this.watchForm = builder.group({
             brand: this.brand,
@@ -64,6 +59,13 @@ var WatchComponent = (function () {
             this.watchModel = new watch_model_1.Watch(null, null);
         }
     }
+    WatchComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        //Get the known brands
+        this.twapi.getBrands().then(function (res) {
+            _this.brands = res;
+        });
+    };
     /**
      * [selectBrand description]
      * @param {string} brand [description]
@@ -94,7 +96,10 @@ var WatchComponent = (function () {
         var _this = this;
         this.submitAttempt = true;
         if (this.watchForm.valid) {
-            this.twapi.upsertWatch(this.watchModel).then(function (res) { return _this.watchSaved.emit(res); }, function (error) { return _this.error = true; });
+            this.twapi.upsertWatch(this.watchModel).then(function (res) {
+                _this.user.watches.push(res);
+                _this.watchSaved.emit(_this.user);
+            }, function (error) { return _this.error = true; });
         }
     };
     WatchComponent.prototype.onDelete = function () {

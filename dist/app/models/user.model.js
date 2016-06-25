@@ -12,6 +12,15 @@ var User = (function () {
         this.key = key;
         this.watches = watches;
     }
+    User.prototype.upsertWatch = function (watch) {
+        for (var i = 0; i < this.watches.length; i++) {
+            if (this.watches[i].id == watch.id) {
+                this.watches[i] = watch;
+                return;
+            }
+        }
+        this.watches.push(watch);
+    };
     return User;
 }());
 exports.User = User;

@@ -25,6 +25,18 @@ export class User{
 		this.watches = watches;
 	}
 
+	upsertWatch(watch:Watch){
+		for (var i = 0; i < this.watches.length; i++) {
+
+			if(this.watches[i].id == watch.id){
+				this.watches[i] = watch;
+				return;
+			}
+		}
+
+		this.watches.push(watch);
+	}
+
 }
 
 export enum EmailPreferences {

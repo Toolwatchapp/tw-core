@@ -19,9 +19,6 @@ var TwAPIService = (function () {
      */
     function TwAPIService(http) {
         this.http = http;
-        //Defines headers and request options
-        this.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
-        this.options = new http_1.RequestOptions({ headers: this.headers });
         this.baseUrl = "http://localhost/api/";
     }
     /**
@@ -31,14 +28,14 @@ var TwAPIService = (function () {
      * @return {Promise<User>}
      */
     TwAPIService.prototype.login = function (email, password) {
-        var _this = this;
         var creds = { email: email, password: password };
-        return this.http.put(this.baseUrl + "users", JSON.stringify(creds), this.options)
+        return this.http.put(this.baseUrl + "users", JSON.stringify(creds), TwAPIService.options)
             .map(function (res) { return model_factory_1.ModelFactory.buildUser(res.json()); })
             .toPromise().then(function (res) {
             TwAPIService.apikey = res.key;
-            _this.headers.delete('X-API-KEY');
-            _this.headers.append('X-API-KEY', TwAPIService.apikey);
+            TwAPIService.headers.delete('X-API-KEY');
+            TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
+            TwAPIService.user = res;
             return res;
         });
     };
@@ -58,7 +55,7 @@ var TwAPIService = (function () {
             name: name,
             lastname: lastname,
             country: country
-        }), this.options)
+        }), TwAPIService.options)
             .map(function (res) { return model_factory_1.ModelFactory.buildUser(res.json()); })
             .toPromise().then(function (res) { return res; });
     };
@@ -67,7 +64,7 @@ var TwAPIService = (function () {
      * @return {Promise<boolean>}
      */
     TwAPIService.prototype.deleteAccount = function () {
-        return this.http.delete(this.baseUrl + "users", this.options).toPromise().then(function (response) { return true; }).catch(this.handleError);
+        return this.http.delete(this.baseUrl + "users", TwAPIService.options).toPromise().then(function (response) { return true; }).catch(this.handleError);
     };
     /**
      * Update or insert a watch
@@ -89,7 +86,7 @@ var TwAPIService = (function () {
      * @return {Promise<User>}
      */
     TwAPIService.prototype.deleteWatch = function (user, watch) {
-        var deleteOptions = new http_1.RequestOptions({ headers: this.headers });
+        var deleteOptions = new http_1.RequestOptions({ headers: TwAPIService.headers });
         deleteOptions.body = JSON.stringify({ watchId: watch.id });
         return this.http.delete(this.baseUrl + "watches", deleteOptions).toPromise().then(function (response) {
             user.watches = user.watches.filter(function (filter) {
@@ -119,7 +116,7 @@ var TwAPIService = (function () {
      * @return {Promise<Watch>}
      */
     TwAPIService.prototype.deleteMeasure = function (watch, measure) {
-        var deleteOptions = new http_1.RequestOptions({ headers: this.headers });
+        var deleteOptions = new http_1.RequestOptions({ headers: TwAPIService.headers });
         deleteOptions.body = JSON.stringify({ measureId: measure.id });
         return this.http.delete(this.baseUrl + "measures", deleteOptions).toPromise().then(function (response) {
             watch.measures = watch.measures.filter(function (filter) {
@@ -138,7 +135,7 @@ var TwAPIService = (function () {
      * @return {Promise}
      */
     TwAPIService.prototype.getBrands = function () {
-        return this.http.get('/app/assets/json/watch-brand.json')
+        return this.http.get(TwAPIService.assetsUrl + '/json/watch-brand.json')
             .map(function (res) { return res.json(); })
             .toPromise().then(function (brands) { return brands; });
     };
@@ -148,7 +145,7 @@ var TwAPIService = (function () {
      * @return {Promise}
      */
     TwAPIService.prototype.getModels = function (brand) {
-        return this.http.get('/app/assets/json/watch-models/' + brand + ".json")
+        return this.http.get(TwAPIService.assetsUrl + '/json/watch-models/' + brand + ".json")
             .map(function (res) { return res.json(); })
             .toPromise().then(function (models) { return models; });
     };
@@ -160,44 +157,59 @@ var TwAPIService = (function () {
      */
     TwAPIService.prototype.accurateTime = function (statusCallback, precison) {
         if (precison === void 0) { precison = 10; }
-        //Stores each Promise in array
-        var promises = [];
-        for (var i = 0; i < precison; ++i) {
-            promises.push(this.fetchTime(statusCallback));
+        //If we aren't already sync'ed
+        if (TwAPIService.time === undefined) {
+            //Stores each Promise in array
+            var promises = [];
+            for (var i = 0; i < precison; ++i) {
+                promises.push(this.fetchTime(statusCallback));
+            }
+            /**
+             * Promise.all() is the Promise equivalent of thread.join().
+             * It'll wait for all promises to be received.
+             *
+             * Returns a date adjusted w/ the median offset between
+             * atomic clock and js time.
+             * The offset received in each promise also accounts for
+             * the network roundtrip time.
+             */
+            return Promise.all(promises).then(function (results) {
+                results.sort(function (a, b) { return a - b; });
+                var half = Math.floor(results.length / 2);
+                var medianOffset;
+                if (results.length % 2) {
+                    medianOffset = results[half];
+                }
+                else {
+                    medianOffset = (results[half - 1] + results[half]) / 2.0;
+                }
+                TwAPIService.time = {
+                    syncDate: new Date(Date.now() - medianOffset),
+                    syncAnchor: window.performance.now()
+                };
+                return new Date(Date.now() - medianOffset);
+            });
         }
-        /**
-         * Promise.all() is the Promise equivalent of thread.join().
-         * It'll wait for all promises to be received.
-         *
-         * Returns a date adjusted w/ the median offset between
-         * atomic clock and js time.
-         * The offset received in each promise also accounts for
-         * the network roundtrip time.
-         */
-        return Promise.all(promises).then(function (results) {
-            results.sort(function (a, b) { return a - b; });
-            var half = Math.floor(results.length / 2);
-            var medianOffset;
-            if (results.length % 2) {
-                medianOffset = results[half];
-            }
-            else {
-                medianOffset = (results[half - 1] + results[half]) / 2.0;
-            }
-            return new Date(Date.now() - medianOffset);
-        });
+        else {
+            TwAPIService.time.syncDate = new Date(TwAPIService.time.syncDate.getTime() +
+                window.performance.now() - TwAPIService.time.syncAnchor);
+            TwAPIService.time.syncAnchor = window.performance.now();
+            return new Promise(function (resolve, reject) {
+                resolve(TwAPIService.time.syncDate);
+            });
+        }
     };
     /**
      * Fetch offset between atomic clock and js time
      * @param {() => void} statusCallback
      */
     TwAPIService.prototype.fetchTime = function (statusCallback) {
-        var beforeTime = Date.now();
-        return this.http.get(this.baseUrl + "time", this.options).toPromise().then(function (response) {
+        var beforeTime = window.performance.now();
+        return this.http.get(this.baseUrl + "time", TwAPIService.options).toPromise().then(function (response) {
             if (statusCallback !== undefined) {
                 statusCallback();
             }
-            var now = Date.now();
+            var now = window.performance.now();
             var timeDiff = (now - beforeTime) / 2;
             var serverTime = response.json().time - timeDiff;
             return Date.now() - serverTime;
@@ -214,7 +226,7 @@ var TwAPIService = (function () {
             measureId: measure.id,
             referenceTime: measure.accuracyReferenceTime,
             userTime: measure.accuracyUserTime
-        }), this.options).toPromise().then(function (response) {
+        }), TwAPIService.options).toPromise().then(function (response) {
             var json = response.json();
             measure.addAccuracy(json.accuracy, json.accuracyAge, json.percentile);
             return watch;
@@ -231,7 +243,7 @@ var TwAPIService = (function () {
             watchId: watch.id,
             referenceTime: measure.measureReferenceTime,
             userTime: measure.measureUserTime
-        }), this.options).toPromise().then(function (response) {
+        }), TwAPIService.options).toPromise().then(function (response) {
             measure.id = response.json().measureId;
             watch.measures.push(measure);
             return watch;
@@ -249,7 +261,7 @@ var TwAPIService = (function () {
             yearOfBuy: watch.yearOfBuy,
             serial: watch.serial,
             caliber: watch.caliber
-        }), this.options).toPromise().then(function (response) {
+        }), TwAPIService.options).toPromise().then(function (response) {
             watch.id = response.json().id;
             return watch;
         });
@@ -267,7 +279,7 @@ var TwAPIService = (function () {
             yearOfBuy: watch.yearOfBuy,
             serial: watch.serial,
             caliber: watch.caliber
-        }), this.options).toPromise().then(function (response) {
+        }), TwAPIService.options).toPromise().then(function (response) {
             return watch;
         });
     };
@@ -398,6 +410,10 @@ var TwAPIService = (function () {
     TwAPIService.HTTP_LOOP_DETECTED = 508; // RFC5842
     TwAPIService.HTTP_NOT_EXTENDED = 510; // RFC2774
     TwAPIService.HTTP_NETWORK_AUTHENTICATION_REQUIRED = 511;
+    //Defines headers and request options
+    TwAPIService.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+    TwAPIService.options = new http_1.RequestOptions({ headers: TwAPIService.headers });
+    TwAPIService.assetsUrl = "app/assets";
     TwAPIService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])

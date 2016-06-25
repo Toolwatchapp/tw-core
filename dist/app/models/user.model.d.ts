@@ -10,6 +10,7 @@ export declare class User {
     watches: Watch[];
     emailPreferences: EmailPreferences;
     constructor(id: number, email: string, name: string, lastname: string, country: string, registerDate: string, key: string, watches: Watch[]);
+    upsertWatch(watch: Watch): void;
 }
 export declare enum EmailPreferences {
     None = 0,

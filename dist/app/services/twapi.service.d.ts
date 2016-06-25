@@ -116,9 +116,12 @@ export declare class TwAPIService {
     static HTTP_LOOP_DETECTED: number;
     static HTTP_NOT_EXTENDED: number;
     static HTTP_NETWORK_AUTHENTICATION_REQUIRED: number;
-    private headers;
-    private options;
+    static user: User;
+    private static time;
+    private static headers;
+    private static options;
     private baseUrl;
+    static assetsUrl: string;
     private static apikey;
     /**
      * Inject http service

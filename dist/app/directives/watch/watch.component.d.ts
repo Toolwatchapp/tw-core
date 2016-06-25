@@ -38,6 +38,7 @@ export declare class WatchComponent implements OnInit {
      * @param {FormBuilder}      private builder   [description]
      */
     constructor(translate: TranslateService, twapi: TwAPIService, builder: FormBuilder);
+    ngAfterViewInit(): void;
     /**
      * [selectBrand description]
      * @param {string} brand [description]

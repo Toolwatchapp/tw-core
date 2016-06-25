@@ -148,11 +148,18 @@ export class TwAPIService {
     public static HTTP_NOT_EXTENDED = 510;                                                // RFC2774
     public static HTTP_NETWORK_AUTHENTICATION_REQUIRED = 511;
 
+    public static user:User;
+    private static time:{
+    	syncDate:Date,
+    	syncAnchor:number;
+    }
+
 	//Defines headers and request options
-	private headers: Headers = new Headers({ 'Content-Type': 'application/json' });
-	private options: RequestOptions = new RequestOptions({ headers: this.headers });
+	private static headers: Headers = new Headers({ 'Content-Type': 'application/json' });
+	private static options: RequestOptions = new RequestOptions({ headers: TwAPIService.headers });
 	
 	private baseUrl:string = "http://localhost/api/";
+	public static assetsUrl = "app/assets"
 	private static apikey:string;
 
 	/**
@@ -173,14 +180,15 @@ export class TwAPIService {
 		return this.http.put(
 			this.baseUrl + "users", 
 			JSON.stringify(creds), 
-			this.options
+			TwAPIService.options
 		)
 		.map((res) => { return ModelFactory.buildUser(res.json()); })
 		.toPromise().then(
 			res => {
 				TwAPIService.apikey = res.key;
-				this.headers.delete('X-API-KEY');
-				this.headers.append('X-API-KEY', TwAPIService.apikey);
+				TwAPIService.headers.delete('X-API-KEY');
+				TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
+				TwAPIService.user = res;
 				return res;
 			}
 		)
@@ -206,7 +214,7 @@ export class TwAPIService {
 				lastname: lastname,
 				country:country
 			}),
-			this.options
+			TwAPIService.options
 		)
 		.map((res) => { return ModelFactory.buildUser(res.json()); })
 		.toPromise().then(
@@ -222,7 +230,7 @@ export class TwAPIService {
 
 		return this.http.delete(
 			this.baseUrl + "users",
-			this.options
+			TwAPIService.options
 		).toPromise().then(
 			response => true
 		).catch(this.handleError);
@@ -249,7 +257,7 @@ export class TwAPIService {
 	 * @return {Promise<User>}       
 	 */
 	deleteWatch(user:User, watch:Watch):Promise<User>{
-		let deleteOptions = new RequestOptions({ headers: this.headers });
+		let deleteOptions = new RequestOptions({ headers: TwAPIService.headers });
 		deleteOptions.body = JSON.stringify({ watchId: watch.id });
 
 		return this.http.delete(
@@ -291,7 +299,7 @@ export class TwAPIService {
 	 */
 	deleteMeasure(watch: Watch, measure: Measure): Promise<Watch> {
 
-		let deleteOptions = new RequestOptions({ headers: this.headers });
+		let deleteOptions = new RequestOptions({ headers: TwAPIService.headers });
 		deleteOptions.body = JSON.stringify({measureId:measure.id});
 
 		return this.http.delete(
@@ -326,7 +334,7 @@ export class TwAPIService {
 	 */
 	getBrands(): Promise<[{ name: string, icon: string, models:string}]> {
 		return this.http.get(
-			'/app/assets/json/watch-brand.json')
+			TwAPIService.assetsUrl + '/json/watch-brand.json')
 		.map(res => res.json())
 		.toPromise().then(
 			brands => brands
@@ -340,7 +348,7 @@ export class TwAPIService {
 	 */
 	getModels(brand:string): Promise<[string]> {
 		return this.http.get(
-			'/app/assets/json/watch-models/'+brand+".json")
+			TwAPIService.assetsUrl + '/json/watch-models/' + brand + ".json")
 			.map(res => res.json())
 			.toPromise().then(
 			models => models
@@ -356,35 +364,58 @@ export class TwAPIService {
 	accurateTime(statusCallback?:()=>void, 
 		precison:number = 10): Promise<Date>{
 
-		//Stores each Promise in array
-		let promises:Promise<number>[] = [];
-		for (var i = 0; i < precison; ++i) {
-			promises.push(this.fetchTime(statusCallback));
-		}
-
-		/**
-		 * Promise.all() is the Promise equivalent of thread.join().
-		 * It'll wait for all promises to be received. 
-		 *
-		 * Returns a date adjusted w/ the median offset between 
-		 * atomic clock and js time. 
-		 * The offset received in each promise also accounts for
-		 * the network roundtrip time.
-		 */
-		return Promise.all(promises).then((results:any[]) => {
-			results.sort(function(a: any, b: any) { return a - b; });
-
-			let half: number = Math.floor(results.length / 2);
-			let medianOffset;
-
-			if (results.length % 2) {
-				medianOffset = results[half];
-			} else {
-				medianOffset = (results[half - 1] + results[half]) / 2.0;
+		//If we aren't already sync'ed
+		if(TwAPIService.time === undefined){
+			//Stores each Promise in array
+			let promises:Promise<number>[] = [];
+			for (var i = 0; i < precison; ++i) {
+				promises.push(this.fetchTime(statusCallback));
 			}
 
-			return new Date(Date.now() - medianOffset);
-		});
+			/**
+			 * Promise.all() is the Promise equivalent of thread.join().
+			 * It'll wait for all promises to be received. 
+			 *
+			 * Returns a date adjusted w/ the median offset between 
+			 * atomic clock and js time. 
+			 * The offset received in each promise also accounts for
+			 * the network roundtrip time.
+			 */
+			return Promise.all(promises).then((results:any[]) => {
+				results.sort(function(a: any, b: any) { return a - b; });
+
+				let half: number = Math.floor(results.length / 2);
+				let medianOffset;
+
+				if (results.length % 2) {
+					medianOffset = results[half];
+				} else {
+					medianOffset = (results[half - 1] + results[half]) / 2.0;
+				}
+
+				TwAPIService.time = {
+					syncDate: new Date(Date.now() - medianOffset),
+					syncAnchor: window.performance.now()
+				};
+
+				return new Date(Date.now() - medianOffset);
+			});
+		//Only compute the difference from last time;
+		}else{
+
+			TwAPIService.time.syncDate = new Date(
+				TwAPIService.time.syncDate.getTime() +
+				window.performance.now() - TwAPIService.time.syncAnchor
+			);
+			
+			TwAPIService.time.syncAnchor = window.performance.now();
+
+			return new Promise<Date>(
+				(resolve, reject) => { 
+					resolve(TwAPIService.time.syncDate); 
+				}
+			);
+		}
 	}
 
 	/**
@@ -394,17 +425,17 @@ export class TwAPIService {
 	private fetchTime(statusCallback?: () => void)
 		: Promise<number> {
 
-		let beforeTime: number = Date.now();
+		let beforeTime: number = window.performance.now();
 		return this.http.get(
 			this.baseUrl + "time",
-			this.options).toPromise().then(
+			TwAPIService.options).toPromise().then(
 			response => {
 
 				if (statusCallback !== undefined){
 					statusCallback();
 				}
 
-				let now: number = Date.now();
+				let now: number = window.performance.now();
 				let timeDiff = (now - beforeTime) / 2;
 				let serverTime = response.json().time - timeDiff;
 				return Date.now() - serverTime;
@@ -426,7 +457,7 @@ export class TwAPIService {
 				referenceTime: measure.accuracyReferenceTime,
 				userTime: measure.accuracyUserTime
 			}),
-			this.options
+			TwAPIService.options
 		).toPromise().then(
 			response => {
 				let json = response.json();
@@ -450,7 +481,7 @@ export class TwAPIService {
 				referenceTime: measure.measureReferenceTime,
 				userTime: measure.measureUserTime
 			}),
-			this.options
+			TwAPIService.options
 		).toPromise().then(
 			response => {
 				measure.id = response.json().measureId;
@@ -475,7 +506,7 @@ export class TwAPIService {
 				serial: watch.serial,
 				caliber:watch.caliber
 			}),
-			this.options
+			TwAPIService.options
 		).toPromise().then(
 			response => {
 				watch.id = response.json().id;
@@ -500,7 +531,7 @@ export class TwAPIService {
 				serial: watch.serial,
 				caliber: watch.caliber
 			}),
-			this.options
+			TwAPIService.options
 		).toPromise().then(
 			response => {
 				return watch;

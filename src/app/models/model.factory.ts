@@ -42,7 +42,7 @@ export class ModelFactory {
 						jsonMeasure.id,
 						jsonMeasure.measureUserTime,
 						jsonMeasure.measureReferenceTime,
-						jsonMeasure.status,
+						jsonMeasure.statusId,
 						jsonMeasure.accuracyUserTime,
 						jsonMeasure.accuracyReferenceTime,
 						jsonMeasure.accuracy,

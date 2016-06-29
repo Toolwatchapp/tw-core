@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
+var watch_model_1 = require('./../models/watch.model');
 var model_factory_1 = require('./../models/model.factory');
 require('rxjs/add/operator/toPromise');
 var TwAPIService = (function () {
@@ -150,6 +151,13 @@ var TwAPIService = (function () {
             .toPromise().then(function (models) { return models; });
     };
     /**
+     * Gets the previously computed offset
+     * @return {number} [description]
+     */
+    TwAPIService.prototype.getOffsetTime = function () {
+        return TwAPIService.time.offset;
+    };
+    /**
      * Retrieve atomic clock time adjusted for network latency
      * @param  {()=>void} statusCallback Called at each partial complete
      * @param  {number = 0} precison How many calls we want to aveage
@@ -157,6 +165,7 @@ var TwAPIService = (function () {
      */
     TwAPIService.prototype.accurateTime = function (statusCallback, precison) {
         if (precison === void 0) { precison = 10; }
+        console.log("in");
         //If we aren't already sync'ed
         if (TwAPIService.time === undefined) {
             //Stores each Promise in array
@@ -185,9 +194,11 @@ var TwAPIService = (function () {
                 }
                 TwAPIService.time = {
                     syncDate: new Date(Date.now() - medianOffset),
-                    syncAnchor: window.performance.now()
+                    syncAnchor: window.performance.now(),
+                    offset: medianOffset
                 };
-                return new Date(Date.now() - medianOffset);
+                console.log(TwAPIService.time);
+                return TwAPIService.time.syncDate;
             });
         }
         else {
@@ -195,6 +206,7 @@ var TwAPIService = (function () {
                 window.performance.now() - TwAPIService.time.syncAnchor);
             TwAPIService.time.syncAnchor = window.performance.now();
             return new Promise(function (resolve, reject) {
+                console.log(TwAPIService.time);
                 resolve(TwAPIService.time.syncDate);
             });
         }
@@ -227,8 +239,10 @@ var TwAPIService = (function () {
             referenceTime: measure.accuracyReferenceTime,
             userTime: measure.accuracyUserTime
         }), TwAPIService.options).toPromise().then(function (response) {
-            var json = response.json();
+            var json = response.json().result;
             measure.addAccuracy(json.accuracy, json.accuracyAge, json.percentile);
+            watch.upsertMeasure(measure);
+            watch.next = watch_model_1.WatchAction.Measure;
             return watch;
         }).catch(this.handleError);
     };

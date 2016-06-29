@@ -11,13 +11,14 @@ export class ClockComponent implements OnInit {
 
   month:string;
   day:string;
+  date:Date;
   monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   constructor(private elementRef: ElementRef) {
 
-	var d:Date = new Date();
-	this.month = this.monthNames[d.getMonth()];
-	this.day = this.dayNames[d.getDay()] + " " + d.getDay();
+	this.date = new Date();
+	this.month = this.monthNames[this.date.getMonth()];
+	this.day = this.dayNames[this.date.getDay()] + " " + this.date.getDay();
   }
 
   ngAfterViewInit() {
@@ -26,11 +27,9 @@ export class ClockComponent implements OnInit {
 
   initLocalClocks() {
 
-	// Get the local time using JS
-	var date = new Date;
-	var seconds = date.getSeconds();
-	var minutes = date.getMinutes();
-	var hours = date.getHours();
+	var seconds = this.date.getSeconds();
+	var minutes = this.date.getMinutes();
+	var hours = this.date.getHours();
 
 	// Create an object with each hand and it's angle in degrees
 	var hands = [

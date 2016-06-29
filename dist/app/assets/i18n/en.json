@@ -37,7 +37,7 @@
 	"about": "About",
 	"never-measured": "Measure your watch now",
 	"spd": "seconds per day",
-	"waiting": "Measure in ",
+	"waiting": "Check accuracy in ",
 	"hours": "hour(s)",
 	"new-measure": "Measure now",
 	"check-accuracy": "Check accuracy",
@@ -52,6 +52,21 @@
 	"sync-confirm-action": "All good, take me home scotty",
 	"plus-minus-explain": "One does not simply have a timepiece without drift! Press the following buttons to add/retrieve a minute.",
 	"12-hours-explain": "In order for the measure to be precise, you must wait at least 12 hours before checking back your measure. Don't worry, we will send you an email to remind you. In the meantime, enjoy wearing your timepiece !",
-	"back-dashboard": "Back to the dashboard"
+	"back-dashboard": "Back to the dashboard",
+	"share-text": "My watch is more accurate than {X}% of all tested watches on @ToolWatchApp",
+	"congratulation": "Congratulation",
+	"accuracy-result": "Your {watch} runs at {x} spd",
+	"percentil-result": "and is more accurate than {x}% of all the tested watches.",
+	"share-result": "DON'T KEEP THIS GOLDMINE JUST FOR YOU, SHARE IT ;)",
+	"share-action": "Share",
+	"select-measure": "select your watch",
+	"atomic-sync": "ATOMIC TIME SYNCED",
+	"leap-year": "NEXT LEAP YEAR",
+	"about-tw-title":" About Toolwatch", 
+	"about-tw": "Toolwatch is the most convenient and easy way to measure the accuracy of your mechanical watch. Accuracy has always been the holy grail of watchmaking. Throughout the ages, watchmakers have been competing for building the most accurate and precise watch movement but the consumers do not have the tools to appreciate that effort. Now, with Toolwatch, every watch enthusiast is able to keep an eye on the accuracy of his watch(es)!",
+	"about-why-tw-title": "Why using Toolwatch?",
+	"about-why-tw": "Professional tools used by watchmakers are expensive (Toolwatch is free!) and heavy (Toolwatch is light!) and measure the watch in different positions (up, down, on a side etc) that do not reflect the actual way the watch is worn by its possessor. With Toolwatch, the accuracy is measured following your lifestyle. Unlike measuring by yourself, Toolwatch calculates for you the accuracy of your watch anytime and anywhere in an easy to use and reliable way.",
+	"about-works-title": "How it works?",
+	"about-works":"Toolwatch synchronizes your browser with the U. S. Naval Observatory's atomic clocks cluster which produces a weighted average of several commercial atomic frequency standards. It is dominated by six active hydrogen masers, there are also a number of commercial cesium beam-tube standards in the cluster. We also account for the networking time between you and Toolwatch' servers. To put it simply, we do not use your computer clock but the most accurate atomic clock on earth to synchronize your timepieces."
 }
 

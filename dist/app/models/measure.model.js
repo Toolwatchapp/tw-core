@@ -32,6 +32,7 @@ var Measure = (function () {
         this.status |= MeasureStatus.AccuracyMeasure;
     };
     Measure.prototype.addAccuracy = function (accuracy, accuracyAge, percentile) {
+        console.log("addAccuracy", accuracy, accuracyAge, percentile);
         this.accuracy = accuracy;
         this.accuracyAge = accuracyAge;
         this.percentile = percentile;

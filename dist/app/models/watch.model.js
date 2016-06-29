@@ -26,13 +26,20 @@ var Watch = (function () {
         }
         var lastMeasure = this.currentMeasure();
         if (lastMeasure !== null
-            && lastMeasure.status == measure_model_1.MeasureStatus.BaseMeasure) {
-            if ((lastMeasure.measureUserTime - Date.now() / 3600) < 12) {
+            && lastMeasure.status & measure_model_1.MeasureStatus.BaseMeasure) {
+            console.log(lastMeasure.measureUserTime, Date.now());
+            console.log(lastMeasure.measureUserTime - Date.now() / 1000);
+            console.log((lastMeasure.measureUserTime - Date.now() / 1000) / 3600);
+            console.log(Math.abs((lastMeasure.measureUserTime - Date.now() / 1000) / 3600));
+            if (Math.abs((lastMeasure.measureUserTime - Date.now() / 1000) / 3600) < 12) {
                 this.next = WatchAction.Waiting;
-                this.waiting = Math.round(12 - (lastMeasure.measureUserTime - Date.now()) / 3600);
+                this.waiting = Math.round(12 - Math.abs((lastMeasure.measureUserTime - Date.now() / 1000) / 3600));
+            }
+            else if (!(lastMeasure.status & measure_model_1.MeasureStatus.AccuracyMeasure)) {
+                this.next = WatchAction.Accuracy;
             }
             else {
-                this.next = WatchAction.Accuracy;
+                this.next = WatchAction.Measure;
             }
         }
     }
@@ -43,6 +50,20 @@ var Watch = (function () {
         else {
             return null;
         }
+    };
+    Watch.prototype.upsertMeasure = function (measure) {
+        console.log("this", this);
+        console.log("measure", measure);
+        for (var i = 0; i < this.measures.length; i++) {
+            console.log("i", i);
+            if (this.measures[i].id == measure.id) {
+                this.measures[i] = measure;
+                console.log("return", this, this.measures[i], measure);
+                return;
+            }
+        }
+        this.measures.push(measure);
+        console.log("this2", this);
     };
     return Watch;
 }());

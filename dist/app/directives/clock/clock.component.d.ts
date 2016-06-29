@@ -3,6 +3,7 @@ export declare class ClockComponent implements OnInit {
     private elementRef;
     month: string;
     day: string;
+    date: Date;
     monthNames: string[];
     dayNames: string[];
     constructor(elementRef: ElementRef);

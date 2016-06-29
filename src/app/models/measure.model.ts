@@ -52,6 +52,7 @@ export class Measure{
 	}
 
 	addAccuracy(accuracy:number, accuracyAge:number, percentile:number){
+		console.log("addAccuracy", accuracy,accuracyAge,percentile);
 		this.accuracy = accuracy;
 		this.accuracyAge = accuracyAge;
 		this.percentile = percentile;

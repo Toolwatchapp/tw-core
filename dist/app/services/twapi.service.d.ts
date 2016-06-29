@@ -194,6 +194,11 @@ export declare class TwAPIService {
      */
     getModels(brand: string): Promise<[string]>;
     /**
+     * Gets the previously computed offset
+     * @return {number} [description]
+     */
+    getOffsetTime(): number;
+    /**
      * Retrieve atomic clock time adjusted for network latency
      * @param  {()=>void} statusCallback Called at each partial complete
      * @param  {number = 0} precison How many calls we want to aveage

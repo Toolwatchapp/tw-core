@@ -12,5 +12,15 @@ export class BlogPost{
 		this.date = date;
 		this.excerpt = excerpt;
 		this.url = url;
+
+		this.excerpt = this.excerpt.replace('<p>', '')
+			.replace('</p>', '')
+			.replace(/<(?:.|\n)*?>/gm, '');
+
+		this.title = this.title.replace('&#8211;', '')
+			.replace('&#8220;', '')
+			.replace(/<(?:.|\n)*?>/gm, '');
+
+
 	}
 }

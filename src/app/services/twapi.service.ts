@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, HTTP_PROVIDERS, RequestOptions, Headers, Response }  from '@angular/http';
 import { User }  from './../models/user.model';
-import { Watch }  from './../models/watch.model';
+import { Watch, WatchAction }  from './../models/watch.model';
 import { Measure, MeasureStatus }  from './../models/measure.model';
 import { ModelFactory }  from './../models/model.factory';
 import { BlogPost } from './../models/blog-post.model'
@@ -151,7 +151,8 @@ export class TwAPIService {
     public static user:User;
     private static time:{
     	syncDate:Date,
-    	syncAnchor:number;
+    	syncAnchor:number,
+    	offset:number
     }
 
 	//Defines headers and request options
@@ -356,6 +357,14 @@ export class TwAPIService {
 	}
 
 	/**
+	 * Gets the previously computed offset
+	 * @return {number} [description]
+	 */
+	getOffsetTime():number{
+		return TwAPIService.time.offset;
+	}
+
+	/**
 	 * Retrieve atomic clock time adjusted for network latency
 	 * @param  {()=>void} statusCallback Called at each partial complete
 	 * @param  {number = 0} precison How many calls we want to aveage
@@ -363,6 +372,8 @@ export class TwAPIService {
 	 */
 	accurateTime(statusCallback?:()=>void, 
 		precison:number = 10): Promise<Date>{
+
+		console.log("in");
 
 		//If we aren't already sync'ed
 		if(TwAPIService.time === undefined){
@@ -395,10 +406,13 @@ export class TwAPIService {
 
 				TwAPIService.time = {
 					syncDate: new Date(Date.now() - medianOffset),
-					syncAnchor: window.performance.now()
+					syncAnchor: window.performance.now(),
+					offset:medianOffset
 				};
 
-				return new Date(Date.now() - medianOffset);
+				console.log(TwAPIService.time);
+
+				return TwAPIService.time.syncDate;
 			});
 		//Only compute the difference from last time;
 		}else{
@@ -412,6 +426,7 @@ export class TwAPIService {
 
 			return new Promise<Date>(
 				(resolve, reject) => { 
+					console.log(TwAPIService.time);
 					resolve(TwAPIService.time.syncDate); 
 				}
 			);
@@ -460,8 +475,10 @@ export class TwAPIService {
 			TwAPIService.options
 		).toPromise().then(
 			response => {
-				let json = response.json();
+				let json = response.json().result;
 				measure.addAccuracy(json.accuracy, json.accuracyAge, json.percentile);
+				watch.upsertMeasure(measure);
+				watch.next = WatchAction.Measure;
 				return watch;
 			}
 		).catch(this.handleError);

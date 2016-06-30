@@ -159,7 +159,7 @@ export class TwAPIService {
 	private static headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 	private static options: RequestOptions = new RequestOptions({ headers: TwAPIService.headers });
 	
-	private baseUrl:string = "http://localhost/api/";
+	private baseUrl:string = "https://tw-prepod-pr-170.herokuapp.com/";
 	public static assetsUrl = "app/assets"
 	private static apikey:string;
 

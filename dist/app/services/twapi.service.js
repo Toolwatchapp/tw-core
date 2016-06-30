@@ -20,7 +20,7 @@ var TwAPIService = (function () {
      */
     function TwAPIService(http) {
         this.http = http;
-        this.baseUrl = "http://localhost/api/";
+        this.baseUrl = "https://tw-prepod-pr-170.herokuapp.com/";
     }
     /**
      * Log a user using email and password

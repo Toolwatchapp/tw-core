@@ -8,19 +8,20 @@ export class BlogPost{
 	constructor(id: number, title: string, date: Date, excerpt: string, url: string){
 
 		this.id = id;
-		this.title = title;
+		this.title = this.decodeHTMLEntities(title);
 		this.date = date;
-		this.excerpt = excerpt;
+		this.excerpt = this.decodeHTMLEntities(excerpt);
 		this.url = url;
-
-		this.excerpt = this.excerpt.replace('<p>', '')
-			.replace('</p>', '')
-			.replace(/<(?:.|\n)*?>/gm, '');
-
-		this.title = this.title.replace('&#8211;', '')
-			.replace('&#8220;', '')
-			.replace(/<(?:.|\n)*?>/gm, '');
-
-
 	}
+
+	private decodeHTMLEntities(str:string) {
+
+    if(str && typeof str === 'string') {
+      str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+      str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+    }
+
+    return str;
+  }
+
 }

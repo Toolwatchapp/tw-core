@@ -73,6 +73,9 @@
 	"facebook-login": "Login with facebook",
 	"generic-share": "Discover the accuracy of your mechanical watch #toolwatch",
 	"logging-in": "We are logging you in",
-	"signin-slogan": "Fill the form bellow to create your account"
+	"signin-slogan": "Fill the form bellow to create your account",
+	"add-new-watch": "Add a new watch",
+	"edit-watch": "Edit or delete your watch"
+
 }
 

@@ -44,12 +44,9 @@ export class SignupComponent implements OnInit {
    */
   constructor(private translate: TranslateService, 
     private twapi: TwAPIService, private builder: FormBuilder) { 
-	  //use navigator lang if available
-    //Lang definition
-    var userLang = navigator.language.split('-')[0];
-    userLang = /(fr|en)/gi.test(userLang) ? userLang : 'en';
+
     translate.setDefaultLang('en');
-    translate.use(userLang);
+    translate.use('en');
 
     translate.get("countries").subscribe((result: [string]) => {
       this.countries = result;

@@ -38,10 +38,8 @@ export class LoginComponent implements OnInit {
     private twapi: TwAPIService, private builder: FormBuilder) { 
   	
     //Lang definition
-	  var userLang = navigator.language.split('-')[0]; 
-	  userLang = /(fr|en)/gi.test(userLang) ? userLang : 'en';
 	  translate.setDefaultLang('en');
-	  translate.use(userLang);
+	  translate.use('en');
 
     //Form constraints
     this.password = new Control('', Validators.required);

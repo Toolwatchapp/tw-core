@@ -48,12 +48,9 @@ export class WatchComponent implements OnInit {
    */
   constructor(private translate: TranslateService,
     private twapi: TwAPIService, private builder: FormBuilder) {
-    //use navigator lang if available
-    //Lang definition
-    var userLang = navigator.language.split('-')[0];
-    userLang = /(fr|en)/gi.test(userLang) ? userLang : 'en';
+
     translate.setDefaultLang('en');
-    translate.use(userLang);
+    translate.use('en');
 
     //Construct form
     this.watchForm = builder.group({

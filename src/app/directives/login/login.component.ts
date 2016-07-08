@@ -77,6 +77,7 @@ export class LoginComponent implements OnInit {
               this.error = true;
               break;
           }
+          this.loginAttempt.emit(false);
         }
       );
     }

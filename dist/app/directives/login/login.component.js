@@ -63,6 +63,7 @@ var LoginComponent = (function () {
                         _this.error = true;
                         break;
                 }
+                _this.loginAttempt.emit(false);
             });
         }
     };

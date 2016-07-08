@@ -13,6 +13,7 @@ export declare class LoginComponent implements OnInit {
     credientials: boolean;
     error: boolean;
     userLogged: EventEmitter<{}>;
+    loginAttempt: EventEmitter<{}>;
     /**
      * Constructor w/ service injection
      * @param {TranslateService} private translate [description]

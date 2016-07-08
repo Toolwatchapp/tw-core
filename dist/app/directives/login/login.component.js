@@ -30,6 +30,7 @@ var LoginComponent = (function () {
         this.credientials = false;
         this.error = false;
         this.userLogged = new core_1.EventEmitter();
+        this.loginAttempt = new core_1.EventEmitter();
         //Lang definition
         translate.setDefaultLang('en');
         translate.use('en');
@@ -47,6 +48,7 @@ var LoginComponent = (function () {
      */
     LoginComponent.prototype.onSubmit = function (user) {
         var _this = this;
+        this.loginAttempt.emit(true);
         this.submitAttempt = true;
         this.error = false;
         this.credientials = false;
@@ -70,6 +72,10 @@ var LoginComponent = (function () {
         core_1.Output(), 
         __metadata('design:type', Object)
     ], LoginComponent.prototype, "userLogged", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], LoginComponent.prototype, "loginAttempt", void 0);
     LoginComponent = __decorate([
         core_1.Component({
             selector: 'app-login',

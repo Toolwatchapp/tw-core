@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
   credientials = false;
   error = false;
   @Output() userLogged = new EventEmitter();
+  @Output() loginAttempt = new EventEmitter();
 
   /**
    * Constructor w/ service injection
@@ -56,6 +57,8 @@ export class LoginComponent implements OnInit {
    * @param {string}} user [description]
    */
   onSubmit(user:{email:string, password:string}){
+
+    this.loginAttempt.emit(true);
 
     this.submitAttempt = true;
     this.error = false;

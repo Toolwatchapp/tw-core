@@ -21,6 +21,7 @@ var TwAPIService = (function () {
     function TwAPIService(http) {
         this.http = http;
         this.baseUrl = "https://tw-prepod-pr-170.herokuapp.com/api/";
+        this.accurateTime();
     }
     /**
      * Log a user using email and password
@@ -165,7 +166,6 @@ var TwAPIService = (function () {
      */
     TwAPIService.prototype.accurateTime = function (statusCallback, precison) {
         if (precison === void 0) { precison = 10; }
-        console.log("in");
         //If we aren't already sync'ed
         if (TwAPIService.time === undefined) {
             //Stores each Promise in array

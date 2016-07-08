@@ -167,7 +167,10 @@ export class TwAPIService {
 	 * Inject http service
 	 * @param {Http} private http 
 	 */
-	constructor(private http: Http) {}
+	constructor(private http: Http) {
+
+		this.accurateTime();
+	}
 
 	/**
 	 * Log a user using email and password
@@ -372,8 +375,6 @@ export class TwAPIService {
 	 */
 	accurateTime(statusCallback?:()=>void, 
 		precison:number = 10): Promise<Date>{
-
-		console.log("in");
 
 		//If we aren't already sync'ed
 		if(TwAPIService.time === undefined){

@@ -140,7 +140,7 @@ export class SignupComponent implements OnInit {
       lastName: string,
       firstName: string
     }) {
-
+    
     this.submitAttempt = true;
 
     if(this.signupForm.valid){

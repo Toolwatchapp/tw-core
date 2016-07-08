@@ -8,6 +8,7 @@
 	"account-exists": "This email is already linked to an account",
 	"email-repeat": "Confirm email",
 	"email-match": "Emails must match.",
+	"email-taken": "This is email is already in use",
 	"password-repeat": "Confirm password",
 	"password-match": "Passwords must match",
 	"firstName":"Firstname",

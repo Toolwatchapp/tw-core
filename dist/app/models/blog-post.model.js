@@ -5,14 +5,16 @@ var BlogPost = (function () {
         this.title = this.decodeHTMLEntities(title);
         this.date = date;
         this.excerpt = this.decodeHTMLEntities(excerpt);
+        String.fromCharCode;
         this.url = url;
     }
     BlogPost.prototype.decodeHTMLEntities = function (str) {
-        if (str && typeof str === 'string') {
-            str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-            str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-        }
-        return str;
+        var txt = document.createElement("textarea");
+        str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+        str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+        str = str.replace('[Read more…]', '');
+        txt.innerHTML = str;
+        return txt.value;
     };
     return BlogPost;
 }());

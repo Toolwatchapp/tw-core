@@ -11,17 +11,19 @@ export class BlogPost{
 		this.title = this.decodeHTMLEntities(title);
 		this.date = date;
 		this.excerpt = this.decodeHTMLEntities(excerpt);
+		String.fromCharCode
 		this.url = url;
 	}
 
 	private decodeHTMLEntities(str:string) {
 
-    if(str && typeof str === 'string') {
-      str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-      str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-    }
+		var txt = document.createElement("textarea");
+		str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+      	str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+      	str = str.replace('[Read more…]', '');
+	    txt.innerHTML = str;
 
-    return str;
-  }
+	    return txt.value;
+  	}
 
 }

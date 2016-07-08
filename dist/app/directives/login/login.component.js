@@ -31,10 +31,8 @@ var LoginComponent = (function () {
         this.error = false;
         this.userLogged = new core_1.EventEmitter();
         //Lang definition
-        var userLang = navigator.language.split('-')[0];
-        userLang = /(fr|en)/gi.test(userLang) ? userLang : 'en';
         translate.setDefaultLang('en');
-        translate.use(userLang);
+        translate.use('en');
         //Form constraints
         this.password = new common_1.Control('', common_1.Validators.required);
         this.email = new common_1.Control('', common_1.Validators.compose([common_1.Validators.required, global_validator_1.GlobalValidator.mailFormat]));

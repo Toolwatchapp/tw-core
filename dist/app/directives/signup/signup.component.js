@@ -36,12 +36,8 @@ var SignupComponent = (function () {
         this.filteredList = [];
         this.query = "";
         this.userLogged = new core_1.EventEmitter();
-        //use navigator lang if available
-        //Lang definition
-        var userLang = navigator.language.split('-')[0];
-        userLang = /(fr|en)/gi.test(userLang) ? userLang : 'en';
         translate.setDefaultLang('en');
-        translate.use(userLang);
+        translate.use('en');
         translate.get("countries").subscribe(function (result) {
             _this.countries = result;
         });

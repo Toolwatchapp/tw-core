@@ -5,7 +5,7 @@ import { Watch } from './../../models/watch.model';
 import { User } from './../../models/user.model';
 import { TwAPIService } from './../../services/twapi.service';
 export declare class WatchComponent implements OnInit {
-    private translate;
+    protected translate: TranslateService;
     private twapi;
     private builder;
     watchModel: Watch;

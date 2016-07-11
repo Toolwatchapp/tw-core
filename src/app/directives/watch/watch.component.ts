@@ -46,7 +46,7 @@ export class WatchComponent implements OnInit {
    * @param {TwAPIService}     private twapi     [description]
    * @param {FormBuilder}      private builder   [description]
    */
-  constructor(private translate: TranslateService,
+  constructor(protected translate: TranslateService,
     private twapi: TwAPIService, private builder: FormBuilder) {
 
     translate.setDefaultLang('en');

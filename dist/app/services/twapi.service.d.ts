@@ -150,6 +150,7 @@ export declare class TwAPIService {
      * @return {Promise<boolean>}
      */
     deleteAccount(): Promise<boolean>;
+    getWatches(): Promise<Watch[]>;
     /**
      * Update or insert a watch
      * @param  {Watch}          watch

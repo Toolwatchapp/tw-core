@@ -76,7 +76,9 @@
 	"logging-in": "We are logging you in",
 	"signin-slogan": "Fill the form bellow to create your account",
 	"add-new-watch": "Add a new watch",
-	"edit-watch": "Edit or delete your watch"
+	"edit-watch": "Edit or delete your watch",
+	"refresh-info": "Pull to refresh",
+	"refreshing": "Refreshing..."
 
 }
 

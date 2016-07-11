@@ -240,6 +240,16 @@ export class TwAPIService {
 		).catch(this.handleError);
 	}
 
+	getWatches(): Promise<Watch[]>{
+		return this.http.get(
+			this.baseUrl + "watches",
+			TwAPIService.options)
+		.map((res) => { return ModelFactory.buildWatches(res.json()); })
+		.toPromise().then(
+			res => res
+		);
+	}
+
 	/**
 	 * Update or insert a watch
 	 * @param  {Watch}          watch

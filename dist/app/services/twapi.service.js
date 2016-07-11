@@ -68,6 +68,11 @@ var TwAPIService = (function () {
     TwAPIService.prototype.deleteAccount = function () {
         return this.http.delete(this.baseUrl + "users", TwAPIService.options).toPromise().then(function (response) { return true; }).catch(this.handleError);
     };
+    TwAPIService.prototype.getWatches = function () {
+        return this.http.get(this.baseUrl + "watches", TwAPIService.options)
+            .map(function (res) { return model_factory_1.ModelFactory.buildWatches(res.json()); })
+            .toPromise().then(function (res) { return res; });
+    };
     /**
      * Update or insert a watch
      * @param  {Watch}          watch

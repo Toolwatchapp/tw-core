@@ -172,6 +172,10 @@ export class TwAPIService {
 		this.accurateTime();
 	}
 
+	public static resetTime(){
+		TwAPIService.time = undefined;
+	}
+
 	/**
 	 * Log a user using email and password
 	 * @param  {string}        email   

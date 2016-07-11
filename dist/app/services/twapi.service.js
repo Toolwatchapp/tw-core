@@ -23,6 +23,9 @@ var TwAPIService = (function () {
         this.baseUrl = "https://tw-prepod-pr-170.herokuapp.com/api/";
         this.accurateTime();
     }
+    TwAPIService.resetTime = function () {
+        TwAPIService.time = undefined;
+    };
     /**
      * Log a user using email and password
      * @param  {string}        email

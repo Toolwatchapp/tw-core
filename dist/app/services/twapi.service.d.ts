@@ -128,6 +128,7 @@ export declare class TwAPIService {
      * @param {Http} private http
      */
     constructor(http: Http);
+    static resetTime(): void;
     /**
      * Log a user using email and password
      * @param  {string}        email

@@ -77,7 +77,9 @@ export class LoginComponent implements OnInit {
           GAService.event('CTA', 'LOGIN', 'SUCCESS');
         },
         error => {
+          console.log('login error');
           GAService.event('CTA', 'LOGIN', 'FAIL');
+          this.loginError.emit(true);
           switch (error.status) {
             case 401:
               this.credientials = true;
@@ -86,7 +88,6 @@ export class LoginComponent implements OnInit {
               this.error = true;
               break;
           }
-          this.loginError.emit(true);
         }
       );
     }

@@ -62,7 +62,9 @@ var LoginComponent = (function () {
                 _this.userLogged.emit(res);
                 ga_service_1.GAService.event('CTA', 'LOGIN', 'SUCCESS');
             }, function (error) {
+                console.log('login error');
                 ga_service_1.GAService.event('CTA', 'LOGIN', 'FAIL');
+                _this.loginError.emit(true);
                 switch (error.status) {
                     case 401:
                         _this.credientials = true;
@@ -71,7 +73,6 @@ var LoginComponent = (function () {
                         _this.error = true;
                         break;
                 }
-                _this.loginError.emit(true);
             });
         }
     };

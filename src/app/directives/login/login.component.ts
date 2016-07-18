@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
   error = false;
   @Output() userLogged = new EventEmitter();
   @Output() loginAttempt = new EventEmitter();
+  @Output() loginError = new EventEmitter();
 
   /**
    * Constructor w/ service injection
@@ -85,7 +86,7 @@ export class LoginComponent implements OnInit {
               this.error = true;
               break;
           }
-          this.loginAttempt.emit(false);
+          this.loginError.emit(true);
         }
       );
     }

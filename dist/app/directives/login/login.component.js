@@ -32,6 +32,7 @@ var LoginComponent = (function () {
         this.error = false;
         this.userLogged = new core_1.EventEmitter();
         this.loginAttempt = new core_1.EventEmitter();
+        this.loginError = new core_1.EventEmitter();
         //Lang definition
         translate.setDefaultLang('en');
         translate.use('en');
@@ -70,7 +71,7 @@ var LoginComponent = (function () {
                         _this.error = true;
                         break;
                 }
-                _this.loginAttempt.emit(false);
+                _this.loginError.emit(true);
             });
         }
     };
@@ -84,6 +85,10 @@ var LoginComponent = (function () {
         core_1.Output(), 
         __metadata('design:type', Object)
     ], LoginComponent.prototype, "loginAttempt", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], LoginComponent.prototype, "loginError", void 0);
     LoginComponent = __decorate([
         core_1.Component({
             selector: 'app-login',

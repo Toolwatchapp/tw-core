@@ -65,7 +65,9 @@ export class LoginComponent implements OnInit {
     this.credientials = false;
 
     //Form constraints are ok
-    if(this.loginForm.valid){
+    if(this.loginForm.valid 
+      && user.email.length != 0 
+      && user.password.length !=0){
       this.twapi.login(user.email, user.password).then(
         res => { this.userLogged.emit(res) },
         error => {

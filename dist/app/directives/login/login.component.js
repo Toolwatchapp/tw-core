@@ -55,16 +55,12 @@ var LoginComponent = (function () {
         this.error = false;
         this.credientials = false;
         //Form constraints are ok
-        if (this.loginForm.valid
-            && user.email.length != 0
-            && user.password.length != 0) {
+        if (this.loginForm.valid) {
             this.twapi.login(user.email, user.password).then(function (res) {
                 _this.userLogged.emit(res);
                 ga_service_1.GAService.event('CTA', 'LOGIN', 'SUCCESS');
             }, function (error) {
-                console.log('login error');
                 ga_service_1.GAService.event('CTA', 'LOGIN', 'FAIL');
-                _this.loginError.emit(true);
                 switch (error.status) {
                     case 401:
                         _this.credientials = true;
@@ -74,6 +70,9 @@ var LoginComponent = (function () {
                         break;
                 }
             });
+        }
+        else {
+            this.loginAttempt.emit(false);
         }
     };
     LoginComponent.prototype.ngOnInit = function () {

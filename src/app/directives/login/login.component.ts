@@ -68,18 +68,14 @@ export class LoginComponent implements OnInit {
     this.credientials = false;
 
     //Form constraints are ok
-    if(this.loginForm.valid 
-      && user.email.length != 0 
-      && user.password.length !=0){
+    if(this.loginForm.valid){
       this.twapi.login(user.email, user.password).then(
         res => { 
           this.userLogged.emit(res);
           GAService.event('CTA', 'LOGIN', 'SUCCESS');
         },
         error => {
-          console.log('login error');
           GAService.event('CTA', 'LOGIN', 'FAIL');
-          this.loginError.emit(true);
           switch (error.status) {
             case 401:
               this.credientials = true;
@@ -90,6 +86,8 @@ export class LoginComponent implements OnInit {
           }
         }
       );
+    }else{
+      this.loginAttempt.emit(false);
     }
   }
 

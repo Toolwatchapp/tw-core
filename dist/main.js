@@ -7,11 +7,13 @@ var watch_component_1 = require('./app/directives/watch/watch.component');
 var ng2_translate_1 = require('ng2-translate/ng2-translate');
 var http_1 = require('@angular/http');
 var core_2 = require('@angular/core');
+var ga_service_1 = require('./app/services/ga.service');
 if (_1.environment.production) {
     core_1.enableProdMode();
 }
 platform_browser_dynamic_1.bootstrap(watch_component_1.WatchComponent, [
     http_1.HTTP_PROVIDERS,
+    ga_service_1.GAService,
     core_2.provide(ng2_translate_1.TranslateLoader, {
         useFactory: function (http) { return new ng2_translate_1.TranslateStaticLoader(http, 'app/assets/i18n', '.json'); },
         deps: [http_1.Http]

@@ -16,6 +16,7 @@ var user_model_1 = require('./../../models/user.model');
 var twapi_service_1 = require('./../../services/twapi.service');
 var http_1 = require('@angular/http');
 var button_1 = require('@angular2-material/button');
+var ga_service_1 = require('./../../services/ga.service');
 var WatchComponent = (function () {
     /**
      * Constructor with DI
@@ -93,14 +94,24 @@ var WatchComponent = (function () {
         this.submitAttempt = true;
         if (this.watchForm.valid) {
             this.twapi.upsertWatch(this.watchModel).then(function (res) {
+                ga_service_1.GAService.event('CTA', 'WATCH_UPSERT', 'SUCCESS');
                 _this.user.watches.push(res);
                 _this.watchSaved.emit(_this.user);
-            }, function (error) { return _this.error = true; });
+            }, function (error) {
+                ga_service_1.GAService.event('CTA', 'WATCH_UPSERT', 'FAIL');
+                _this.error = true;
+            });
         }
     };
     WatchComponent.prototype.onDelete = function () {
         var _this = this;
-        this.twapi.deleteWatch(this.user, this.watchModel).then(function (res) { return _this.watchSaved.emit(res); }, function (error) { return _this.error = true; });
+        this.twapi.deleteWatch(this.user, this.watchModel).then(function (res) {
+            ga_service_1.GAService.event('CTA', 'WATCH_DELETE', 'SUCCESS');
+            _this.watchSaved.emit(res);
+        }, function (error) {
+            ga_service_1.GAService.event('CTA', 'WATCH_DELETE', 'FAIL');
+            _this.error = true;
+        });
     };
     __decorate([
         core_1.Input(), 

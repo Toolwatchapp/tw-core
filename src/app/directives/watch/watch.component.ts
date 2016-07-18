@@ -6,6 +6,7 @@ import { User } from './../../models/user.model';
 import {TwAPIService} from './../../services/twapi.service';
 import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
 import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
+import { GAService } from './../../services/ga.service';
 
 @Component({
   selector: 'watch-form',
@@ -116,18 +117,28 @@ export class WatchComponent implements OnInit {
     if (this.watchForm.valid) {
       this.twapi.upsertWatch(this.watchModel).then(
         res => {
+          GAService.event('CTA', 'WATCH_UPSERT', 'SUCCESS');
           this.user.watches.push(res);
           this.watchSaved.emit(this.user)
         },
-        error => this.error = true
+        error => {
+          GAService.event('CTA', 'WATCH_UPSERT', 'FAIL');
+          this.error = true
+        }
       );
     }
   }
 
   onDelete(){
     this.twapi.deleteWatch(this.user, this.watchModel).then(
-      res => this.watchSaved.emit(res),
-      error => this.error = true
+      res => {
+        GAService.event('CTA', 'WATCH_DELETE', 'SUCCESS');
+        this.watchSaved.emit(res)
+      },
+      error => {
+        GAService.event('CTA', 'WATCH_DELETE', 'FAIL');
+        this.error = true
+      }
     );
   }
 }

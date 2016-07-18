@@ -15,6 +15,7 @@ var twapi_service_1 = require('./../../services/twapi.service');
 var http_1 = require('@angular/http');
 var button_1 = require('@angular2-material/button');
 var global_validator_1 = require('./../global-validator');
+var ga_service_1 = require('./../../services/ga.service');
 var LoginComponent = (function () {
     /**
      * Constructor w/ service injection
@@ -53,8 +54,14 @@ var LoginComponent = (function () {
         this.error = false;
         this.credientials = false;
         //Form constraints are ok
-        if (this.loginForm.valid) {
-            this.twapi.login(user.email, user.password).then(function (res) { _this.userLogged.emit(res); }, function (error) {
+        if (this.loginForm.valid
+            && user.email.length != 0
+            && user.password.length != 0) {
+            this.twapi.login(user.email, user.password).then(function (res) {
+                _this.userLogged.emit(res);
+                ga_service_1.GAService.event('CTA', 'LOGIN', 'SUCCESS');
+            }, function (error) {
+                ga_service_1.GAService.event('CTA', 'LOGIN', 'FAIL');
                 switch (error.status) {
                     case 401:
                         _this.credientials = true;

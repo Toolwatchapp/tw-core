@@ -15,6 +15,7 @@ var twapi_service_1 = require('./../../services/twapi.service');
 var http_1 = require('@angular/http');
 var button_1 = require('@angular2-material/button');
 var global_validator_1 = require('./../global-validator');
+var ga_service_1 = require('./../../services/ga.service');
 var SignupComponent = (function () {
     /**
     * Constructor w/ service injection
@@ -93,7 +94,11 @@ var SignupComponent = (function () {
         var _this = this;
         this.submitAttempt = true;
         if (this.signupForm.valid) {
-            this.twapi.signup(user.email, user.password, user.firstName, user.lastName, this.query).then(function (res) { _this.userLogged.emit(res); }, function (error) {
+            this.twapi.signup(user.email, user.password, user.firstName, user.lastName, this.query).then(function (res) {
+                ga_service_1.GAService.event('CTA', 'SIGNUP', 'SUCCESS');
+                _this.userLogged.emit(res);
+            }, function (error) {
+                ga_service_1.GAService.event('CTA', 'SIGNUP', 'FAIL');
                 switch (error.status) {
                     case twapi_service_1.TwAPIService.HTTP_UNAUTHORIZED:
                         _this.emailTaken = true;

@@ -5,6 +5,7 @@ import { Watch, WatchAction }  from './../models/watch.model';
 import { Measure, MeasureStatus }  from './../models/measure.model';
 import { ModelFactory }  from './../models/model.factory';
 import { BlogPost } from './../models/blog-post.model'
+import { GAService } from './ga.service';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -193,6 +194,7 @@ export class TwAPIService {
 		.map((res) => { return ModelFactory.buildUser(res.json()); })
 		.toPromise().then(
 			res => {
+                GAService.event('API', 'LOGIN');
 				TwAPIService.apikey = res.key;
 				TwAPIService.headers.delete('X-API-KEY');
 				TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
@@ -226,7 +228,10 @@ export class TwAPIService {
 		)
 		.map((res) => { return ModelFactory.buildUser(res.json()); })
 		.toPromise().then(
-			res => res
+			res => {
+                GAService.event('API', 'SIGNUP');
+                return res;
+            }
 		);
 	}
 
@@ -240,7 +245,10 @@ export class TwAPIService {
 			this.baseUrl + "users",
 			TwAPIService.options
 		).toPromise().then(
-			response => true
+			response => {
+                GAService.event('API', 'DELETE_ACCOUNT');
+                return true;
+            }
 		).catch(this.handleError);
 	}
 
@@ -250,7 +258,10 @@ export class TwAPIService {
 			TwAPIService.options)
 		.map((res) => { return ModelFactory.buildWatches(res.json()); })
 		.toPromise().then(
-			res => res
+			res => {
+                GAService.event('API', 'WATCHES', 'GET');
+                return res
+            }
 		);
 	}
 
@@ -289,6 +300,8 @@ export class TwAPIService {
 						return filter.id != watch.id;
 					}
 				);
+
+                GAService.event('API', 'WATCHES', 'DELETE');
 
 				return user;
 			}
@@ -331,6 +344,9 @@ export class TwAPIService {
 						return filter.id != measure.id;
 					}
 				);
+
+                GAService.event('API', 'MEASURE', 'DELETE');
+
 				return watch;
 			}
 		).catch(this.handleError);
@@ -342,7 +358,10 @@ export class TwAPIService {
 		)
 		.map((res) => { return ModelFactory.buildPosts(res.json()); })
 		.toPromise().then(
-			res => res
+			res => {
+                GAService.event('API', 'BLOG', 'GET');
+                return res
+            }
 		);
 	}
 
@@ -355,7 +374,10 @@ export class TwAPIService {
 			TwAPIService.assetsUrl + '/json/watch-brand.json')
 		.map(res => res.json())
 		.toPromise().then(
-			brands => brands
+			brands => {
+                GAService.event('API', 'BRANDS', 'GET');
+                return brands;
+            }
 		);
 	}
 
@@ -369,7 +391,10 @@ export class TwAPIService {
 			TwAPIService.assetsUrl + '/json/watch-models/' + brand + ".json")
 			.map(res => res.json())
 			.toPromise().then(
-			models => models
+			models => {
+                GAService.event('API', 'MODELS', 'GET');
+                return models
+            }
 		);
 	}
 
@@ -389,6 +414,9 @@ export class TwAPIService {
 	 */
 	accurateTime(statusCallback?:()=>void, 
 		precison:number = 10): Promise<Date>{
+
+        GAService.event('API', 'TIME', 'GET');
+
 
 		//If we aren't already sync'ed
 		if(TwAPIService.time === undefined){
@@ -490,6 +518,7 @@ export class TwAPIService {
 			TwAPIService.options
 		).toPromise().then(
 			response => {
+                GAService.event('API', 'MEASURE', 'SECOND');
 				let json = response.json().result;
 				measure.addAccuracy(json.accuracy, json.accuracyAge, json.percentile);
 				watch.upsertMeasure(measure);
@@ -516,6 +545,7 @@ export class TwAPIService {
 			TwAPIService.options
 		).toPromise().then(
 			response => {
+                GAService.event('API', 'MEASURE', 'FIRST');
 				measure.id = response.json().measureId;
 				watch.measures.push(measure);
 				return watch;
@@ -542,6 +572,7 @@ export class TwAPIService {
 		).toPromise().then(
 			response => {
 				watch.id = response.json().id;
+                GAService.event('API', 'WATCH', 'PUT');
 				return watch;
 			}
 		);
@@ -566,6 +597,7 @@ export class TwAPIService {
 			TwAPIService.options
 		).toPromise().then(
 			response => {
+                GAService.event('API', 'WATCH', 'UPDATE');
 				return watch;
 			}
 		);

@@ -12,6 +12,7 @@ var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
 var watch_model_1 = require('./../models/watch.model');
 var model_factory_1 = require('./../models/model.factory');
+var ga_service_1 = require('./ga.service');
 require('rxjs/add/operator/toPromise');
 var TwAPIService = (function () {
     /**
@@ -37,6 +38,7 @@ var TwAPIService = (function () {
         return this.http.put(this.baseUrl + "users", JSON.stringify(creds), TwAPIService.options)
             .map(function (res) { return model_factory_1.ModelFactory.buildUser(res.json()); })
             .toPromise().then(function (res) {
+            ga_service_1.GAService.event('API', 'LOGIN');
             TwAPIService.apikey = res.key;
             TwAPIService.headers.delete('X-API-KEY');
             TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
@@ -62,19 +64,28 @@ var TwAPIService = (function () {
             country: country
         }), TwAPIService.options)
             .map(function (res) { return model_factory_1.ModelFactory.buildUser(res.json()); })
-            .toPromise().then(function (res) { return res; });
+            .toPromise().then(function (res) {
+            ga_service_1.GAService.event('API', 'SIGNUP');
+            return res;
+        });
     };
     /**
      * Deletes the account currently logged in.
      * @return {Promise<boolean>}
      */
     TwAPIService.prototype.deleteAccount = function () {
-        return this.http.delete(this.baseUrl + "users", TwAPIService.options).toPromise().then(function (response) { return true; }).catch(this.handleError);
+        return this.http.delete(this.baseUrl + "users", TwAPIService.options).toPromise().then(function (response) {
+            ga_service_1.GAService.event('API', 'DELETE_ACCOUNT');
+            return true;
+        }).catch(this.handleError);
     };
     TwAPIService.prototype.getWatches = function () {
         return this.http.get(this.baseUrl + "watches", TwAPIService.options)
             .map(function (res) { return model_factory_1.ModelFactory.buildWatches(res.json()); })
-            .toPromise().then(function (res) { return res; });
+            .toPromise().then(function (res) {
+            ga_service_1.GAService.event('API', 'WATCHES', 'GET');
+            return res;
+        });
     };
     /**
      * Update or insert a watch
@@ -102,6 +113,7 @@ var TwAPIService = (function () {
             user.watches = user.watches.filter(function (filter) {
                 return filter.id != watch.id;
             });
+            ga_service_1.GAService.event('API', 'WATCHES', 'DELETE');
             return user;
         });
     };
@@ -132,13 +144,17 @@ var TwAPIService = (function () {
             watch.measures = watch.measures.filter(function (filter) {
                 return filter.id != measure.id;
             });
+            ga_service_1.GAService.event('API', 'MEASURE', 'DELETE');
             return watch;
         }).catch(this.handleError);
     };
     TwAPIService.prototype.getBlogPosts = function () {
         return this.http.get("https://blog.toolwatch.io/?json=1")
             .map(function (res) { return model_factory_1.ModelFactory.buildPosts(res.json()); })
-            .toPromise().then(function (res) { return res; });
+            .toPromise().then(function (res) {
+            ga_service_1.GAService.event('API', 'BLOG', 'GET');
+            return res;
+        });
     };
     /**
      * Return known brands
@@ -147,7 +163,10 @@ var TwAPIService = (function () {
     TwAPIService.prototype.getBrands = function () {
         return this.http.get(TwAPIService.assetsUrl + '/json/watch-brand.json')
             .map(function (res) { return res.json(); })
-            .toPromise().then(function (brands) { return brands; });
+            .toPromise().then(function (brands) {
+            ga_service_1.GAService.event('API', 'BRANDS', 'GET');
+            return brands;
+        });
     };
     /**
      * Returns model of a given brand
@@ -157,7 +176,10 @@ var TwAPIService = (function () {
     TwAPIService.prototype.getModels = function (brand) {
         return this.http.get(TwAPIService.assetsUrl + '/json/watch-models/' + brand + ".json")
             .map(function (res) { return res.json(); })
-            .toPromise().then(function (models) { return models; });
+            .toPromise().then(function (models) {
+            ga_service_1.GAService.event('API', 'MODELS', 'GET');
+            return models;
+        });
     };
     /**
      * Gets the previously computed offset
@@ -174,6 +196,7 @@ var TwAPIService = (function () {
      */
     TwAPIService.prototype.accurateTime = function (statusCallback, precison) {
         if (precison === void 0) { precison = 10; }
+        ga_service_1.GAService.event('API', 'TIME', 'GET');
         //If we aren't already sync'ed
         if (TwAPIService.time === undefined) {
             //Stores each Promise in array
@@ -247,6 +270,7 @@ var TwAPIService = (function () {
             referenceTime: measure.accuracyReferenceTime,
             userTime: measure.accuracyUserTime
         }), TwAPIService.options).toPromise().then(function (response) {
+            ga_service_1.GAService.event('API', 'MEASURE', 'SECOND');
             var json = response.json().result;
             measure.addAccuracy(json.accuracy, json.accuracyAge, json.percentile);
             watch.upsertMeasure(measure);
@@ -266,6 +290,7 @@ var TwAPIService = (function () {
             referenceTime: measure.measureReferenceTime,
             userTime: measure.measureUserTime
         }), TwAPIService.options).toPromise().then(function (response) {
+            ga_service_1.GAService.event('API', 'MEASURE', 'FIRST');
             measure.id = response.json().measureId;
             watch.measures.push(measure);
             return watch;
@@ -285,6 +310,7 @@ var TwAPIService = (function () {
             caliber: watch.caliber
         }), TwAPIService.options).toPromise().then(function (response) {
             watch.id = response.json().id;
+            ga_service_1.GAService.event('API', 'WATCH', 'PUT');
             return watch;
         });
     };
@@ -302,6 +328,7 @@ var TwAPIService = (function () {
             serial: watch.serial,
             caliber: watch.caliber
         }), TwAPIService.options).toPromise().then(function (response) {
+            ga_service_1.GAService.event('API', 'WATCH', 'UPDATE');
             return watch;
         });
     };

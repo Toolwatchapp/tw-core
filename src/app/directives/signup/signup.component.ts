@@ -5,6 +5,7 @@ import {TwAPIService} from './../../services/twapi.service'
 import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
 import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 import { GlobalValidator } from './../global-validator';
+import { GAService } from './../../services/ga.service';
 
 @Component({
   selector: 'app-signup',
@@ -149,8 +150,12 @@ export class SignupComponent implements OnInit {
        user.firstName,
        user.lastName,
        this.query).then(
-        res => { this.userLogged.emit(res) },
+        res => { 
+          GAService.event('CTA', 'SIGNUP', 'SUCCESS');
+          this.userLogged.emit(res) 
+        },
         error => {
+          GAService.event('CTA', 'SIGNUP', 'FAIL');
           switch (error.status) {
             case TwAPIService.HTTP_UNAUTHORIZED:
               this.emailTaken = true;

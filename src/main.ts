@@ -10,6 +10,7 @@ import { WatchComponent } from './app/directives/watch/watch.component';
 import {TRANSLATE_PROVIDERS, TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
 import {HTTP_PROVIDERS, Http} from '@angular/http';
 import {Component, Injectable, provide} from '@angular/core';
+import {GAService} from './app/services/ga.service';
 
 if (environment.production) {
   enableProdMode();
@@ -18,6 +19,7 @@ if (environment.production) {
 
 bootstrap(WatchComponent, [
     HTTP_PROVIDERS,
+    GAService,
     provide(TranslateLoader, {
         useFactory: (http: Http) => new TranslateStaticLoader(http, 'app/assets/i18n', '.json'),
         deps: [Http]

@@ -5,6 +5,8 @@ import {TwAPIService} from './../../services/twapi.service'
 import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
 import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 import { GlobalValidator } from './../global-validator';
+import { GAService } from './../../services/ga.service';
+
 
 @Component({
   selector: 'app-login',
@@ -69,8 +71,12 @@ export class LoginComponent implements OnInit {
       && user.email.length != 0 
       && user.password.length !=0){
       this.twapi.login(user.email, user.password).then(
-        res => { this.userLogged.emit(res) },
+        res => { 
+          this.userLogged.emit(res);
+          GAService.event('CTA', 'LOGIN', 'SUCCESS');
+        },
         error => {
+          GAService.event('CTA', 'LOGIN', 'FAIL');
           switch (error.status) {
             case 401:
               this.credientials = true;

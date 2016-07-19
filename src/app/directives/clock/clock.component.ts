@@ -27,7 +27,7 @@ export class ClockComponent implements OnInit {
 
   initLocalClocks() {
 
-	var seconds = this.date.getSeconds();
+	var seconds = this.date.getSeconds()+1;
 	var minutes = this.date.getMinutes();
 	var hours = this.date.getHours();
 

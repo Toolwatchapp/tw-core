@@ -23,7 +23,7 @@ var ClockComponent = (function () {
         this.initLocalClocks();
     };
     ClockComponent.prototype.initLocalClocks = function () {
-        var seconds = this.date.getSeconds();
+        var seconds = this.date.getSeconds() + 1;
         var minutes = this.date.getMinutes();
         var hours = this.date.getHours();
         // Create an object with each hand and it's angle in degrees

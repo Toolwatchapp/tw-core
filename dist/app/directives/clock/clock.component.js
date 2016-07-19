@@ -17,7 +17,7 @@ var ClockComponent = (function () {
         this.dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         this.date = new Date();
         this.month = this.monthNames[this.date.getMonth()];
-        this.day = this.dayNames[this.date.getDay()] + " " + this.date.getDay();
+        this.day = this.dayNames[this.date.getDay()] + " " + this.date.getDate();
     }
     ClockComponent.prototype.ngAfterViewInit = function () {
         this.initLocalClocks();

@@ -18,12 +18,12 @@ export class ClockComponent implements OnInit {
 
 	this.date = new Date();
 	this.month = this.monthNames[this.date.getMonth()];
-	this.day = this.dayNames[this.date.getDay()] + " " + this.date.getDay();
+	this.day = this.dayNames[this.date.getDay()] + " " + this.date.getDate();
   }
 
   ngAfterViewInit() {
 	  this.initLocalClocks();
-  }
+  } 
 
   initLocalClocks() {
 

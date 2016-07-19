@@ -2,13 +2,15 @@
   [ngFormModel] = "loginForm"
   (ngSubmit)="onSubmit(loginForm.value)"
 >     
-      <!-- GENERAL ERROR MESSAGES -->
-      <div class="error-message" [hidden]="!credientials">
-          {{ 'credentials' | translate:{value: param} }}
-      </div>
+      <div  class="form-group">
+        <!-- GENERAL ERROR MESSAGES -->
+        <div class="error-message" [hidden]="!credientials">
+            {{ 'credentials' | translate:{value: param} }}
+        </div>
 
-      <div class="error-message" [hidden]="!error">
-          {{ 'error' | translate:{value: param} }}
+        <div class="error-message" [hidden]="!error">
+            {{ 'error' | translate:{value: param} }}
+        </div>
       </div>
       <!-- END GENERAL ERROR MESSAGES -->
 

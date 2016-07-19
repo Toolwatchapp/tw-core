@@ -73,10 +73,12 @@ export class LoginComponent implements OnInit {
         res => { 
           this.userLogged.emit(res);
           GAService.event('CTA', 'LOGIN', 'SUCCESS');
-        },
-        error => {
+        }, 
+        err => {
           GAService.event('CTA', 'LOGIN', 'FAIL');
-          switch (error.status) {
+          this.loginAttempt.emit(false);
+
+          switch (err.status) {
             case 401:
               this.credientials = true;
               break;

@@ -34,17 +34,19 @@ var TwAPIService = (function () {
      * @return {Promise<User>}
      */
     TwAPIService.prototype.login = function (email, password) {
+        var _this = this;
         var creds = { email: email, password: password };
         return this.http.put(this.baseUrl + "users", JSON.stringify(creds), TwAPIService.options)
             .map(function (res) { return model_factory_1.ModelFactory.buildUser(res.json()); })
             .toPromise().then(function (res) {
+            console.log("works");
             ga_service_1.GAService.event('API', 'LOGIN');
             TwAPIService.apikey = res.key;
             TwAPIService.headers.delete('X-API-KEY');
             TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
             TwAPIService.user = res;
             return res;
-        });
+        }, function (err) { return _this.handleError(err); });
     };
     /**
      * Registers a new user
@@ -337,13 +339,8 @@ var TwAPIService = (function () {
      * @param {any} error [description]
      */
     TwAPIService.prototype.handleError = function (error) {
-        console.log("handleError");
-        // In a real world app, we might use a remote logging infrastructure
-        // We'd also dig deeper into the error to get a better message
-        var errMsg = (error.message) ? error.message :
-            error.status ? error.status + " - " + error.statusText : 'Server error';
-        console.error(errMsg); // log to console instead
-        return new Error(error);
+        console.error('An error occurred', error);
+        return Promise.reject(error.message || error);
     };
     /**
      * All the HTTP code used by the toolwatch API are defined here.

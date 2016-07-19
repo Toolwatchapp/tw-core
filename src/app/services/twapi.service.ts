@@ -194,13 +194,16 @@ export class TwAPIService {
 		.map((res) => { return ModelFactory.buildUser(res.json()); })
 		.toPromise().then(
 			res => {
+                console.log("works");
+
                 GAService.event('API', 'LOGIN');
 				TwAPIService.apikey = res.key;
 				TwAPIService.headers.delete('X-API-KEY');
 				TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
 				TwAPIService.user = res;
 				return res;
-			}
+			},
+            err => this.handleError(err)
 		)
 	}  
 
@@ -609,13 +612,8 @@ export class TwAPIService {
 	 * @param {any} error [description]
 	 */
 	private handleError(error: any) {
-		console.log("handleError");
-		// In a real world app, we might use a remote logging infrastructure
-		// We'd also dig deeper into the error to get a better message
-		let errMsg = (error.message) ? error.message :
-			error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-		console.error(errMsg); // log to console instead
-		return new Error(error);
+		console.error('An error occurred', error);
+        return Promise.reject(error.message || error);
 	}
 
 }

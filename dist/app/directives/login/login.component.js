@@ -59,9 +59,10 @@ var LoginComponent = (function () {
             this.twapi.login(user.email, user.password).then(function (res) {
                 _this.userLogged.emit(res);
                 ga_service_1.GAService.event('CTA', 'LOGIN', 'SUCCESS');
-            }, function (error) {
+            }, function (err) {
                 ga_service_1.GAService.event('CTA', 'LOGIN', 'FAIL');
-                switch (error.status) {
+                _this.loginAttempt.emit(false);
+                switch (err.status) {
                     case 401:
                         _this.credientials = true;
                         break;

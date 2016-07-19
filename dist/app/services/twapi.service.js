@@ -21,7 +21,7 @@ var TwAPIService = (function () {
      */
     function TwAPIService(http) {
         this.http = http;
-        this.baseUrl = "https://tw-prepod-pr-170.herokuapp.com/api/";
+        this.baseUrl = "https://toolwatch.io/api/";
         this.accurateTime();
     }
     TwAPIService.resetTime = function () {

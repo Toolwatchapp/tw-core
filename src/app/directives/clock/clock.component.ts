@@ -27,7 +27,8 @@ export class ClockComponent implements OnInit {
 
   initLocalClocks() {
 
-	var seconds = this.date.getSeconds()+1;
+    var milliseconds = this.date.getMilliseconds();
+	var seconds = this.date.getSeconds();
 	var minutes = this.date.getMinutes();
 	var hours = this.date.getHours();
 
@@ -39,11 +40,11 @@ export class ClockComponent implements OnInit {
 		},
 		{
 			hand: 'minutes',
-			angle: (minutes * 6)
+			angle: (minutes * 6) + (seconds/60) * 6
 		},
 		{
 			hand: 'seconds',
-			angle: (seconds * 6)
+			angle: (seconds * 6) + (milliseconds/1000)*6
 		}
 	];
 

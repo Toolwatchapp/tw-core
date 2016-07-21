@@ -78,7 +78,9 @@
 	"add-new-watch": "Add a new watch",
 	"edit-watch": "Edit or delete your watch",
 	"refresh-info": "Pull to refresh",
-	"refreshing": "Refreshing..."
+	"refreshing": "Refreshing...",
+	"no-watch": "You don't have any measure yet!",
+	"new-watch": "Add a watch"
 
 }
 

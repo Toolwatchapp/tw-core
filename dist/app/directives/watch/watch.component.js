@@ -95,7 +95,7 @@ var WatchComponent = (function () {
         if (this.watchForm.valid) {
             this.twapi.upsertWatch(this.watchModel).then(function (res) {
                 ga_service_1.GAService.event('CTA', 'WATCH_UPSERT', 'SUCCESS');
-                _this.user.watches.push(res);
+                _this.user.upsertWatch(res);
                 _this.watchSaved.emit(_this.user);
             }, function (error) {
                 ga_service_1.GAService.event('CTA', 'WATCH_UPSERT', 'FAIL');

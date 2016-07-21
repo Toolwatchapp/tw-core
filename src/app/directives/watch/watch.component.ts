@@ -118,7 +118,7 @@ export class WatchComponent implements OnInit {
       this.twapi.upsertWatch(this.watchModel).then(
         res => {
           GAService.event('CTA', 'WATCH_UPSERT', 'SUCCESS');
-          this.user.watches.push(res);
+          this.user.upsertWatch(res);
           this.watchSaved.emit(this.user)
         },
         error => {

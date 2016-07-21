@@ -28,7 +28,7 @@
 	"update-watch": "Update this watch",
 	"delete-watch": "Delete this watch",
 	"slogan": "The most convenient way to measure the accuracy of your mechanical watch",
-	"delete-watch-alert": "Watch suppresion",
+	"delete-watch-alert": "Delete watch",
 	"delete-watch-confirm": "Do you want to delete your ",
 	"confirm": "Confirm",
 	"cancel": "Cancel",

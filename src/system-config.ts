@@ -60,6 +60,7 @@ const barrels: string[] = [
   'app/directives/signup',
   'app/directives/watch',
   'app/directives/watch/moon-phases',
+  'app/directives/format/leadingzero',
   /** @cli-barrel */
 ];
 

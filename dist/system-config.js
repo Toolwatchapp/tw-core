@@ -56,6 +56,7 @@ var barrels = [
     'app/directives/signup',
     'app/directives/watch',
     'app/directives/watch/moon-phases',
+    'app/directives/format/leadingzero',
 ];
 var cliSystemConfigPackages = {};
 barrels.forEach(function (barrelName) {

@@ -194,8 +194,6 @@ export class TwAPIService {
 		.map((res) => { return ModelFactory.buildUser(res.json()); })
 		.toPromise().then(
 			res => {
-                console.log("works");
-
                 GAService.event('API', 'LOGIN');
 				TwAPIService.apikey = res.key;
 				TwAPIService.headers.delete('X-API-KEY');
@@ -206,6 +204,37 @@ export class TwAPIService {
             err => this.handleError(err)
 		)
 	}  
+
+
+    /**
+     * Get an user using his API key
+     * @param  {string}        key [description]
+     * @return {Promise<User>}     [description]
+     */
+    getUser(key:string):Promise<User> {
+
+        
+        TwAPIService.apikey = key;
+        TwAPIService.headers.delete('X-API-KEY');
+        TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
+        
+
+        return this.http.get(
+            this.baseUrl + "users", 
+            TwAPIService.options
+        )
+        .map((res) => { return ModelFactory.buildUser(res.json()); })
+        .toPromise().then(
+            res => {
+
+                GAService.event('API', 'AUTOLOGIN');
+                TwAPIService.user = res;
+                return res;
+            },
+            err => this.handleError(err)
+        )
+
+    }
 
 	/**
 	 * Registers a new user

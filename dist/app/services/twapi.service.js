@@ -39,11 +39,28 @@ var TwAPIService = (function () {
         return this.http.put(this.baseUrl + "users", JSON.stringify(creds), TwAPIService.options)
             .map(function (res) { return model_factory_1.ModelFactory.buildUser(res.json()); })
             .toPromise().then(function (res) {
-            console.log("works");
             ga_service_1.GAService.event('API', 'LOGIN');
             TwAPIService.apikey = res.key;
             TwAPIService.headers.delete('X-API-KEY');
             TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
+            TwAPIService.user = res;
+            return res;
+        }, function (err) { return _this.handleError(err); });
+    };
+    /**
+     * Get an user using his API key
+     * @param  {string}        key [description]
+     * @return {Promise<User>}     [description]
+     */
+    TwAPIService.prototype.getUser = function (key) {
+        var _this = this;
+        TwAPIService.apikey = key;
+        TwAPIService.headers.delete('X-API-KEY');
+        TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
+        return this.http.get(this.baseUrl + "users", TwAPIService.options)
+            .map(function (res) { return model_factory_1.ModelFactory.buildUser(res.json()); })
+            .toPromise().then(function (res) {
+            ga_service_1.GAService.event('API', 'AUTOLOGIN');
             TwAPIService.user = res;
             return res;
         }, function (err) { return _this.handleError(err); });

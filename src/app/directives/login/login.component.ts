@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
    * @param {FormBuilder}      private builder   [description]
    */
   constructor(private translate: TranslateService, 
-    private twapi: TwAPIService, private builder: FormBuilder) { 
+    protected twapi: TwAPIService, private builder: FormBuilder) { 
   	
     //Lang definition
 	  translate.setDefaultLang('en');

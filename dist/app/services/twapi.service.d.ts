@@ -137,6 +137,12 @@ export declare class TwAPIService {
      */
     login(email: string, password: string): Promise<User>;
     /**
+     * Get an user using his API key
+     * @param  {string}        key [description]
+     * @return {Promise<User>}     [description]
+     */
+    getUser(key: string): Promise<User>;
+    /**
      * Registers a new user
      * @param  {string}        email
      * @param  {string}        password

@@ -4,7 +4,7 @@ import { FormBuilder, Control, ControlGroup } from '@angular/common';
 import { TwAPIService } from './../../services/twapi.service';
 export declare class LoginComponent implements OnInit {
     private translate;
-    private twapi;
+    protected twapi: TwAPIService;
     private builder;
     loginForm: ControlGroup;
     email: Control;

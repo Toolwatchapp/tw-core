@@ -9,13 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var testing_1 = require('@angular/core/testing');
-var testing_2 = require('@angular/compiler/testing');
 var core_1 = require('@angular/core');
+var ng2_translate_1 = require('ng2-translate/ng2-translate');
+var http_1 = require('@angular/http');
+var ga_service_1 = require('./../../services/ga.service');
+var twapi_service_1 = require('./../../services/twapi.service');
+var testing_2 = require('@angular/compiler/testing');
+var core_2 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var login_component_1 = require('./login.component');
 testing_1.describe('Component: Login', function () {
     var builder;
-    testing_1.beforeEachProviders(function () { return [login_component_1.LoginComponent]; });
+    testing_1.beforeEachProviders(function () { return [login_component_1.LoginComponent, core_1.provide(ng2_translate_1.TranslateLoader, {
+            useFactory: function (http) { return new ng2_translate_1.TranslateStaticLoader(http, 'app/assets/i18n', '.json'); },
+            deps: [http_1.Http]
+        }), http_1.HTTP_PROVIDERS, ga_service_1.GAService, ng2_translate_1.TranslateService, twapi_service_1.TwAPIService]; });
     testing_1.beforeEach(testing_1.inject([testing_2.TestComponentBuilder], function (tcb) {
         builder = tcb;
     }));
@@ -35,7 +43,7 @@ var LoginComponentTestController = (function () {
     function LoginComponentTestController() {
     }
     LoginComponentTestController = __decorate([
-        core_1.Component({
+        core_2.Component({
             selector: 'test',
             template: "\n    <app-login></app-login>\n  ",
             directives: [login_component_1.LoginComponent]

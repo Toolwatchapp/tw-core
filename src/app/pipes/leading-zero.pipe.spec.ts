@@ -11,6 +11,6 @@ describe('LeadingZero Pipe', () => {
   beforeEachProviders(() => [LeadingZero]);
 
   it('should transform the input', inject([LeadingZero], (pipe: LeadingZero) => {
-      expect(pipe.transform(0)).toBe(null);
+      expect(pipe.transform(9)).toBe("09");
   }));
 });

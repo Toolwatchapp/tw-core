@@ -11,6 +11,7 @@ describe('ArethmeticSign Pipe', () => {
   beforeEachProviders(() => [ArethmeticSign]);
 
   it('should transform the input', inject([ArethmeticSign], (pipe: ArethmeticSign) => {
-      expect(pipe.transform(0)).toBe(null);
+      expect(pipe.transform(3)).toBe("+3");
+      expect(pipe.transform(-2)).toBe("-2");
   }));
 });

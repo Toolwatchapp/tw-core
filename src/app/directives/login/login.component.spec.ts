@@ -6,6 +6,14 @@ import {
   it,
   inject,
 } from '@angular/core/testing';
+
+import {provide} from '@angular/core';
+import {TRANSLATE_PROVIDERS, TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
+import {HTTP_PROVIDERS, Http} from '@angular/http';
+import {GAService} from './../../services/ga.service';
+import {TwAPIService} from './../../services/twapi.service';
+
+
 import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
 import { Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -14,7 +22,11 @@ import { LoginComponent } from './login.component';
 describe('Component: Login', () => {
   let builder: TestComponentBuilder;
 
-  beforeEachProviders(() => [LoginComponent]);
+  beforeEachProviders(() => [LoginComponent, provide(TranslateLoader, {
+        useFactory: (http: Http) => new TranslateStaticLoader(http, 'app/assets/i18n', '.json'),
+        deps: [Http]
+    }), HTTP_PROVIDERS,GAService,TranslateService, TwAPIService]);
+
   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
     builder = tcb;
   }));

@@ -3,8 +3,8 @@ import { MoonPhasesComponent } from './moon-phases/moon-phases.component';
 
 @Component({
   selector: 'clock',
-  templateUrl: 'app/directives/clock/clock.component.html',
-  styleUrls: ['app/directives/clock/clock.component.css'],
+  // templateUrl: 'app/directives/clock/clock.component.html',
+  template: '',
   directives: [MoonPhasesComponent]
 })
 export class ClockComponent implements OnInit {

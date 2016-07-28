@@ -9,8 +9,8 @@ import { GAService } from './../../services/ga.service';
 
 @Component({
   selector: 'app-signup',
-  templateUrl: 'app/directives/signup/signup.component.html',
-  styleUrls: ['app/directives/signup/signup.component.css'],
+  templateUrl: 'base/dist/app/directives/signup/signup.component.html',
+  // styleUrls: ['app/directives/signup/signup.component.css'],
   pipes: [TranslatePipe],
   providers: [TwAPIService, HTTP_PROVIDERS],
   directives: [FORM_DIRECTIVES, MD_BUTTON_DIRECTIVES]

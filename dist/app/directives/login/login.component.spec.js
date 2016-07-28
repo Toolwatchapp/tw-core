@@ -21,7 +21,7 @@ var login_component_1 = require('./login.component');
 testing_1.describe('Component: Login', function () {
     var builder;
     testing_1.beforeEachProviders(function () { return [login_component_1.LoginComponent, core_1.provide(ng2_translate_1.TranslateLoader, {
-            useFactory: function (http) { return new ng2_translate_1.TranslateStaticLoader(http, 'app/assets/i18n', '.json'); },
+            useFactory: function (http) { return new ng2_translate_1.TranslateStaticLoader(http, 'base/dist/app/assets/i18n', '.json'); },
             deps: [http_1.Http]
         }), http_1.HTTP_PROVIDERS, ga_service_1.GAService, ng2_translate_1.TranslateService, twapi_service_1.TwAPIService]; });
     testing_1.beforeEach(testing_1.inject([testing_2.TestComponentBuilder], function (tcb) {

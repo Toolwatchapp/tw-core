@@ -11,10 +11,19 @@ import { Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { SignupComponent } from './signup.component';
 
+import {provide} from '@angular/core';
+import {TRANSLATE_PROVIDERS, TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
+import {HTTP_PROVIDERS, Http} from '@angular/http';
+import {GAService} from './../../services/ga.service';
+import {TwAPIService} from './../../services/twapi.service';
+
 describe('Component: Signup', () => {
   let builder: TestComponentBuilder;
 
-  beforeEachProviders(() => [SignupComponent]);
+  beforeEachProviders(() => [SignupComponent, provide(TranslateLoader, {
+        useFactory: (http: Http) => new TranslateStaticLoader(http, 'base/dist/app/assets/i18n', '.json'),
+        deps: [Http]
+    }), HTTP_PROVIDERS,GAService,TranslateService, TwAPIService]);
   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
     builder = tcb;
   }));

@@ -7,14 +7,19 @@ import {
   inject,
 } from '@angular/core/testing';
 import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
-import { Component } from '@angular/core';
+import { Component, ElementRef, provide } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ClockComponent } from './clock.component';
+import { MoonPhasesComponent } from './moon-phases/moon-phases.component';
 
-describe('Component: Watch', () => {
+class MockElementRef implements ElementRef {
+  nativeElement = {};
+}
+
+describe('Component: Clock', () => {
   let builder: TestComponentBuilder;
 
-  beforeEachProviders(() => [ClockComponent]);
+  beforeEachProviders(() => [ClockComponent, MoonPhasesComponent, provide(ElementRef, { useValue: new MockElementRef() })]);
   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
     builder = tcb;
   }));
@@ -37,7 +42,7 @@ describe('Component: Watch', () => {
 @Component({
   selector: 'test',
   template: `
-    <app-watch></app-watch>
+    <clock></clock>
   `,
   directives: [ClockComponent]
 })

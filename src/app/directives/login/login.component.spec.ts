@@ -23,7 +23,7 @@ describe('Component: Login', () => {
   let builder: TestComponentBuilder;
 
   beforeEachProviders(() => [LoginComponent, provide(TranslateLoader, {
-        useFactory: (http: Http) => new TranslateStaticLoader(http, 'app/assets/i18n', '.json'),
+        useFactory: (http: Http) => new TranslateStaticLoader(http, 'base/dist/app/assets/i18n', '.json'),
         deps: [Http]
     }), HTTP_PROVIDERS,GAService,TranslateService, TwAPIService]);
 
@@ -34,7 +34,7 @@ describe('Component: Login', () => {
   it('should inject the component', inject([LoginComponent],
       (component: LoginComponent) => {
     expect(component).toBeTruthy();
-  }));
+  })); 
 
   it('should create the component', inject([], () => {
     return builder.createAsync(LoginComponentTestController)

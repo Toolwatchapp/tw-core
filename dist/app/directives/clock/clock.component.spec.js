@@ -13,9 +13,16 @@ var testing_2 = require('@angular/compiler/testing');
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var clock_component_1 = require('./clock.component');
-testing_1.describe('Component: Watch', function () {
+var moon_phases_component_1 = require('./moon-phases/moon-phases.component');
+var MockElementRef = (function () {
+    function MockElementRef() {
+        this.nativeElement = {};
+    }
+    return MockElementRef;
+}());
+testing_1.describe('Component: Clock', function () {
     var builder;
-    testing_1.beforeEachProviders(function () { return [clock_component_1.ClockComponent]; });
+    testing_1.beforeEachProviders(function () { return [clock_component_1.ClockComponent, moon_phases_component_1.MoonPhasesComponent, core_1.provide(core_1.ElementRef, { useValue: new MockElementRef() })]; });
     testing_1.beforeEach(testing_1.inject([testing_2.TestComponentBuilder], function (tcb) {
         builder = tcb;
     }));
@@ -37,7 +44,7 @@ var ClockComponentTestController = (function () {
     ClockComponentTestController = __decorate([
         core_1.Component({
             selector: 'test',
-            template: "\n    <app-watch></app-watch>\n  ",
+            template: "\n    <clock></clock>\n  ",
             directives: [clock_component_1.ClockComponent]
         }), 
         __metadata('design:paramtypes', [])

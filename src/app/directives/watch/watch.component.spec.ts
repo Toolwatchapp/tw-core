@@ -6,6 +6,14 @@ import {
   it,
   inject,
 } from '@angular/core/testing';
+
+
+import {provide} from '@angular/core';
+import {TRANSLATE_PROVIDERS, TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
+import {HTTP_PROVIDERS, Http} from '@angular/http';
+import {GAService} from './../../services/ga.service';
+import {TwAPIService} from './../../services/twapi.service';
+
 import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
 import { Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -14,7 +22,11 @@ import { WatchComponent } from './watch.component';
 describe('Component: Watch', () => {
   let builder: TestComponentBuilder;
 
-  beforeEachProviders(() => [WatchComponent]);
+  beforeEachProviders(() => [WatchComponent,  provide(TranslateLoader, {
+        useFactory: (http: Http) => new TranslateStaticLoader(http, 'base/dist/app/assets/i18n', '.json'),
+        deps: [Http]
+    }), HTTP_PROVIDERS,GAService,TranslateService, TwAPIService]);
+  
   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
     builder = tcb;
   }));
@@ -37,7 +49,7 @@ describe('Component: Watch', () => {
 @Component({
   selector: 'test',
   template: `
-    <app-watch></app-watch>
+    <watch-form></watch-form>
   `,
   directives: [WatchComponent]
 })

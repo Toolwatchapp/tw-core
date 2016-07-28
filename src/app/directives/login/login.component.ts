@@ -10,8 +10,8 @@ import { GAService } from './../../services/ga.service';
 
 @Component({
   selector: 'app-login',
-  templateUrl: 'app/directives/login/login.component.html',
-  styleUrls: ['app/directives/login/login.component.css'],
+  templateUrl: 'base/dist/app/directives/login/login.component.html',
+  // styleUrls: ['app/directives/login/login.component.css'],
   pipes: [TranslatePipe],
   providers: [TwAPIService, HTTP_PROVIDERS],
   directives: [FORM_DIRECTIVES, MD_BUTTON_DIRECTIVES]

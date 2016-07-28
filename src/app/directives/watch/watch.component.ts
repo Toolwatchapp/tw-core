@@ -10,8 +10,8 @@ import { GAService } from './../../services/ga.service';
 
 @Component({
   selector: 'watch-form',
-  templateUrl: 'app/directives/watch/watch.component.html',
-  styleUrls: ['app/directives/watch/watch.component.css'],
+  templateUrl: 'base/dist/app/directives/watch/watch.component.html',
+  // styleUrls: ['app/directives/watch/watch.component.css'],
   pipes: [TranslatePipe],
   providers: [TwAPIService, HTTP_PROVIDERS],
   directives: [FORM_DIRECTIVES, MD_BUTTON_DIRECTIVES]

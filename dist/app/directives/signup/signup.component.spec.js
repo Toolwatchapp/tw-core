@@ -13,9 +13,17 @@ var testing_2 = require('@angular/compiler/testing');
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var signup_component_1 = require('./signup.component');
+var core_2 = require('@angular/core');
+var ng2_translate_1 = require('ng2-translate/ng2-translate');
+var http_1 = require('@angular/http');
+var ga_service_1 = require('./../../services/ga.service');
+var twapi_service_1 = require('./../../services/twapi.service');
 testing_1.describe('Component: Signup', function () {
     var builder;
-    testing_1.beforeEachProviders(function () { return [signup_component_1.SignupComponent]; });
+    testing_1.beforeEachProviders(function () { return [signup_component_1.SignupComponent, core_2.provide(ng2_translate_1.TranslateLoader, {
+            useFactory: function (http) { return new ng2_translate_1.TranslateStaticLoader(http, 'base/dist/app/assets/i18n', '.json'); },
+            deps: [http_1.Http]
+        }), http_1.HTTP_PROVIDERS, ga_service_1.GAService, ng2_translate_1.TranslateService, twapi_service_1.TwAPIService]; });
     testing_1.beforeEach(testing_1.inject([testing_2.TestComponentBuilder], function (tcb) {
         builder = tcb;
     }));

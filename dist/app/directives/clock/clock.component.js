@@ -54,8 +54,8 @@ var ClockComponent = (function () {
     ClockComponent = __decorate([
         core_1.Component({
             selector: 'clock',
-            templateUrl: 'app/directives/clock/clock.component.html',
-            styleUrls: ['app/directives/clock/clock.component.css'],
+            // templateUrl: 'app/directives/clock/clock.component.html',
+            template: '',
             directives: [moon_phases_component_1.MoonPhasesComponent]
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef])

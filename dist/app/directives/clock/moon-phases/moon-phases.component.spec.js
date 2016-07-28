@@ -13,9 +13,17 @@ var testing_2 = require('@angular/compiler/testing');
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var moon_phases_component_1 = require('./moon-phases.component');
+var MockElementRef = (function () {
+    function MockElementRef() {
+        this.nativeElement = {};
+    }
+    return MockElementRef;
+}());
 testing_1.describe('Component: MoonPhases', function () {
     var builder;
-    testing_1.beforeEachProviders(function () { return [moon_phases_component_1.MoonPhasesComponent]; });
+    testing_1.beforeEachProviders(function () { return [
+        moon_phases_component_1.MoonPhasesComponent,
+        core_1.provide(core_1.ElementRef, { useValue: new MockElementRef() })]; });
     testing_1.beforeEach(testing_1.inject([testing_2.TestComponentBuilder], function (tcb) {
         builder = tcb;
     }));
@@ -37,7 +45,7 @@ var MoonPhasesComponentTestController = (function () {
     MoonPhasesComponentTestController = __decorate([
         core_1.Component({
             selector: 'test',
-            template: "\n    <app-moon-phases></app-moon-phases>\n  ",
+            template: "\n    <moon-phases></moon-phases>\n  ",
             directives: [moon_phases_component_1.MoonPhasesComponent]
         }), 
         __metadata('design:paramtypes', [])

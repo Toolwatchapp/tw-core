@@ -128,8 +128,8 @@ var WatchComponent = (function () {
     WatchComponent = __decorate([
         core_1.Component({
             selector: 'watch-form',
-            templateUrl: 'app/directives/watch/watch.component.html',
-            styleUrls: ['app/directives/watch/watch.component.css'],
+            templateUrl: 'base/dist/app/directives/watch/watch.component.html',
+            // styleUrls: ['app/directives/watch/watch.component.css'],
             pipes: [ng2_translate_1.TranslatePipe],
             providers: [twapi_service_1.TwAPIService, http_1.HTTP_PROVIDERS],
             directives: [common_1.FORM_DIRECTIVES, button_1.MD_BUTTON_DIRECTIVES]

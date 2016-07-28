@@ -36,8 +36,7 @@ var MoonPhasesComponent = (function (_super) {
     MoonPhasesComponent = __decorate([
         core_1.Component({
             selector: 'moon-phases',
-            templateUrl: 'app/directives/watch/moon-phases/moon-phases.component.html',
-            styleUrls: ['app/directives/watch/moon-phases/moon-phases.component.css']
+            template: '',
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef])
     ], MoonPhasesComponent);

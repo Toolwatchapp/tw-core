@@ -3,8 +3,9 @@ import { Astro } from './../astro';
 
 @Component({
   selector: 'moon-phases',
-  templateUrl: 'app/directives/watch/moon-phases/moon-phases.component.html',
-  styleUrls: ['app/directives/watch/moon-phases/moon-phases.component.css']
+  template: '',
+  // templateUrl: 'app/directives/clock/moon-phases/moon-phases.component.html',
+  // styleUrls: ['app/directives/clock/moon-phases/moon-phases.component.css']
 })
 export class MoonPhasesComponent extends Astro implements OnInit {
   

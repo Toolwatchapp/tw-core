@@ -7,14 +7,20 @@ import {
   inject,
 } from '@angular/core/testing';
 import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
-import { Component } from '@angular/core';
+import { Component, ElementRef, provide } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { MoonPhasesComponent } from './moon-phases.component';
+
+class MockElementRef implements ElementRef {
+  nativeElement = {};
+}
 
 describe('Component: MoonPhases', () => {
   let builder: TestComponentBuilder;
 
-  beforeEachProviders(() => [MoonPhasesComponent]);
+  beforeEachProviders(() => [
+    MoonPhasesComponent,  
+    provide(ElementRef, { useValue: new MockElementRef() })]);
   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
     builder = tcb;
   }));
@@ -37,7 +43,7 @@ describe('Component: MoonPhases', () => {
 @Component({
   selector: 'test',
   template: `
-    <app-moon-phases></app-moon-phases>
+    <moon-phases></moon-phases>
   `,
   directives: [MoonPhasesComponent]
 })

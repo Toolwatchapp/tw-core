@@ -5,7 +5,7 @@ var Watch = (function () {
         if (historySize === void 0) { historySize = 0; }
         if (measures === void 0) { measures = []; }
         if (name === void 0) { name = ""; }
-        if (yearOfBuy === void 0) { yearOfBuy = 0; }
+        if (yearOfBuy === void 0) { yearOfBuy = null; }
         if (serial === void 0) { serial = ""; }
         if (caliber === void 0) { caliber = ""; }
         this.status = WatchStatus.None;

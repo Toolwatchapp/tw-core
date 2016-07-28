@@ -14,7 +14,7 @@ export class Watch{
 	waiting:number;
 
 	constructor(id: number, brand: string, historySize: number = 0,
-		measures: Measure[] = [], name: string = "", yearOfBuy: number = 0,
+		measures: Measure[] = [], name: string = "", yearOfBuy: number = null,
 		serial: string = "", caliber: string = "") {
 
 		this.id = id;

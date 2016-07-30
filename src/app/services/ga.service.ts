@@ -2,10 +2,6 @@ import { Injectable } from '@angular/core';
 import './analytics';
 declare let ga;
 
-import { Wove } from 'aspect.js/dist/lib/aspect';
-import { LoggerAspect } from './../aspects/logger.aspect';
-
-@Wove(LoggerAspect)
 @Injectable()
 export class GAService {
 

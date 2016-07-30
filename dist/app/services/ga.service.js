@@ -10,8 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 require('./analytics');
-var aspect_1 = require('aspect.js/dist/lib/aspect');
-var logger_aspect_1 = require('./../aspects/logger.aspect');
 var GAService = (function () {
     function GAService() {
     }
@@ -45,7 +43,6 @@ var GAService = (function () {
     };
     GAService.gaCreated = false;
     GAService = __decorate([
-        aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Injectable(), 
         __metadata('design:paramtypes', [])
     ], GAService);

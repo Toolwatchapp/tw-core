@@ -1,5 +1,8 @@
 import { Watch } from './watch.model'
+import { LoggerAspect } from './../aspects/logger.aspect'
+import {Wove} from 'aspect.js/dist/lib/aspect';
 
+@Wove(LoggerAspect)
 export class User{
 	id:number;
 	email:string;
@@ -36,6 +39,19 @@ export class User{
 
 		this.watches.push(watch);
 	}
+
+	public toString = () : string => {
+
+		return `User (
+			id: ${this.id}, 
+			email: ${this.email}, 
+			name: ${this.name}, 
+			lastname: ${this.lastname}, 
+			country: ${this.country}, 
+			registerDate: ${this.registerDate}, 
+			key: ${this.key}, 
+			watches: ${this.watches})`;
+    }
 
 }
 

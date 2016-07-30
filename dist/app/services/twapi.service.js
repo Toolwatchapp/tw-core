@@ -14,6 +14,8 @@ var watch_model_1 = require('./../models/watch.model');
 var model_factory_1 = require('./../models/model.factory');
 var ga_service_1 = require('./ga.service');
 require('rxjs/add/operator/toPromise');
+var aspect_1 = require('aspect.js/dist/lib/aspect');
+var logger_aspect_1 = require('./../aspects/logger.aspect');
 var TwAPIService = (function () {
     /**
      * Inject http service
@@ -478,6 +480,7 @@ var TwAPIService = (function () {
     TwAPIService.options = new http_1.RequestOptions({ headers: TwAPIService.headers });
     TwAPIService.assetsUrl = "app/assets";
     TwAPIService = __decorate([
+        aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
     ], TwAPIService);

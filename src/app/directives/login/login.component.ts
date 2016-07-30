@@ -7,11 +7,14 @@ import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 import { GlobalValidator } from './../global-validator';
 import { GAService } from './../../services/ga.service';
 
+import { Wove } from 'aspect.js/dist/lib/aspect';
+import { LoggerAspect } from './../../aspects/logger.aspect';
 
+@Wove(LoggerAspect)
 @Component({
   selector: 'app-login',
-  templateUrl: 'base/dist/app/directives/login/login.component.html',
-  // styleUrls: ['app/directives/login/login.component.css'],
+  templateUrl: 'app/directives/login/login.component.html',
+  styleUrls: ['app/directives/login/login.component.css'],
   pipes: [TranslatePipe],
   providers: [TwAPIService, HTTP_PROVIDERS],
   directives: [FORM_DIRECTIVES, MD_BUTTON_DIRECTIVES]

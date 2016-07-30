@@ -16,6 +16,8 @@ var http_1 = require('@angular/http');
 var button_1 = require('@angular2-material/button');
 var global_validator_1 = require('./../global-validator');
 var ga_service_1 = require('./../../services/ga.service');
+var aspect_1 = require('aspect.js/dist/lib/aspect');
+var logger_aspect_1 = require('./../../aspects/logger.aspect');
 var SignupComponent = (function () {
     /**
     * Constructor w/ service injection
@@ -117,6 +119,7 @@ var SignupComponent = (function () {
         __metadata('design:type', Object)
     ], SignupComponent.prototype, "userLogged", void 0);
     SignupComponent = __decorate([
+        aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Component({
             selector: 'app-signup',
             templateUrl: 'base/dist/app/directives/signup/signup.component.html',

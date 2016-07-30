@@ -15,6 +15,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var astro_1 = require('./../astro');
+var aspect_1 = require('aspect.js/dist/lib/aspect');
+var logger_aspect_1 = require('./../../../aspects/logger.aspect');
 var MoonPhasesComponent = (function (_super) {
     __extends(MoonPhasesComponent, _super);
     function MoonPhasesComponent(elementRef) {
@@ -34,6 +36,7 @@ var MoonPhasesComponent = (function (_super) {
     MoonPhasesComponent.prototype.ngOnInit = function () {
     };
     MoonPhasesComponent = __decorate([
+        aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Component({
             selector: 'moon-phases',
             template: '',

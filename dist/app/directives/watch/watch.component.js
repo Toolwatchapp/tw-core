@@ -17,6 +17,8 @@ var twapi_service_1 = require('./../../services/twapi.service');
 var http_1 = require('@angular/http');
 var button_1 = require('@angular2-material/button');
 var ga_service_1 = require('./../../services/ga.service');
+var aspect_1 = require('aspect.js/dist/lib/aspect');
+var logger_aspect_1 = require('./../../aspects/logger.aspect');
 var WatchComponent = (function () {
     /**
      * Constructor with DI
@@ -126,6 +128,7 @@ var WatchComponent = (function () {
         __metadata('design:type', Object)
     ], WatchComponent.prototype, "watchSaved", void 0);
     WatchComponent = __decorate([
+        aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Component({
             selector: 'watch-form',
             templateUrl: 'base/dist/app/directives/watch/watch.component.html',

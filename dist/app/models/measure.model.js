@@ -1,7 +1,22 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var aspect_1 = require('aspect.js/dist/lib/aspect');
+var logger_aspect_1 = require('./../aspects/logger.aspect');
 var Measure = (function () {
     function Measure(id, measureUserTime, measureReferenceTime, status, accuracyUserTime, accuracyReferenceTime, accuracy, accuracyAge, percentile) {
+        var _this = this;
         this.status = MeasureStatus.None;
+        this.toString = function () {
+            return "Measure (id: " + _this.id + ",\n\t\tmeasureUserTime: " + _this.measureUserTime + ",\n\t\tmeasureReferenceTime: " + _this.measureReferenceTime + ",\n\t\taccuracyUserTime: " + _this.accuracyUserTime + ",\n\t\taccuracyReferenceTime: " + _this.accuracyReferenceTime + ",\n\t\taccuracy: " + _this.accuracy + ",\n\t\taccuracyAge: " + _this.accuracyAge + ",\n\t\tpercentile: " + _this.percentile + ",\n\t\tstatus: " + _this.status + ")";
+        };
         this.id = id;
         this.measureUserTime = measureUserTime;
         this.measureReferenceTime = measureReferenceTime;
@@ -48,6 +63,10 @@ var Measure = (function () {
             }
         }
     };
+    Measure = __decorate([
+        aspect_1.Wove(logger_aspect_1.LoggerAspect), 
+        __metadata('design:paramtypes', [Number, Number, Number, Number, Number, Number, Number, Number, Number])
+    ], Measure);
     return Measure;
 }());
 exports.Measure = Measure;

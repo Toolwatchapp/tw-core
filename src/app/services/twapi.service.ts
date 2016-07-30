@@ -8,7 +8,10 @@ import { BlogPost } from './../models/blog-post.model'
 import { GAService } from './ga.service';
 
 import 'rxjs/add/operator/toPromise';
+import { Wove } from 'aspect.js/dist/lib/aspect';
+import { LoggerAspect } from './../aspects/logger.aspect';
 
+@Wove(LoggerAspect)
 @Injectable()
 /**
  * Exposes the Toolwatch API.

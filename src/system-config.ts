@@ -4,7 +4,8 @@
 /** Map relative paths to URLs. */
 const map: any = {
   'ng2-translate': 'vendor/ng2-translate',
-  '@angular2-material': 'vendor/@angular2-material'
+  '@angular2-material': 'vendor/@angular2-material',
+  'aspect.js': 'vendor/aspect.js'
 };
 
 /** User packages configuration. */
@@ -31,6 +32,11 @@ const packages: any = {
     format: 'cjs',
     defaultExtension: 'js',
     main: 'list.js'
+  },
+  'aspect.js/dist/lib':{
+    format: 'cjs',
+    defaultExtension: 'js',
+    main: 'aspect.js'
   }
 };
 

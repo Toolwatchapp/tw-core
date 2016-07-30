@@ -7,7 +7,10 @@ import {TwAPIService} from './../../services/twapi.service';
 import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
 import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 import { GAService } from './../../services/ga.service';
+import { Wove } from 'aspect.js/dist/lib/aspect';
+import { LoggerAspect } from './../../aspects/logger.aspect';
 
+@Wove(LoggerAspect)
 @Component({
   selector: 'watch-form',
   templateUrl: 'base/dist/app/directives/watch/watch.component.html',

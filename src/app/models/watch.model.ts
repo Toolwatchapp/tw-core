@@ -1,5 +1,9 @@
 import { Measure, MeasureStatus } from './measure.model'
+import {Wove} from 'aspect.js/dist/lib/aspect';
+import { LoggerAspect } from './../aspects/logger.aspect'
 
+
+@Wove(LoggerAspect)
 export class Watch{
 	id:number;
 	brand:string;
@@ -53,6 +57,19 @@ export class Watch{
 		}
 	}
 
+	public toString = () : string => {
+		return `Watch (id: ${this.id},
+				brand: ${this.brand},
+				historySize: ${this.historySize},
+				measures: ${this.measures},
+				name: ${this.name},
+				yearOfBuy: ${this.yearOfBuy},
+				serial: ${this.serial},
+				caliber: ${this.caliber},
+				status: ${this.status},
+				next: ${this.next},
+				waiting: ${this.waiting})`;
+	}
 
 	currentMeasure():Measure{
 		if(this.measures.length !== 0){

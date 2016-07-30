@@ -1,3 +1,8 @@
+import { Wove } from 'aspect.js/dist/lib/aspect';
+import { LoggerAspect } from './../aspects/logger.aspect'
+
+
+@Wove(LoggerAspect)
 export class Measure{
 
 	id:number;
@@ -38,6 +43,17 @@ export class Measure{
 		this.computePostAccuracyStatus(accuracy, accuracyAge);
 	}
 
+	public toString = () : string => {
+		return `Measure (id: ${this.id},
+		measureUserTime: ${this.measureUserTime},
+		measureReferenceTime: ${this.measureReferenceTime},
+		accuracyUserTime: ${this.accuracyUserTime},
+		accuracyReferenceTime: ${this.accuracyReferenceTime},
+		accuracy: ${this.accuracy},
+		accuracyAge: ${this.accuracyAge},
+		percentile: ${this.percentile},
+		status: ${this.status})`;
+	}
 
 	addBaseMeasure(referenceTime:number, userTime:number){
 		this.measureReferenceTime = referenceTime;

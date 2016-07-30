@@ -7,6 +7,10 @@ import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 import { GlobalValidator } from './../global-validator';
 import { GAService } from './../../services/ga.service';
 
+import { Wove } from 'aspect.js/dist/lib/aspect';
+import { LoggerAspect } from './../../aspects/logger.aspect';
+
+@Wove(LoggerAspect)
 @Component({
   selector: 'app-signup',
   templateUrl: 'base/dist/app/directives/signup/signup.component.html',

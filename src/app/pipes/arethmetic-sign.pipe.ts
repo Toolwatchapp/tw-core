@@ -1,5 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { Wove } from 'aspect.js/dist/lib/aspect';
+import { LoggerAspect } from './../aspects/logger.aspect';
 
+@Wove(LoggerAspect)
 @Pipe({
   name: 'arethmeticSign'
 })

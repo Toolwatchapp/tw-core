@@ -9,6 +9,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var aspect_1 = require('aspect.js/dist/lib/aspect');
+var logger_aspect_1 = require('./../aspects/logger.aspect');
 var ArethmeticSign = (function () {
     function ArethmeticSign() {
     }
@@ -21,6 +23,7 @@ var ArethmeticSign = (function () {
         }
     };
     ArethmeticSign = __decorate([
+        aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Pipe({
             name: 'arethmeticSign'
         }), 

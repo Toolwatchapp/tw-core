@@ -12,6 +12,7 @@ export declare class Watch {
     next: WatchAction;
     waiting: number;
     constructor(id: number, brand: string, historySize?: number, measures?: Measure[], name?: string, yearOfBuy?: number, serial?: string, caliber?: string);
+    toString: () => string;
     currentMeasure(): Measure;
     upsertMeasure(measure: Measure): void;
 }

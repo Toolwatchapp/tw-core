@@ -17,7 +17,7 @@ if (environment.production) {
 }
 
 
-bootstrap(WatchComponent, [
+bootstrap(LoginComponent, [
     HTTP_PROVIDERS,
     GAService,
     provide(TranslateLoader, {

@@ -1,3 +1,8 @@
+import {Wove} from 'aspect.js/dist/lib/aspect';
+import { LoggerAspect } from './../aspects/logger.aspect'
+
+
+@Wove(LoggerAspect)
 export class BlogPost{
 	id:number;
 	title:string;
@@ -13,6 +18,14 @@ export class BlogPost{
 		this.excerpt = this.decodeHTMLEntities(excerpt);
 		String.fromCharCode
 		this.url = url;
+	}
+
+	public toString = () : string => {
+		return `BlogPost (id: ${this.id},
+				title: ${this.title},
+				date: ${this.date},
+				excerpt: ${this.excerpt},
+				url: ${this.url})`;
 	}
 
 	private decodeHTMLEntities(str:string) {

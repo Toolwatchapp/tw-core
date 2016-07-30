@@ -9,6 +9,7 @@ export declare class Measure {
     percentile: number;
     status: MeasureStatus;
     constructor(id: number, measureUserTime: number, measureReferenceTime: number, status?: number, accuracyUserTime?: number, accuracyReferenceTime?: number, accuracy?: number, accuracyAge?: number, percentile?: number);
+    toString: () => string;
     addBaseMeasure(referenceTime: number, userTime: number): void;
     addAccuracyMeasure(referenceTime: number, userTime: number): void;
     addAccuracy(accuracy: number, accuracyAge: number, percentile: number): void;

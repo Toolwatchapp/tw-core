@@ -10,6 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var moon_phases_component_1 = require('./moon-phases/moon-phases.component');
+var aspect_1 = require('aspect.js/dist/lib/aspect');
+var logger_aspect_1 = require('./../../aspects/logger.aspect');
 var ClockComponent = (function () {
     function ClockComponent(elementRef) {
         this.elementRef = elementRef;
@@ -52,6 +54,7 @@ var ClockComponent = (function () {
     ClockComponent.prototype.ngOnInit = function () {
     };
     ClockComponent = __decorate([
+        aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Component({
             selector: 'clock',
             // templateUrl: 'app/directives/clock/clock.component.html',

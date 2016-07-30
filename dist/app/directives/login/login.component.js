@@ -16,6 +16,8 @@ var http_1 = require('@angular/http');
 var button_1 = require('@angular2-material/button');
 var global_validator_1 = require('./../global-validator');
 var ga_service_1 = require('./../../services/ga.service');
+var aspect_1 = require('aspect.js/dist/lib/aspect');
+var logger_aspect_1 = require('./../../aspects/logger.aspect');
 var LoginComponent = (function () {
     /**
      * Constructor w/ service injection
@@ -91,10 +93,11 @@ var LoginComponent = (function () {
         __metadata('design:type', Object)
     ], LoginComponent.prototype, "loginError", void 0);
     LoginComponent = __decorate([
+        aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Component({
             selector: 'app-login',
-            templateUrl: 'base/dist/app/directives/login/login.component.html',
-            // styleUrls: ['app/directives/login/login.component.css'],
+            templateUrl: 'app/directives/login/login.component.html',
+            styleUrls: ['app/directives/login/login.component.css'],
             pipes: [ng2_translate_1.TranslatePipe],
             providers: [twapi_service_1.TwAPIService, http_1.HTTP_PROVIDERS],
             directives: [common_1.FORM_DIRECTIVES, button_1.MD_BUTTON_DIRECTIVES]

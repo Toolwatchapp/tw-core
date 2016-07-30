@@ -1,6 +1,9 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { MoonPhasesComponent } from './moon-phases/moon-phases.component';
+import { Wove } from 'aspect.js/dist/lib/aspect';
+import { LoggerAspect } from './../../aspects/logger.aspect';
 
+@Wove(LoggerAspect)
 @Component({
   selector: 'clock',
   // templateUrl: 'app/directives/clock/clock.component.html',

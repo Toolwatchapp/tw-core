@@ -1,7 +1,19 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var measure_model_1 = require('./measure.model');
+var aspect_1 = require('aspect.js/dist/lib/aspect');
+var logger_aspect_1 = require('./../aspects/logger.aspect');
 var Watch = (function () {
     function Watch(id, brand, historySize, measures, name, yearOfBuy, serial, caliber) {
+        var _this = this;
         if (historySize === void 0) { historySize = 0; }
         if (measures === void 0) { measures = []; }
         if (name === void 0) { name = ""; }
@@ -9,6 +21,9 @@ var Watch = (function () {
         if (serial === void 0) { serial = ""; }
         if (caliber === void 0) { caliber = ""; }
         this.status = WatchStatus.None;
+        this.toString = function () {
+            return "Watch (id: " + _this.id + ",\n\t\t\t\tbrand: " + _this.brand + ",\n\t\t\t\thistorySize: " + _this.historySize + ",\n\t\t\t\tmeasures: " + _this.measures + ",\n\t\t\t\tname: " + _this.name + ",\n\t\t\t\tyearOfBuy: " + _this.yearOfBuy + ",\n\t\t\t\tserial: " + _this.serial + ",\n\t\t\t\tcaliber: " + _this.caliber + ",\n\t\t\t\tstatus: " + _this.status + ",\n\t\t\t\tnext: " + _this.next + ",\n\t\t\t\twaiting: " + _this.waiting + ")";
+        };
         this.id = id;
         this.brand = brand;
         this.historySize = historySize;
@@ -65,6 +80,10 @@ var Watch = (function () {
         this.measures.push(measure);
         console.log("this2", this);
     };
+    Watch = __decorate([
+        aspect_1.Wove(logger_aspect_1.LoggerAspect), 
+        __metadata('design:paramtypes', [Number, String, Number, Array, String, Number, String, String])
+    ], Watch);
     return Watch;
 }());
 exports.Watch = Watch;

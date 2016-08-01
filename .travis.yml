@@ -9,6 +9,10 @@ branches:
   only:
   - master
 
+notifications:
+  slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
+  email: false
+
 before_install:
  - export CHROME_BIN=/usr/bin/google-chrome
  - export DISPLAY=:99.0

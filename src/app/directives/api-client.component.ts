@@ -10,7 +10,6 @@ import { Wove, beforeMethod, Metadata } from 'aspect.js/dist/lib/aspect';
 
 @Wove()
 @Component({
-  moduleId: module.id,
   selector: 'api-client-app',
   templateUrl: 'api-client.component.html',
   styleUrls: ['api-client.component.css'],

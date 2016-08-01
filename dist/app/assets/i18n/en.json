@@ -79,8 +79,8 @@
 	"edit-watch": "Edit or delete your watch",
 	"refresh-info": "Pull to refresh",
 	"refreshing": "Refreshing...",
-	"no-watch": "You don't have any measure yet!",
+	"no-watch": "Got a watch to measure?",
+	"no-watch-sub": "Tap the button to make your first measure.",
 	"new-watch": "Add a watch"
-
 }
 

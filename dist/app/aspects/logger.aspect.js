@@ -13,16 +13,16 @@ var LoggerAspect = (function () {
     function LoggerAspect() {
     }
     LoggerAspect.prototype.beforeStatic = function (meta) {
-        console.log("TW: AFTER: " + meta.className + "." + meta.method.name + " with result " + meta.method.result);
+        //console.log(`TW: AFTER: ${meta.className}.${meta.method.name} with result ${meta.method.result}`);
     };
     LoggerAspect.prototype.before = function (meta) {
-        console.log("TW: BEFORE: " + meta.className + "." + meta.method.name + " with args " + meta.method.args.join(', '));
+        //console.log(`TW: BEFORE: ${meta.className}.${meta.method.name} with args ${meta.method.args.join(', ')}`);
     };
     LoggerAspect.prototype.after = function (meta) {
-        console.log("TW: AFTER: " + meta.className + "." + meta.method.name + " with result " + meta.method.result);
+        //console.log(`TW: AFTER: ${meta.className}.${meta.method.name} with result ${meta.method.result}`);
     };
     LoggerAspect.prototype.afterStaticMethod = function (meta) {
-        console.log("TW: AFTER: " + meta.className + "." + meta.method.name + " with result " + meta.method.result);
+        //console.log(`TW: AFTER: ${meta.className}.${meta.method.name} with result ${meta.method.result}`);
     };
     __decorate([
         aspect_1.beforeStaticMethod({ classNamePattern: /.*/, methodNamePattern: /.*/ }), 

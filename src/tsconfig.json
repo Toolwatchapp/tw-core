@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "declaration": false,
+    "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "module": "commonjs",
@@ -15,14 +15,7 @@
     "inlineSources": true,
     "declaration": true
   },
-
-  "files": [
-    "main.ts",
-    "typings.d.ts",
-    "app/services/twapi.service.ts",
-    "app/directives/login/login.component.ts",
-    "app/directives/signup/signup.component.ts",
-    "app/directives/watch/watch.component.ts",
-    "app/directives/watch/moon-phases/moon-phases.component.ts"
+  "exclude": [
+      "node_modules"
   ]
 }

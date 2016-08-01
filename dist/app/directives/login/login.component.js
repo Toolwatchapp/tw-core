@@ -96,8 +96,8 @@ var LoginComponent = (function () {
         aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Component({
             selector: 'app-login',
-            templateUrl: 'app/directives/login/login.component.html',
-            styleUrls: ['app/directives/login/login.component.css'],
+            templateUrl: 'base/dist/app/directives/login/login.component.html',
+            styleUrls: ['base/dist/app/directives/login/login.component.css'],
             pipes: [ng2_translate_1.TranslatePipe],
             providers: [twapi_service_1.TwAPIService, http_1.HTTP_PROVIDERS],
             directives: [common_1.FORM_DIRECTIVES, button_1.MD_BUTTON_DIRECTIVES]

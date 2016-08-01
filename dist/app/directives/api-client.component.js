@@ -22,7 +22,6 @@ var ApiClientAppComponent = (function () {
     ApiClientAppComponent = __decorate([
         aspect_1.Wove(),
         core_1.Component({
-            moduleId: module.id,
             selector: 'api-client-app',
             templateUrl: 'api-client.component.html',
             styleUrls: ['api-client.component.css'],

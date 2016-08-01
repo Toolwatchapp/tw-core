@@ -13,22 +13,22 @@ export class LoggerAspect {
 
   @beforeStaticMethod({ classNamePattern: /.*/, methodNamePattern: /.*/})
   beforeStatic(meta: Metadata) {
-    console.log(`TW: AFTER: ${meta.className}.${meta.method.name} with result ${meta.method.result}`);
+    //console.log(`TW: AFTER: ${meta.className}.${meta.method.name} with result ${meta.method.result}`);
   }
 
   @beforeMethod({ classNamePattern: /.*/, methodNamePattern: /.*/})
   before(meta: Metadata) {
-    console.log(`TW: BEFORE: ${meta.className}.${meta.method.name} with args ${meta.method.args.join(', ')}`);
+    //console.log(`TW: BEFORE: ${meta.className}.${meta.method.name} with args ${meta.method.args.join(', ')}`);
   }
 
   @afterMethod({ classNamePattern: /.*/, methodNamePattern: /.*/})
   after(meta: Metadata) {
-    console.log(`TW: AFTER: ${meta.className}.${meta.method.name} with result ${meta.method.result}`);
+    //console.log(`TW: AFTER: ${meta.className}.${meta.method.name} with result ${meta.method.result}`);
   }
 
   @afterStaticMethod({ classNamePattern: /.*/, methodNamePattern: /.*/})
   afterStaticMethod(meta: Metadata) {
-    console.log(`TW: AFTER: ${meta.className}.${meta.method.name} with result ${meta.method.result}`);
+    //console.log(`TW: AFTER: ${meta.className}.${meta.method.name} with result ${meta.method.result}`);
   }
 
   // @onThrowOfMethod({ classNamePattern: /.*/, methodNamePattern: /.*/})

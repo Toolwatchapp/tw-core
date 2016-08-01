@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ng server",
     "lint": "tslint \"src/**/*.ts\"",
+    "pretest": "npm run postinstall",
     "test": "ng test --watch false",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",

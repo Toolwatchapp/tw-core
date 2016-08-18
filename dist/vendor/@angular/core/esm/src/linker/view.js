@@ -1,17 +1,23 @@
-import { ObservableWrapper } from '../facade/async';
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+import { AnimationGroupPlayer } from '../animation/animation_group_player';
+import { ViewAnimationMap } from '../animation/view_animation_map';
+import { ChangeDetectorStatus } from '../change_detection/change_detection';
 import { ListWrapper } from '../facade/collection';
 import { isPresent } from '../facade/lang';
+import { wtfCreateScope, wtfLeave } from '../profile/profile';
+import { DebugContext } from './debug_context';
 import { AppElement } from './element';
+import { ElementInjector } from './element_injector';
+import { ExpressionChangedAfterItHasBeenCheckedException, ViewDestroyedException, ViewWrappedException } from './exceptions';
 import { ViewRef_ } from './view_ref';
 import { ViewType } from './view_type';
 import { ensureSlotCount, flattenNestedViewRenderNodes } from './view_utils';
-import { ChangeDetectionStrategy, ChangeDetectorState } from '../change_detection/change_detection';
-import { wtfCreateScope, wtfLeave } from '../profile/profile';
-import { ExpressionChangedAfterItHasBeenCheckedException, ViewDestroyedException, ViewWrappedException } from './exceptions';
-import { DebugContext } from './debug_context';
-import { ElementInjector } from './element_injector';
-import { AnimationGroupPlayer } from '../animation/animation_group_player';
-import { ActiveAnimationPlayersMap } from '../animation/active_animation_players_map';
 var _scope_check = wtfCreateScope(`AppView#check(ascii id)`);
 /**
  * Cost of making objects: http://jsperf.com/instantiate-size-of-object
@@ -29,11 +35,8 @@ export class AppView {
         this.contentChildren = [];
         this.viewChildren = [];
         this.viewContainerElement = null;
-        // The names of the below fields must be kept in sync with codegen_name_util.ts or
-        // change detection will fail.
-        this.cdState = ChangeDetectorState.NeverChecked;
-        this.destroyed = false;
-        this.activeAnimationPlayers = new ActiveAnimationPlayersMap();
+        this.numberOfChecks = 0;
+        this.animationPlayers = new ViewAnimationMap();
         this.ref = new ViewRef_(this);
         if (type === ViewType.COMPONENT || type === ViewType.HOST) {
             this.renderer = viewUtils.renderComponent(componentType);
@@ -42,21 +45,28 @@ export class AppView {
             this.renderer = declarationAppElement.parentView.renderer;
         }
     }
+    get destroyed() { return this.cdMode === ChangeDetectorStatus.Destroyed; }
     cancelActiveAnimation(element, animationName, removeAllAnimations = false) {
         if (removeAllAnimations) {
-            this.activeAnimationPlayers.findAllPlayersByElement(element).forEach(player => player.destroy());
+            this.animationPlayers.findAllPlayersByElement(element).forEach(player => player.destroy());
         }
         else {
-            var player = this.activeAnimationPlayers.find(element, animationName);
+            var player = this.animationPlayers.find(element, animationName);
             if (isPresent(player)) {
                 player.destroy();
             }
         }
     }
-    registerAndStartAnimation(element, animationName, player) {
-        this.activeAnimationPlayers.set(element, animationName, player);
-        player.onDone(() => { this.activeAnimationPlayers.remove(element, animationName); });
-        player.play();
+    queueAnimation(element, animationName, player) {
+        this.animationPlayers.set(element, animationName, player);
+        player.onDone(() => { this.animationPlayers.remove(element, animationName); });
+    }
+    triggerQueuedAnimations() {
+        this.animationPlayers.getAllPlayers().forEach(player => {
+            if (!player.hasStarted()) {
+                player.play();
+            }
+        });
     }
     create(context, givenProjectableNodes, rootSelectorOrNode) {
         this.context = context;
@@ -132,7 +142,7 @@ export class AppView {
         this._destroyRecurse();
     }
     _destroyRecurse() {
-        if (this.destroyed) {
+        if (this.cdMode === ChangeDetectorStatus.Destroyed) {
             return;
         }
         var children = this.contentChildren;
@@ -144,7 +154,7 @@ export class AppView {
             children[i]._destroyRecurse();
         }
         this.destroyLocal();
-        this.destroyed = true;
+        this.cdMode = ChangeDetectorStatus.Destroyed;
     }
     destroyLocal() {
         var hostElement = this.type === ViewType.COMPONENT ? this.declarationAppElement.nativeElement : null;
@@ -152,15 +162,15 @@ export class AppView {
             this.disposables[i]();
         }
         for (var i = 0; i < this.subscriptions.length; i++) {
-            ObservableWrapper.dispose(this.subscriptions[i]);
+            this.subscriptions[i].unsubscribe();
         }
         this.destroyInternal();
         this.dirtyParentQueriesInternal();
-        if (this.activeAnimationPlayers.length == 0) {
+        if (this.animationPlayers.length == 0) {
             this.renderer.destroyView(hostElement, this.allNodes);
         }
         else {
-            var player = new AnimationGroupPlayer(this.activeAnimationPlayers.getAllPlayers());
+            var player = new AnimationGroupPlayer(this.animationPlayers.getAllPlayers());
             player.onDone(() => { this.renderer.destroyView(hostElement, this.allNodes); });
         }
     }
@@ -174,11 +184,11 @@ export class AppView {
     detachInternal() { }
     detach() {
         this.detachInternal();
-        if (this.activeAnimationPlayers.length == 0) {
+        if (this.animationPlayers.length == 0) {
             this.renderer.detachView(this.flatRootNodes);
         }
         else {
-            var player = new AnimationGroupPlayer(this.activeAnimationPlayers.getAllPlayers());
+            var player = new AnimationGroupPlayer(this.animationPlayers.getAllPlayers());
             player.onDone(() => { this.renderer.detachView(this.flatRootNodes); });
         }
     }
@@ -199,16 +209,16 @@ export class AppView {
     dirtyParentQueriesInternal() { }
     detectChanges(throwOnChange) {
         var s = _scope_check(this.clazz);
-        if (this.cdMode === ChangeDetectionStrategy.Checked ||
-            this.cdState === ChangeDetectorState.Errored)
+        if (this.cdMode === ChangeDetectorStatus.Checked ||
+            this.cdMode === ChangeDetectorStatus.Errored)
             return;
-        if (this.destroyed) {
+        if (this.cdMode === ChangeDetectorStatus.Destroyed) {
             this.throwDestroyedError('detectChanges');
         }
         this.detectChangesInternal(throwOnChange);
-        if (this.cdMode === ChangeDetectionStrategy.CheckOnce)
-            this.cdMode = ChangeDetectionStrategy.Checked;
-        this.cdState = ChangeDetectorState.CheckedBefore;
+        if (this.cdMode === ChangeDetectorStatus.CheckOnce)
+            this.cdMode = ChangeDetectorStatus.Checked;
+        this.numberOfChecks++;
         wtfLeave(s);
     }
     /**
@@ -221,7 +231,7 @@ export class AppView {
     detectContentChildrenChanges(throwOnChange) {
         for (var i = 0; i < this.contentChildren.length; ++i) {
             var child = this.contentChildren[i];
-            if (child.cdMode === ChangeDetectionStrategy.Detached)
+            if (child.cdMode === ChangeDetectorStatus.Detached)
                 continue;
             child.detectChanges(throwOnChange);
         }
@@ -229,11 +239,12 @@ export class AppView {
     detectViewChildrenChanges(throwOnChange) {
         for (var i = 0; i < this.viewChildren.length; ++i) {
             var child = this.viewChildren[i];
-            if (child.cdMode === ChangeDetectionStrategy.Detached)
+            if (child.cdMode === ChangeDetectorStatus.Detached)
                 continue;
             child.detectChanges(throwOnChange);
         }
     }
+    markContentChildAsMoved(renderAppElement) { this.dirtyParentQueriesInternal(); }
     addToContentChildren(renderAppElement) {
         renderAppElement.parentView.contentChildren.push(this);
         this.viewContainerElement = renderAppElement;
@@ -244,12 +255,12 @@ export class AppView {
         this.dirtyParentQueriesInternal();
         this.viewContainerElement = null;
     }
-    markAsCheckOnce() { this.cdMode = ChangeDetectionStrategy.CheckOnce; }
+    markAsCheckOnce() { this.cdMode = ChangeDetectorStatus.CheckOnce; }
     markPathToRootAsCheckOnce() {
         let c = this;
-        while (isPresent(c) && c.cdMode !== ChangeDetectionStrategy.Detached) {
-            if (c.cdMode === ChangeDetectionStrategy.Checked) {
-                c.cdMode = ChangeDetectionStrategy.CheckOnce;
+        while (isPresent(c) && c.cdMode !== ChangeDetectorStatus.Detached) {
+            if (c.cdMode === ChangeDetectorStatus.Checked) {
+                c.cdMode = ChangeDetectorStatus.CheckOnce;
             }
             let parentEl = c.type === ViewType.COMPONENT ? c.declarationAppElement : c.viewContainerElement;
             c = isPresent(parentEl) ? parentEl.parentView : null;
@@ -321,7 +332,7 @@ export class DebugAppView extends AppView {
     _rethrowWithContext(e, stack) {
         if (!(e instanceof ViewWrappedException)) {
             if (!(e instanceof ExpressionChangedAfterItHasBeenCheckedException)) {
-                this.cdState = ChangeDetectorState.Errored;
+                this.cdMode = ChangeDetectorStatus.Errored;
             }
             if (isPresent(this._currentDebugContext)) {
                 throw new ViewWrappedException(e, stack, this._currentDebugContext);
@@ -330,7 +341,7 @@ export class DebugAppView extends AppView {
     }
     eventHandler(cb) {
         var superHandler = super.eventHandler(cb);
-        return (event /** TODO #9100 */) => {
+        return (event) => {
             this._resetDebug();
             try {
                 return superHandler(event);

@@ -1,8 +1,15 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { Injectable } from '@angular/core';
 import { __platform_browser_private__ } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import { ResponseOptions } from '../base_response_options';
-import { ContentType, RequestMethod, ResponseType } from '../enums';
+import { ContentType, RequestMethod, ResponseContentType, ResponseType } from '../enums';
 import { isPresent, isString } from '../facade/lang';
 import { Headers } from '../headers';
 import { getResponseURL, isSuccess } from '../http_utils';
@@ -17,6 +24,8 @@ const XSSI_PREFIX = /^\)\]\}',?\n/;
  *
  * This class would typically not be created or interacted with directly inside applications, though
  * the {@link MockConnection} may be interacted with in tests.
+ *
+ * @experimental
  */
 export class XHRConnection {
     constructor(req, browserXHR, baseResponseOptions) {
@@ -63,7 +72,12 @@ export class XHRConnection {
             };
             // error event handler
             let onError = (err) => {
-                var responseOptions = new ResponseOptions({ body: err, type: ResponseType.Error });
+                var responseOptions = new ResponseOptions({
+                    body: err,
+                    type: ResponseType.Error,
+                    status: _xhr.status,
+                    statusText: _xhr.statusText,
+                });
                 if (isPresent(baseResponseOptions)) {
                     responseOptions = baseResponseOptions.merge(responseOptions);
                 }
@@ -72,6 +86,25 @@ export class XHRConnection {
             this.setDetectedContentType(req, _xhr);
             if (isPresent(req.headers)) {
                 req.headers.forEach((values, name) => _xhr.setRequestHeader(name, values.join(',')));
+            }
+            // Select the correct buffer type to store the response
+            if (isPresent(req.responseType) && isPresent(_xhr.responseType)) {
+                switch (req.responseType) {
+                    case ResponseContentType.ArrayBuffer:
+                        _xhr.responseType = 'arraybuffer';
+                        break;
+                    case ResponseContentType.Json:
+                        _xhr.responseType = 'json';
+                        break;
+                    case ResponseContentType.Text:
+                        _xhr.responseType = 'text';
+                        break;
+                    case ResponseContentType.Blob:
+                        _xhr.responseType = 'blob';
+                        break;
+                    default:
+                        throw new Error('The selected responseType is not supported');
+                }
             }
             _xhr.addEventListener('load', onLoad);
             _xhr.addEventListener('error', onError);
@@ -93,18 +126,18 @@ export class XHRConnection {
             case ContentType.NONE:
                 break;
             case ContentType.JSON:
-                _xhr.setRequestHeader('Content-Type', 'application/json');
+                _xhr.setRequestHeader('content-type', 'application/json');
                 break;
             case ContentType.FORM:
-                _xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+                _xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
                 break;
             case ContentType.TEXT:
-                _xhr.setRequestHeader('Content-Type', 'text/plain');
+                _xhr.setRequestHeader('content-type', 'text/plain');
                 break;
             case ContentType.BLOB:
                 var blob = req.blob();
                 if (blob.type) {
-                    _xhr.setRequestHeader('Content-Type', blob.type);
+                    _xhr.setRequestHeader('content-type', blob.type);
                 }
                 break;
         }
@@ -112,12 +145,14 @@ export class XHRConnection {
 }
 /**
  * `XSRFConfiguration` sets up Cross Site Request Forgery (XSRF) protection for the application
- * using a cookie. See https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF) for more
- * information on XSRF.
+ * using a cookie. See {@link https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)}
+ * for more information on XSRF.
  *
  * Applications can configure custom cookie and header names by binding an instance of this class
  * with different `cookieName` and `headerName` values. See the main HTTP documentation for more
  * details.
+ *
+ * @experimental
  */
 export class CookieXSRFStrategy {
     constructor(_cookieName = 'XSRF-TOKEN', _headerName = 'X-XSRF-TOKEN') {

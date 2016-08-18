@@ -1,8 +1,17 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var core_1 = require('@angular/core');
 var collection_1 = require('../facade/collection');
 var lang_1 = require('../facade/lang');
 var _CASE_DEFAULT = new Object();
+// TODO: remove when fully deprecated
+var _warned = false;
 var SwitchView = (function () {
     function SwitchView(_viewContainerRef, _templateRef) {
         this._viewContainerRef = _viewContainerRef;
@@ -16,7 +25,7 @@ exports.SwitchView = SwitchView;
 var NgSwitch = (function () {
     function NgSwitch() {
         this._useDefault = false;
-        this._valueViews = new collection_1.Map();
+        this._valueViews = new Map();
         this._activeViews = [];
     }
     Object.defineProperty(NgSwitch.prototype, "ngSwitch", {
@@ -100,8 +109,12 @@ var NgSwitch = (function () {
     };
     /** @nocollapse */
     NgSwitch.decorators = [
-        { type: core_1.Directive, args: [{ selector: '[ngSwitch]', inputs: ['ngSwitch'] },] },
+        { type: core_1.Directive, args: [{ selector: '[ngSwitch]' },] },
     ];
+    /** @nocollapse */
+    NgSwitch.propDecorators = {
+        'ngSwitch': [{ type: core_1.Input },],
+    };
     return NgSwitch;
 }());
 exports.NgSwitch = NgSwitch;
@@ -123,8 +136,8 @@ var NgSwitchCase = (function () {
     });
     Object.defineProperty(NgSwitchCase.prototype, "ngSwitchWhen", {
         set: function (value) {
-            if (!this._warned) {
-                this._warned = true;
+            if (!_warned) {
+                _warned = true;
                 console.warn('*ngSwitchWhen is deprecated and will be removed. Use *ngSwitchCase instead');
             }
             this._switch._onCaseValueChanged(this._value, value, this._view);
@@ -135,7 +148,7 @@ var NgSwitchCase = (function () {
     });
     /** @nocollapse */
     NgSwitchCase.decorators = [
-        { type: core_1.Directive, args: [{ selector: '[ngSwitchCase],[ngSwitchWhen]', inputs: ['ngSwitchCase', 'ngSwitchWhen'] },] },
+        { type: core_1.Directive, args: [{ selector: '[ngSwitchCase],[ngSwitchWhen]' },] },
     ];
     /** @nocollapse */
     NgSwitchCase.ctorParameters = [
@@ -143,6 +156,11 @@ var NgSwitchCase = (function () {
         { type: core_1.TemplateRef, },
         { type: NgSwitch, decorators: [{ type: core_1.Host },] },
     ];
+    /** @nocollapse */
+    NgSwitchCase.propDecorators = {
+        'ngSwitchCase': [{ type: core_1.Input },],
+        'ngSwitchWhen': [{ type: core_1.Input },],
+    };
     return NgSwitchCase;
 }());
 exports.NgSwitchCase = NgSwitchCase;

@@ -1,10 +1,6 @@
-import {
-  describe,
-  ddescribe,
-  expect,
-  iit,
-  it
-} from '@angular/core/testing';
+/// <reference path="../../../../typings/globals/jasmine/index.d.ts" />
+
+import {addProviders, inject} from '@angular/core/testing';
 import {Astro} from './astro';
 
 describe('Astro', () => {

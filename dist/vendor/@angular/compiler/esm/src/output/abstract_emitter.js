@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { BaseException } from '../facade/exceptions';
 import { StringWrapper, isBlank, isPresent, isString } from '../facade/lang';
 import * as o from './output_ast';
@@ -168,7 +175,6 @@ export class AbstractEmitterVisitor {
             name = this.getBuiltinMethodName(expr.builtin);
             if (isBlank(name)) {
                 // some builtins just mean to skip the call.
-                // e.g. `bind` in Dart.
                 return null;
             }
         }

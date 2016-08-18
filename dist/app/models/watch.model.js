@@ -99,4 +99,4 @@ var WatchAction = exports.WatchAction;
     WatchStatus[WatchStatus["HaveMoreMeasures"] = 4] = "HaveMoreMeasures";
 })(exports.WatchStatus || (exports.WatchStatus = {}));
 var WatchStatus = exports.WatchStatus;
-//# sourceMappingURL=watch.model.js.map
+//# sourceMappingURL=../../watch.model.js.map

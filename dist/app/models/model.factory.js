@@ -39,4 +39,4 @@ var ModelFactory = (function () {
     return ModelFactory;
 }());
 exports.ModelFactory = ModelFactory;
-//# sourceMappingURL=model.factory.js.map
+//# sourceMappingURL=../../model.factory.js.map

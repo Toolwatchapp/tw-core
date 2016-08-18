@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 var globalScope;
 if (typeof window === 'undefined') {
     if (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope) {
@@ -14,11 +21,18 @@ else {
 export function scheduleMicroTask(fn) {
     Zone.current.scheduleMicroTask('scheduleMicrotask', fn);
 }
-export const IS_DART = false;
 // Need to declare a new variable for global here since TypeScript
 // exports the original value of the symbol.
 var _global = globalScope;
 export { _global as global };
+/**
+ * Runtime representation a type that a Component or other object is instances of.
+ *
+ * An example of a `Type` is `MyCustomComponent` class, which in JavaScript is be represented by
+ * the `MyCustomComponent` constructor function.
+ *
+ * @stable
+ */
 export var Type = Function;
 export function getTypeNameForDebugging(type) {
     if (type['name']) {
@@ -28,30 +42,6 @@ export function getTypeNameForDebugging(type) {
 }
 export var Math = _global.Math;
 export var Date = _global.Date;
-var _devMode = true;
-var _modeLocked = false;
-export function lockMode() {
-    _modeLocked = true;
-}
-/**
- * Disable Angular's development mode, which turns off assertions and other
- * checks within the framework.
- *
- * One important assertion this disables verifies that a change detection pass
- * does not result in additional changes to any bindings (also known as
- * unidirectional data flow).
- * @stable
- */
-export function enableProdMode() {
-    if (_modeLocked) {
-        // Cannot use BaseException as that ends up importing from facade/lang.
-        throw 'Cannot enable prod mode after platform setup.';
-    }
-    _devMode = false;
-}
-export function assertionsEnabled() {
-    return _devMode;
-}
 // TODO: remove calls to assert in production environment
 // Note: Can't just export this and import in in other files
 // as `assert` is a reserved keyword in Dart
@@ -87,7 +77,9 @@ export function isStrictStringMap(obj) {
     return isStringMap(obj) && Object.getPrototypeOf(obj) === STRING_MAP_PROTO;
 }
 export function isPromise(obj) {
-    return obj instanceof _global.Promise;
+    // allow any Promise/A+ compliant thenable.
+    // It's up to the caller to ensure that obj.then conforms to the spec
+    return isPresent(obj) && isFunction(obj.then);
 }
 export function isArray(obj) {
     return Array.isArray(obj);
@@ -103,11 +95,11 @@ export function stringify(token) {
     if (token === undefined || token === null) {
         return '' + token;
     }
-    if (token.name) {
-        return token.name;
-    }
     if (token.overriddenName) {
         return token.overriddenName;
+    }
+    if (token.name) {
+        return token.name;
     }
     var res = token.toString();
     var newLineIndex = res.indexOf('\n');
@@ -229,52 +221,11 @@ export class NumberWrapper {
     // TODO: NaN is a valid literal but is returned by parseFloat to indicate an error.
     static parseFloat(text) { return parseFloat(text); }
     static get NaN() { return NaN; }
+    static isNumeric(value) { return !isNaN(value - parseFloat(value)); }
     static isNaN(value) { return isNaN(value); }
     static isInteger(value) { return Number.isInteger(value); }
 }
 export var RegExp = _global.RegExp;
-export class RegExpWrapper {
-    static create(regExpStr, flags = '') {
-        flags = flags.replace(/g/g, '');
-        return new _global.RegExp(regExpStr, flags + 'g');
-    }
-    static firstMatch(regExp, input) {
-        // Reset multimatch regex state
-        regExp.lastIndex = 0;
-        return regExp.exec(input);
-    }
-    static test(regExp, input) {
-        regExp.lastIndex = 0;
-        return regExp.test(input);
-    }
-    static matcher(regExp, input) {
-        // Reset regex state for the case
-        // someone did not loop over all matches
-        // last time.
-        regExp.lastIndex = 0;
-        return { re: regExp, input: input };
-    }
-    static replaceAll(regExp, input, replace) {
-        let c = regExp.exec(input);
-        let res = '';
-        regExp.lastIndex = 0;
-        let prev = 0;
-        while (c) {
-            res += input.substring(prev, c.index);
-            res += replace(c);
-            prev = c.index + c[0].length;
-            regExp.lastIndex = prev;
-            c = regExp.exec(input);
-        }
-        res += input.substring(prev);
-        return res;
-    }
-}
-export class RegExpMatcherWrapper {
-    static next(matcher) {
-        return matcher.re.exec(matcher.input);
-    }
-}
 export class FunctionWrapper {
     static apply(fn, posArgs) { return fn.apply(null, posArgs); }
     static bind(fn, scope) { return fn.bind(scope); }
@@ -374,13 +325,10 @@ export function isPrimitive(obj) {
 export function hasConstructor(value, type) {
     return value.constructor === type;
 }
-export function bitWiseOr(values) {
-    return values.reduce((a, b) => { return a | b; });
-}
-export function bitWiseAnd(values) {
-    return values.reduce((a, b) => { return a & b; });
-}
 export function escape(s) {
     return _global.encodeURI(s);
+}
+export function escapeRegExp(s) {
+    return s.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
 }
 //# sourceMappingURL=lang.js.map

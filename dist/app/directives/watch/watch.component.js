@@ -15,7 +15,6 @@ var watch_model_1 = require('./../../models/watch.model');
 var user_model_1 = require('./../../models/user.model');
 var twapi_service_1 = require('./../../services/twapi.service');
 var http_1 = require('@angular/http');
-var button_1 = require('@angular2-material/button');
 var ga_service_1 = require('./../../services/ga.service');
 var aspect_1 = require('aspect.js/dist/lib/aspect');
 var logger_aspect_1 = require('./../../aspects/logger.aspect');
@@ -135,11 +134,11 @@ var WatchComponent = (function () {
             // styleUrls: ['app/directives/watch/watch.component.css'],
             pipes: [ng2_translate_1.TranslatePipe],
             providers: [twapi_service_1.TwAPIService, http_1.HTTP_PROVIDERS],
-            directives: [common_1.FORM_DIRECTIVES, button_1.MD_BUTTON_DIRECTIVES]
+            directives: [common_1.FORM_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [ng2_translate_1.TranslateService, twapi_service_1.TwAPIService, common_1.FormBuilder])
     ], WatchComponent);
     return WatchComponent;
 }());
 exports.WatchComponent = WatchComponent;
-//# sourceMappingURL=watch.component.js.map
+//# sourceMappingURL=../../../watch.component.js.map

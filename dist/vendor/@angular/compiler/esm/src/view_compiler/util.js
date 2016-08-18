@@ -1,7 +1,15 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { BaseException } from '../facade/exceptions';
 import { isBlank, isPresent } from '../facade/lang';
-import * as o from '../output/output_ast';
 import { Identifiers } from '../identifiers';
+import * as o from '../output/output_ast';
+import { createDiTokenExpression } from '../util';
 export function getPropertyInView(property, callingView, definedView) {
     if (callingView === definedView) {
         return property;
@@ -36,18 +44,6 @@ export function injectFromViewParentInjector(token, optional) {
 }
 export function getViewFactoryName(component, embeddedTemplateIndex) {
     return `viewFactory_${component.type.name}${embeddedTemplateIndex}`;
-}
-export function createDiTokenExpression(token) {
-    if (isPresent(token.value)) {
-        return o.literal(token.value);
-    }
-    else if (token.identifierIsInstance) {
-        return o.importExpr(token.identifier)
-            .instantiate([], o.importType(token.identifier, [], [o.TypeModifier.Const]));
-    }
-    else {
-        return o.importExpr(token.identifier);
-    }
 }
 export function createFlatArray(expressions) {
     var lastNonArrayExpressions = [];

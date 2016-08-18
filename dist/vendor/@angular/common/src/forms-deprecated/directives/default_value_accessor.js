@@ -1,9 +1,15 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var core_1 = require('@angular/core');
 var lang_1 = require('../../facade/lang');
 var control_value_accessor_1 = require('./control_value_accessor');
-exports.DEFAULT_VALUE_ACCESSOR = 
-/* @ts2dart_Provider */ {
+exports.DEFAULT_VALUE_ACCESSOR = {
     provide: control_value_accessor_1.NG_VALUE_ACCESSOR,
     useExisting: core_1.forwardRef(function () { return DefaultValueAccessor; }),
     multi: true

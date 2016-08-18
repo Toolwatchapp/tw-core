@@ -1,9 +1,15 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var core_1 = require('@angular/core');
-var async_1 = require('../facade/async');
+var toPromise_1 = require('rxjs/operator/toPromise');
 var collection_1 = require('../facade/collection');
 var lang_1 = require('../facade/lang');
-var promise_1 = require('../facade/promise');
 /**
  * Providers for validators to be used for {@link Control}s in a form.
  *
@@ -25,8 +31,7 @@ exports.NG_VALIDATORS = new core_1.OpaqueToken('NgValidators');
  *
  * @experimental
  */
-exports.NG_ASYNC_VALIDATORS = 
-/*@ts2dart_const*/ new core_1.OpaqueToken('NgAsyncValidators');
+exports.NG_ASYNC_VALIDATORS = new core_1.OpaqueToken('NgAsyncValidators');
 /**
  * Provides a set of validators used by form controls.
  *
@@ -117,14 +122,14 @@ var Validators = (function () {
             return null;
         return function (control) {
             var promises = _executeAsyncValidators(control, presentValidators).map(_convertToPromise);
-            return promise_1.PromiseWrapper.all(promises).then(_mergeErrors);
+            return Promise.all(promises).then(_mergeErrors);
         };
     };
     return Validators;
 }());
 exports.Validators = Validators;
 function _convertToPromise(obj) {
-    return promise_1.PromiseWrapper.isPromise(obj) ? obj : async_1.ObservableWrapper.toPromise(obj);
+    return lang_1.isPromise(obj) ? obj : toPromise_1.toPromise.call(obj);
 }
 function _executeValidators(control, validators) {
     return validators.map(function (v) { return v(control); });

@@ -1,3 +1,4 @@
+/// <reference path="../../../../typings/globals/jasmine/index.d.ts" />
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -8,36 +9,34 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var testing_1 = require('@angular/core/testing');
-var testing_2 = require('@angular/compiler/testing');
+// import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
 var core_1 = require('@angular/core');
-var platform_browser_1 = require('@angular/platform-browser');
 var clock_component_1 = require('./clock.component');
-var moon_phases_component_1 = require('./moon-phases/moon-phases.component');
 var MockElementRef = (function () {
     function MockElementRef() {
         this.nativeElement = {};
     }
     return MockElementRef;
 }());
-testing_1.describe('Component: Clock', function () {
-    var builder;
-    testing_1.beforeEachProviders(function () { return [clock_component_1.ClockComponent, moon_phases_component_1.MoonPhasesComponent, core_1.provide(core_1.ElementRef, { useValue: new MockElementRef() })]; });
-    testing_1.beforeEach(testing_1.inject([testing_2.TestComponentBuilder], function (tcb) {
-        builder = tcb;
-    }));
-    testing_1.it('should inject the component', testing_1.inject([clock_component_1.ClockComponent], function (component) {
-        testing_1.expect(component).toBeTruthy();
-    }));
-    testing_1.it('should create the component', testing_1.inject([], function () {
-        return builder.createAsync(ClockComponentTestController)
-            .then(function (fixture) {
-            var query = fixture.debugElement.query(platform_browser_1.By.directive(clock_component_1.ClockComponent));
-            testing_1.expect(query).toBeTruthy();
-            testing_1.expect(query.componentInstance).toBeTruthy();
-        });
-    }));
-});
+// describe('Component: Clock', () => {
+//   let builder: TestComponentBuilder;
+//   beforeEach(() => addProviders([ClockComponent, MoonPhasesComponent, provide(ElementRef, { useValue: new MockElementRef() })]));
+//   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
+//     builder = tcb;
+//   }));
+//   it('should inject the component', inject([ClockComponent],
+//       (component: ClockComponent) => {
+//     expect(component).toBeTruthy();
+//   }));
+//   it('should create the component', inject([], () => {
+//     return builder.createAsync(ClockComponentTestController)
+//       .then((fixture: ComponentFixture<any>) => {
+//         let query = fixture.debugElement.query(By.directive(ClockComponent));
+//         expect(query).toBeTruthy();
+//         expect(query.componentInstance).toBeTruthy();
+//       });
+//   }));
+// });
 var ClockComponentTestController = (function () {
     function ClockComponentTestController() {
     }
@@ -51,4 +50,4 @@ var ClockComponentTestController = (function () {
     ], ClockComponentTestController);
     return ClockComponentTestController;
 }());
-//# sourceMappingURL=clock.component.spec.js.map
+//# sourceMappingURL=../../../clock.component.spec.js.map

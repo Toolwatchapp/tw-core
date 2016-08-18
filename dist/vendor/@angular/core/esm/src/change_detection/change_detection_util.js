@@ -1,7 +1,16 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { areIterablesEqual, isListLikeIterable } from '../facade/collection';
 import { isPrimitive, looseIdentical } from '../facade/lang';
 export { looseIdentical } from '../facade/lang';
-export var uninitialized = new Object();
+export const UNINITIALIZED = {
+    toString: () => 'CD_INIT_VALUE'
+};
 export function devModeEqual(a, b) {
     if (isListLikeIterable(a) && isListLikeIterable(b)) {
         return areIterablesEqual(a, b, devModeEqual);
@@ -66,6 +75,6 @@ export class SimpleChange {
     /**
      * Check whether the new value is the first value assigned.
      */
-    isFirstChange() { return this.previousValue === uninitialized; }
+    isFirstChange() { return this.previousValue === UNINITIALIZED; }
 }
 //# sourceMappingURL=change_detection_util.js.map

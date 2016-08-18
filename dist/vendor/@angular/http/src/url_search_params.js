@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var collection_1 = require('../src/facade/collection');
 var lang_1 = require('../src/facade/lang');
@@ -7,15 +14,37 @@ function paramParser(rawParams) {
     if (rawParams.length > 0) {
         var params = rawParams.split('&');
         params.forEach(function (param) {
-            var split = param.split('=');
-            var key = split[0];
-            var val = split[1];
-            var list = lang_1.isPresent(map.get(key)) ? map.get(key) : [];
+            var eqIdx = param.indexOf('=');
+            var _a = eqIdx == -1 ? [param, ''] : [param.slice(0, eqIdx), param.slice(eqIdx + 1)], key = _a[0], val = _a[1];
+            var list = map.get(key) || [];
             list.push(val);
             map.set(key, list);
         });
     }
     return map;
+}
+/**
+ * @experimental
+ **/
+var QueryEncoder = (function () {
+    function QueryEncoder() {
+    }
+    QueryEncoder.prototype.encodeKey = function (k) { return standardEncoding(k); };
+    QueryEncoder.prototype.encodeValue = function (v) { return standardEncoding(v); };
+    return QueryEncoder;
+}());
+exports.QueryEncoder = QueryEncoder;
+function standardEncoding(v) {
+    return encodeURIComponent(v)
+        .replace(/%40/gi, '@')
+        .replace(/%3A/gi, ':')
+        .replace(/%24/gi, '$')
+        .replace(/%2C/gi, ',')
+        .replace(/%3B/gi, ';')
+        .replace(/%2B/gi, '+')
+        .replace(/%3D/gi, ';')
+        .replace(/%3F/gi, '?')
+        .replace(/%2F/gi, '/');
 }
 /**
  * Map-like representation of url search parameters, based on
@@ -24,15 +53,44 @@ function paramParser(rawParams) {
  *   - setAll()
  *   - appendAll()
  *   - replaceAll()
+ *
+ * This class accepts an optional second parameter of ${@link QueryEncoder},
+ * which is used to serialize parameters before making a request. By default,
+ * `QueryEncoder` encodes keys and values of parameters using `encodeURIComponent`,
+ * and then un-encodes certain characters that are allowed to be part of the query
+ * according to IETF RFC 3986: https://tools.ietf.org/html/rfc3986.
+ *
+ * These are the characters that are not encoded: `! $ \' ( ) * + , ; A 9 - . _ ~ ? /`
+ *
+ * If the set of allowed query characters is not acceptable for a particular backend,
+ * `QueryEncoder` can be subclassed and provided as the 2nd argument to URLSearchParams.
+ *
+ * ```
+ * import {URLSearchParams, QueryEncoder} from '@angular/http';
+ * class MyQueryEncoder extends QueryEncoder {
+ *   encodeKey(k: string): string {
+ *     return myEncodingFunction(k);
+ *   }
+ *
+ *   encodeValue(v: string): string {
+ *     return myEncodingFunction(v);
+ *   }
+ * }
+ *
+ * let params = new URLSearchParams('', new MyQueryEncoder());
+ * ```
+ * @experimental
  */
 var URLSearchParams = (function () {
-    function URLSearchParams(rawParams) {
+    function URLSearchParams(rawParams, queryEncoder) {
         if (rawParams === void 0) { rawParams = ''; }
+        if (queryEncoder === void 0) { queryEncoder = new QueryEncoder(); }
         this.rawParams = rawParams;
+        this.queryEncoder = queryEncoder;
         this.paramsMap = paramParser(rawParams);
     }
     URLSearchParams.prototype.clone = function () {
-        var clone = new URLSearchParams();
+        var clone = new URLSearchParams('', this.queryEncoder);
         clone.appendAll(this);
         return clone;
     };
@@ -117,8 +175,11 @@ var URLSearchParams = (function () {
         });
     };
     URLSearchParams.prototype.toString = function () {
+        var _this = this;
         var paramsList = [];
-        this.paramsMap.forEach(function (values, k) { values.forEach(function (v) { return paramsList.push(k + '=' + encodeURIComponent(v)); }); });
+        this.paramsMap.forEach(function (values, k) {
+            values.forEach(function (v) { return paramsList.push(_this.queryEncoder.encodeKey(k) + '=' + _this.queryEncoder.encodeValue(v)); });
+        });
         return paramsList.join('&');
     };
     URLSearchParams.prototype.delete = function (param) { this.paramsMap.delete(param); };

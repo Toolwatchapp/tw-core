@@ -1,7 +1,14 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+"use strict";
 // Some of the code comes from WebComponents.JS
 // https://github.com/webcomponents/webcomponentsjs/blob/master/src/HTMLImports/path.js
-"use strict";
-var lang_1 = require('../src/facade/lang');
+var lang_1 = require('./facade/lang');
 var StyleWithImports = (function () {
     function StyleWithImports(style, styleUrls) {
         this.style = style;
@@ -13,8 +20,8 @@ exports.StyleWithImports = StyleWithImports;
 function isStyleUrlResolvable(url) {
     if (lang_1.isBlank(url) || url.length === 0 || url[0] == '/')
         return false;
-    var schemeMatch = lang_1.RegExpWrapper.firstMatch(_urlWithSchemaRe, url);
-    return lang_1.isBlank(schemeMatch) || schemeMatch[1] == 'package' || schemeMatch[1] == 'asset';
+    var schemeMatch = url.match(_urlWithSchemaRe);
+    return schemeMatch === null || schemeMatch[1] == 'package' || schemeMatch[1] == 'asset';
 }
 exports.isStyleUrlResolvable = isStyleUrlResolvable;
 /**
@@ -36,7 +43,5 @@ function extractStyleUrls(resolver, baseUrl, cssText) {
 }
 exports.extractStyleUrls = extractStyleUrls;
 var _cssImportRe = /@import\s+(?:url\()?\s*(?:(?:['"]([^'"]*))|([^;\)\s]*))[^;]*;?/g;
-// TODO: can't use /^[^:/?#.]+:/g due to clang-format bug:
-//       https://github.com/angular/angular/issues/4596
-var _urlWithSchemaRe = /^([a-zA-Z\-\+\.]+):/g;
+var _urlWithSchemaRe = /^([^:/?#]+):/;
 //# sourceMappingURL=style_url_resolver.js.map

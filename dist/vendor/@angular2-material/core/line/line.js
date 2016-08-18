@@ -52,4 +52,17 @@ var MdLineSetter = (function () {
     return MdLineSetter;
 }());
 exports.MdLineSetter = MdLineSetter;
-//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/line/line.js.map
+var MdLineModule = (function () {
+    function MdLineModule() {
+    }
+    MdLineModule = __decorate([
+        core_1.NgModule({
+            exports: [MdLine],
+            declarations: [MdLine],
+        }), 
+        __metadata('design:paramtypes', [])
+    ], MdLineModule);
+    return MdLineModule;
+}());
+exports.MdLineModule = MdLineModule;
+//# sourceMappingURL=line.js.map

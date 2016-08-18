@@ -1,15 +1,24 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var exceptions_1 = require('../facade/exceptions');
 /**
  * @experimental
  */
+// TODO (matsko): add typing for the animation function
 var RenderComponentType = (function () {
-    function RenderComponentType(id, templateUrl, slotCount, encapsulation, styles) {
+    function RenderComponentType(id, templateUrl, slotCount, encapsulation, styles, animations) {
         this.id = id;
         this.templateUrl = templateUrl;
         this.slotCount = slotCount;
         this.encapsulation = encapsulation;
         this.styles = styles;
+        this.animations = animations;
     }
     return RenderComponentType;
 }());

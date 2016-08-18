@@ -1,6 +1,12 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var directives_1 = require('./directives');
-var forms_deprecated_1 = require('./forms-deprecated');
 /**
  * A collection of Angular core directives that are likely to be used in each and every Angular
  * application. This includes core directives (e.g., NgIf and NgFor), and forms directives (e.g.,
@@ -46,5 +52,5 @@ var forms_deprecated_1 = require('./forms-deprecated');
  *
  * @experimental Contains forms which are experimental.
  */
-exports.COMMON_DIRECTIVES = [directives_1.CORE_DIRECTIVES, forms_deprecated_1.FORM_DIRECTIVES];
+exports.COMMON_DIRECTIVES = [directives_1.CORE_DIRECTIVES];
 //# sourceMappingURL=common_directives.js.map

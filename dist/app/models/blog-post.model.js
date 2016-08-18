@@ -38,4 +38,4 @@ var BlogPost = (function () {
     return BlogPost;
 }());
 exports.BlogPost = BlogPost;
-//# sourceMappingURL=blog-post.model.js.map
+//# sourceMappingURL=../../blog-post.model.js.map

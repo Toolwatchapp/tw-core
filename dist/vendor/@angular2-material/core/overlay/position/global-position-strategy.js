@@ -91,7 +91,7 @@ var GlobalPositionStrategy = (function () {
         var tranlateX = this._reduceTranslateValues('translateX', this._translateX);
         var translateY = this._reduceTranslateValues('translateY', this._translateY);
         apply_transform_1.applyCssTransform(element, tranlateX + " " + translateY);
-        return Promise.resolve();
+        return Promise.resolve(null);
     };
     /** Reduce a list of translate values to a string that can be used in the transform property */
     GlobalPositionStrategy.prototype._reduceTranslateValues = function (translateFn, values) {
@@ -100,4 +100,4 @@ var GlobalPositionStrategy = (function () {
     return GlobalPositionStrategy;
 }());
 exports.GlobalPositionStrategy = GlobalPositionStrategy;
-//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/overlay/position/global-position-strategy.js.map
+//# sourceMappingURL=global-position-strategy.js.map

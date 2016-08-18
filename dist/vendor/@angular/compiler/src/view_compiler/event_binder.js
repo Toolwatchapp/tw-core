@@ -1,6 +1,14 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var collection_1 = require('../facade/collection');
 var lang_1 = require('../facade/lang');
+var identifiers_1 = require('../identifiers');
 var o = require('../output/output_ast');
 var compile_binding_1 = require('./compile_binding');
 var compile_method_1 = require('./compile_method');
@@ -95,8 +103,8 @@ function collectEventListeners(hostEvents, dirs, compileElement) {
         var listener = CompileEventListener.getOrCreate(compileElement, hostEvent.target, hostEvent.name, eventListeners);
         listener.addAction(hostEvent, null, null);
     });
-    collection_1.ListWrapper.forEachWithIndex(dirs, function (directiveAst, i) {
-        var directiveInstance = compileElement.directiveInstances[i];
+    dirs.forEach(function (directiveAst) {
+        var directiveInstance = compileElement.instances.get(identifiers_1.identifierToken(directiveAst.directive.type));
         directiveAst.hostEvents.forEach(function (hostEvent) {
             compileElement.view.bindings.push(new compile_binding_1.CompileBinding(compileElement, hostEvent));
             var listener = CompileEventListener.getOrCreate(compileElement, hostEvent.target, hostEvent.name, eventListeners);

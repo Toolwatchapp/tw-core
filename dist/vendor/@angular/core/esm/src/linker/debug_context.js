@@ -1,7 +1,13 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { StringMapWrapper } from '../facade/collection';
 import { isBlank, isPresent } from '../facade/lang';
 import { ViewType } from './view_type';
-/* @ts2dart_const */
 export class StaticNodeDebugInfo {
     constructor(providerTokens, componentToken, refTokens) {
         this.providerTokens = providerTokens;
@@ -39,7 +45,7 @@ export class DebugContext {
     }
     get injector() { return this._view.injector(this._nodeIndex); }
     get renderNode() {
-        if (isPresent(this._nodeIndex) && isPresent(this._view.allNodes)) {
+        if (isPresent(this._nodeIndex) && this._view.allNodes) {
             return this._view.allNodes[this._nodeIndex];
         }
         else {
@@ -58,11 +64,10 @@ export class DebugContext {
         var staticNodeInfo = this._staticNodeInfo;
         if (isPresent(staticNodeInfo)) {
             var refs = staticNodeInfo.refTokens;
-            StringMapWrapper.forEach(refs, (refToken /** TODO #9100 */, refName /** TODO #9100 */) => {
-                var varValue;
+            StringMapWrapper.forEach(refs, (refToken, refName) => {
+                let varValue;
                 if (isBlank(refToken)) {
-                    varValue =
-                        isPresent(this._view.allNodes) ? this._view.allNodes[this._nodeIndex] : null;
+                    varValue = this._view.allNodes ? this._view.allNodes[this._nodeIndex] : null;
                 }
                 else {
                     varValue = this._view.injectorGet(refToken, this._nodeIndex, null);

@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var base_wrapped_exception_1 = require('./base_wrapped_exception');
 var collection_1 = require('./collection');
@@ -30,7 +37,7 @@ var _ArrayLogger = (function () {
  *   }
  * }
  *
- * bootstrap(MyApp, {provide: ExceptionHandler, useClass: MyExceptionHandler}])
+ * bootstrap(MyApp, [{provide: ExceptionHandler, useClass: MyExceptionHandler}])
  *
  * ```
  * @stable

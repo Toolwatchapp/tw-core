@@ -1,5 +1,25 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { BaseException } from '../index';
 let _FakeAsyncTestZoneSpecType = Zone['FakeAsyncTestZoneSpec'];
+let _fakeAsyncZone = null;
+let _fakeAsyncTestZoneSpec = null;
+/**
+ * Clears out the shared fake async zone for a test.
+ * To be called in a global `beforeEach`.
+ *
+ * @experimental
+ */
+export function resetFakeAsyncZone() {
+    _fakeAsyncZone = null;
+    _fakeAsyncTestZoneSpec = null;
+}
+let _inFakeAsyncCall = false;
 /**
  * Wraps a function to be executed in the fakeAsync zone:
  * - microtasks are manually executed by calling `flushMicrotasks()`,
@@ -15,44 +35,47 @@ let _FakeAsyncTestZoneSpecType = Zone['FakeAsyncTestZoneSpec'];
  *
  * @param fn
  * @returns {Function} The function wrapped to be executed in the fakeAsync zone
+ *
+ * @experimental
  */
 export function fakeAsync(fn) {
-    if (Zone.current.get('FakeAsyncTestZoneSpec') != null) {
-        throw new BaseException('fakeAsync() calls can not be nested');
-    }
-    let fakeAsyncTestZoneSpec = new _FakeAsyncTestZoneSpecType();
-    let fakeAsyncZone = Zone.current.fork(fakeAsyncTestZoneSpec);
     return function (...args /** TODO #9100 */) {
-        let res = fakeAsyncZone.run(() => {
-            let res = fn(...args);
-            flushMicrotasks();
+        if (_inFakeAsyncCall) {
+            throw new BaseException('fakeAsync() calls can not be nested');
+        }
+        _inFakeAsyncCall = true;
+        try {
+            if (!_fakeAsyncZone) {
+                if (Zone.current.get('FakeAsyncTestZoneSpec') != null) {
+                    throw new BaseException('fakeAsync() calls can not be nested');
+                }
+                _fakeAsyncTestZoneSpec = new _FakeAsyncTestZoneSpecType();
+                _fakeAsyncZone = Zone.current.fork(_fakeAsyncTestZoneSpec);
+            }
+            let res = _fakeAsyncZone.run(() => {
+                let res = fn(...args);
+                flushMicrotasks();
+                return res;
+            });
+            if (_fakeAsyncTestZoneSpec.pendingPeriodicTimers.length > 0) {
+                throw new BaseException(`${_fakeAsyncTestZoneSpec.pendingPeriodicTimers.length} ` +
+                    `periodic timer(s) still in the queue.`);
+            }
+            if (_fakeAsyncTestZoneSpec.pendingTimers.length > 0) {
+                throw new BaseException(`${_fakeAsyncTestZoneSpec.pendingTimers.length} timer(s) still in the queue.`);
+            }
             return res;
-        });
-        if (fakeAsyncTestZoneSpec.pendingPeriodicTimers.length > 0) {
-            throw new BaseException(`${fakeAsyncTestZoneSpec.pendingPeriodicTimers.length} ` +
-                `periodic timer(s) still in the queue.`);
         }
-        if (fakeAsyncTestZoneSpec.pendingTimers.length > 0) {
-            throw new BaseException(`${fakeAsyncTestZoneSpec.pendingTimers.length} timer(s) still in the queue.`);
+        finally {
+            _inFakeAsyncCall = false;
         }
-        return res;
     };
 }
 function _getFakeAsyncZoneSpec() {
-    let zoneSpec = Zone.current.get('FakeAsyncTestZoneSpec');
-    if (zoneSpec == null) {
+    if (_fakeAsyncTestZoneSpec == null) {
         throw new Error('The code should be running in the fakeAsync zone to call this function');
     }
-    return zoneSpec;
-}
-/**
- * Clear the queue of pending timers and microtasks.
- * Tests no longer need to call this explicitly.
- *
- * @deprecated
- */
-export function clearPendingTimers() {
-    // Do nothing.
+    return _fakeAsyncTestZoneSpec;
 }
 /**
  * Simulates the asynchronous passage of time for the timers in the fakeAsync zone.
@@ -64,12 +87,15 @@ export function clearPendingTimers() {
  *
  * {@example testing/ts/fake_async.ts region='basic'}
  *
+ * @experimental
  */
 export function tick(millis = 0) {
     _getFakeAsyncZoneSpec().tick(millis);
 }
 /**
  * Discard all remaining periodic tasks.
+ *
+ * @experimental
  */
 export function discardPeriodicTasks() {
     let zoneSpec = _getFakeAsyncZoneSpec();
@@ -78,6 +104,8 @@ export function discardPeriodicTasks() {
 }
 /**
  * Flush any pending microtasks.
+ *
+ * @experimental
  */
 export function flushMicrotasks() {
     _getFakeAsyncZoneSpec().flushMicrotasks();

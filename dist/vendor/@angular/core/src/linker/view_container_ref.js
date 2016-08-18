@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var collection_1 = require('../facade/collection');
 var exceptions_1 = require('../facade/exceptions');
@@ -118,6 +125,14 @@ var ViewContainerRef_ = (function () {
             index = this.length;
         var viewRef_ = viewRef;
         this._element.attachView(viewRef_.internalView, index);
+        return profile_1.wtfLeave(s, viewRef_);
+    };
+    ViewContainerRef_.prototype.move = function (viewRef, currentIndex) {
+        var s = this._insertScope();
+        if (currentIndex == -1)
+            return;
+        var viewRef_ = viewRef;
+        this._element.moveView(viewRef_.internalView, currentIndex);
         return profile_1.wtfLeave(s, viewRef_);
     };
     ViewContainerRef_.prototype.indexOf = function (viewRef) {

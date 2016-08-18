@@ -162,6 +162,8 @@ export class TwAPIService {
 	//Defines headers and request options
 	private static headers: Headers = new Headers({ 'Content-Type': 'application/json' });
 	private static options: RequestOptions = new RequestOptions({ headers: TwAPIService.headers });
+	// Regression RC5. Doesn't accept get without body
+	private static optionsGet: RequestOptions = new RequestOptions({ headers: TwAPIService.headers, body:"" });
 	
 	private baseUrl:string = "https://toolwatch.io/api/";
 	public static assetsUrl = "app/assets"
@@ -171,9 +173,9 @@ export class TwAPIService {
 	 * Inject http service
 	 * @param {Http} private http 
 	 */
-	constructor(private http: Http) {
-
-		this.accurateTime();
+	constructor(public http: Http) {
+		console.log('in')
+		// this.accurateTime();
 	}
 
 	public static resetTime(){
@@ -290,7 +292,7 @@ export class TwAPIService {
 	getWatches(): Promise<Watch[]>{
 		return this.http.get(
 			this.baseUrl + "watches",
-			TwAPIService.options)
+			TwAPIService.optionsGet)
 		.map((res) => { return ModelFactory.buildWatches(res.json()); })
 		.toPromise().then(
 			res => {
@@ -515,24 +517,29 @@ export class TwAPIService {
 	 * Fetch offset between atomic clock and js time
 	 * @param {() => void} statusCallback
 	 */
-	private fetchTime(statusCallback?: () => void)
+	public fetchTime(statusCallback?: () => void)
 		: Promise<number> {
 
 		let beforeTime: number = window.performance.now();
-		return this.http.get(
-			this.baseUrl + "time",
-			TwAPIService.options).toPromise().then(
-			response => {
+		console.log("beforeTime", beforeTime);
+		console.log("TwAPIService.options", TwAPIService.optionsGet);
+		console.log("this.baseUrl", this.baseUrl);
+		return this.http.get(this.baseUrl + "time", TwAPIService.optionsGet)
+			.toPromise()
+			.then(
+				response => {
 
-				if (statusCallback !== undefined){
-					statusCallback();
-				}
+					console.log("response", response);
+					if (statusCallback !== undefined){
+						statusCallback();
+					}
 
-				let now: number = window.performance.now();
-				let timeDiff = (now - beforeTime) / 2;
-				let serverTime = response.json().time - timeDiff;
-				return Date.now() - serverTime;
-			}
+					let now: number = window.performance.now();
+					let timeDiff = (now - beforeTime) / 2;
+					let serverTime = response.json().time - timeDiff;
+					return Date.now() - serverTime;
+				}, 
+				reject => console.error(reject)
 		).catch(this.handleError);
 	}
 
@@ -644,7 +651,7 @@ export class TwAPIService {
 	 * @param {any} error [description]
 	 */
 	private handleError(error: any) {
-		console.error('An error occurred', error);
+		console.error('An error occurred', error || "plop");
         return Promise.reject(error.message || error);
 	}
 

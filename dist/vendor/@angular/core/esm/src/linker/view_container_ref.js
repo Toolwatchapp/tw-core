@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { ListWrapper } from '../facade/collection';
 import { unimplemented } from '../facade/exceptions';
 import { isPresent } from '../facade/lang';
@@ -75,6 +82,14 @@ export class ViewContainerRef_ {
             index = this.length;
         var viewRef_ = viewRef;
         this._element.attachView(viewRef_.internalView, index);
+        return wtfLeave(s, viewRef_);
+    }
+    move(viewRef, currentIndex) {
+        var s = this._insertScope();
+        if (currentIndex == -1)
+            return;
+        var viewRef_ = viewRef;
+        this._element.moveView(viewRef_.internalView, currentIndex);
         return wtfLeave(s, viewRef_);
     }
     indexOf(viewRef) {

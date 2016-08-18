@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var di_1 = require('../../di');
 var collection_1 = require('../../facade/collection');
@@ -5,11 +12,9 @@ var exceptions_1 = require('../../facade/exceptions');
 var lang_1 = require('../../facade/lang');
 /**
  * A repository of different Map diffing strategies used by NgClass, NgStyle, and others.
- * @ts2dart_const
  * @stable
  */
 var KeyValueDiffers = (function () {
-    /*@ts2dart_const*/
     function KeyValueDiffers(factories) {
         this.factories = factories;
     }

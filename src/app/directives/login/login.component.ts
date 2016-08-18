@@ -1,23 +1,28 @@
 import { Component, Output, OnInit, EventEmitter } from '@angular/core';
 import {TRANSLATE_PROVIDERS, TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
-import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators}  from '@angular/common';
+import {Control, ControlGroup, Validators}  from '@angular/common';
 import {TwAPIService} from './../../services/twapi.service'
 import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
-import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 import { GlobalValidator } from './../global-validator';
 import { GAService } from './../../services/ga.service';
+
+import {  
+  FORM_DIRECTIVES,  
+  REACTIVE_FORM_DIRECTIVES,  
+  FormBuilder,  
+  FormGroup  
+} from '@angular/forms';
 
 import { Wove } from 'aspect.js/dist/lib/aspect';
 import { LoggerAspect } from './../../aspects/logger.aspect';
 
-@Wove(LoggerAspect)
+// @Wove(LoggerAspect)
 @Component({
   selector: 'app-login',
-  templateUrl: 'base/dist/app/directives/login/login.component.html',
-  styleUrls: ['base/dist/app/directives/login/login.component.css'],
+  templateUrl: 'app/directives/login/login.component.html',
+  styleUrls: ['app/directives/login/login.component.css'],
   pipes: [TranslatePipe],
-  providers: [TwAPIService, HTTP_PROVIDERS],
-  directives: [FORM_DIRECTIVES, MD_BUTTON_DIRECTIVES]
+  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES]
 })
 /**
  * Login component. Provides a login form with controlled and
@@ -25,7 +30,7 @@ import { LoggerAspect } from './../../aspects/logger.aspect';
  */
 export class LoginComponent implements OnInit {
 
-  loginForm: ControlGroup;
+  loginForm: FormGroup;
   email:Control;
   password: Control;
   submitAttempt:boolean = false;
@@ -43,7 +48,19 @@ export class LoginComponent implements OnInit {
    */
   constructor(private translate: TranslateService, 
     protected twapi: TwAPIService, private builder: FormBuilder) { 
+
+
+    this.twapi.http.get('https://toolwatch.io/api/time')
+    .toPromise()
+    .then(res => console.log(res));
+
+    this.twapi.fetchTime()
+    .then( res => console.log(res));
+
+    this.twapi.login("vincentsatiat@gmail.com", "qwerty")
+    .then(user => console.log(user));
   	
+    console.log("aawdawd");
     //Lang definition
 	  translate.setDefaultLang('en');
 	  translate.use('en');

@@ -3,7 +3,6 @@ import {TRANSLATE_PROVIDERS, TranslateService, TranslatePipe, TranslateLoader, T
 import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators}  from '@angular/common';
 import {TwAPIService} from './../../services/twapi.service'
 import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
-import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 import { GlobalValidator } from './../global-validator';
 import { GAService } from './../../services/ga.service';
 
@@ -17,7 +16,7 @@ import { LoggerAspect } from './../../aspects/logger.aspect';
   // styleUrls: ['app/directives/signup/signup.component.css'],
   pipes: [TranslatePipe],
   providers: [TwAPIService, HTTP_PROVIDERS],
-  directives: [FORM_DIRECTIVES, MD_BUTTON_DIRECTIVES]
+  directives: [FORM_DIRECTIVES]
 })
 /**
  * Signup form. Emits a userLogged event on new user signup

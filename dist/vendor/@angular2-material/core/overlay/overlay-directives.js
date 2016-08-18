@@ -13,11 +13,37 @@ var overlay_1 = require('./overlay');
 var portal_1 = require('../portal/portal');
 var overlay_state_1 = require('./overlay-state');
 var connected_position_1 = require('./position/connected-position');
+var portal_directives_1 = require('../portal/portal-directives');
 /** Default set of positions for the overlay. Follows the behavior of a dropdown. */
 var defaultPositionList = [
     new connected_position_1.ConnectionPositionPair({ originX: 'start', originY: 'bottom' }, { overlayX: 'start', overlayY: 'top' }),
     new connected_position_1.ConnectionPositionPair({ originX: 'start', originY: 'top' }, { overlayX: 'start', overlayY: 'bottom' }),
 ];
+/**
+ * Directive applied to an element to make it usable as an origin for an Overlay using a
+ * ConnectedPositionStrategy.
+ */
+var OverlayOrigin = (function () {
+    function OverlayOrigin(_elementRef) {
+        this._elementRef = _elementRef;
+    }
+    Object.defineProperty(OverlayOrigin.prototype, "elementRef", {
+        get: function () {
+            return this._elementRef;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    OverlayOrigin = __decorate([
+        core_1.Directive({
+            selector: '[overlay-origin]',
+            exportAs: 'overlayOrigin',
+        }), 
+        __metadata('design:paramtypes', [core_1.ElementRef])
+    ], OverlayOrigin);
+    return OverlayOrigin;
+}());
+exports.OverlayOrigin = OverlayOrigin;
 /**
  * Directive to facilitate declarative creation of an Overlay using a ConnectedPositionStrategy.
  */
@@ -77,30 +103,20 @@ var ConnectedOverlayDirective = (function () {
     return ConnectedOverlayDirective;
 }());
 exports.ConnectedOverlayDirective = ConnectedOverlayDirective;
-/**
- * Directive applied to an element to make it usable as an origin for an Overlay using a
- * ConnectedPositionStrategy.
- */
-var OverlayOrigin = (function () {
-    function OverlayOrigin(_elementRef) {
-        this._elementRef = _elementRef;
-    }
-    Object.defineProperty(OverlayOrigin.prototype, "elementRef", {
-        get: function () {
-            return this._elementRef;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    OverlayOrigin = __decorate([
-        core_1.Directive({
-            selector: '[overlay-origin]',
-            exportAs: 'overlayOrigin',
-        }), 
-        __metadata('design:paramtypes', [core_1.ElementRef])
-    ], OverlayOrigin);
-    return OverlayOrigin;
-}());
-exports.OverlayOrigin = OverlayOrigin;
 exports.OVERLAY_DIRECTIVES = [ConnectedOverlayDirective, OverlayOrigin];
-//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/overlay/overlay-directives.js.map
+var OverlayModule = (function () {
+    function OverlayModule() {
+    }
+    OverlayModule = __decorate([
+        core_1.NgModule({
+            imports: [portal_directives_1.PortalModule],
+            exports: exports.OVERLAY_DIRECTIVES,
+            declarations: exports.OVERLAY_DIRECTIVES,
+            providers: overlay_1.OVERLAY_PROVIDERS,
+        }), 
+        __metadata('design:paramtypes', [])
+    ], OverlayModule);
+    return OverlayModule;
+}());
+exports.OverlayModule = OverlayModule;
+//# sourceMappingURL=overlay-directives.js.map

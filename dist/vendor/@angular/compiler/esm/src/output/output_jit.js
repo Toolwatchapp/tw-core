@@ -1,7 +1,14 @@
-import { isPresent, evalExpression } from '../facade/lang';
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+import { evalExpression, isPresent } from '../facade/lang';
+import { sanitizeIdentifier } from '../util';
 import { EmitterVisitorContext } from './abstract_emitter';
 import { AbstractJsEmitterVisitor } from './abstract_js_emitter';
-import { sanitizeIdentifier } from '../util';
 export function jitStatements(sourceUrl, statements, resultVar) {
     var converter = new JitEmitterVisitor();
     var ctx = EmitterVisitorContext.createRoot([resultVar]);

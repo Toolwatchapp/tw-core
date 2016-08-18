@@ -1,14 +1,23 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { unimplemented } from '../facade/exceptions';
 /**
  * @experimental
  */
+// TODO (matsko): add typing for the animation function
 export class RenderComponentType {
-    constructor(id, templateUrl, slotCount, encapsulation, styles) {
+    constructor(id, templateUrl, slotCount, encapsulation, styles, animations) {
         this.id = id;
         this.templateUrl = templateUrl;
         this.slotCount = slotCount;
         this.encapsulation = encapsulation;
         this.styles = styles;
+        this.animations = animations;
     }
 }
 export class RenderDebugInfo {

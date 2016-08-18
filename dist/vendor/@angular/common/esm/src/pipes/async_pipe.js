@@ -1,13 +1,19 @@
-import { ChangeDetectorRef, Injectable, Pipe, WrappedValue } from '@angular/core';
-import { ObservableWrapper } from '../facade/async';
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+import { ChangeDetectorRef, Pipe, WrappedValue } from '@angular/core';
 import { isBlank, isPresent, isPromise } from '../facade/lang';
 import { InvalidPipeArgumentException } from './invalid_pipe_argument_exception';
 class ObservableStrategy {
     createSubscription(async, updateLatestValue) {
-        return ObservableWrapper.subscribe(async, updateLatestValue, e => { throw e; });
+        return async.subscribe({ next: updateLatestValue, error: (e) => { throw e; } });
     }
-    dispose(subscription) { ObservableWrapper.dispose(subscription); }
-    onDestroy(subscription) { ObservableWrapper.dispose(subscription); }
+    dispose(subscription) { subscription.unsubscribe(); }
+    onDestroy(subscription) { subscription.unsubscribe(); }
 }
 class PromiseStrategy {
     createSubscription(async, updateLatestValue) {
@@ -68,7 +74,7 @@ export class AsyncPipe {
         if (isPromise(obj)) {
             return _promiseStrategy;
         }
-        else if (ObservableWrapper.isObservable(obj)) {
+        else if (obj.subscribe) {
             return _observableStrategy;
         }
         else {
@@ -94,7 +100,6 @@ export class AsyncPipe {
 /** @nocollapse */
 AsyncPipe.decorators = [
     { type: Pipe, args: [{ name: 'async', pure: false },] },
-    { type: Injectable },
 ];
 /** @nocollapse */
 AsyncPipe.ctorParameters = [

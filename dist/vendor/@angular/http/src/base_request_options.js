@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -33,10 +40,12 @@ var url_search_params_1 = require('./url_search_params');
  * console.log('req.method:', RequestMethod[req.method]); // Post
  * console.log('options.url:', options.url); // https://google.com
  * ```
+ *
+ * @experimental
  */
 var RequestOptions = (function () {
     function RequestOptions(_a) {
-        var _b = _a === void 0 ? {} : _a, method = _b.method, headers = _b.headers, body = _b.body, url = _b.url, search = _b.search, withCredentials = _b.withCredentials;
+        var _b = _a === void 0 ? {} : _a, method = _b.method, headers = _b.headers, body = _b.body, url = _b.url, search = _b.search, withCredentials = _b.withCredentials, responseType = _b.responseType;
         this.method = lang_1.isPresent(method) ? http_utils_1.normalizeMethodName(method) : null;
         this.headers = lang_1.isPresent(headers) ? headers : null;
         this.body = lang_1.isPresent(body) ? body : null;
@@ -45,6 +54,7 @@ var RequestOptions = (function () {
             (lang_1.isString(search) ? new url_search_params_1.URLSearchParams((search)) : (search)) :
             null;
         this.withCredentials = lang_1.isPresent(withCredentials) ? withCredentials : null;
+        this.responseType = lang_1.isPresent(responseType) ? responseType : null;
     }
     /**
      * Creates a copy of the `RequestOptions` instance, using the optional input as values to override
@@ -83,7 +93,9 @@ var RequestOptions = (function () {
                 this.search,
             withCredentials: lang_1.isPresent(options) && lang_1.isPresent(options.withCredentials) ?
                 options.withCredentials :
-                this.withCredentials
+                this.withCredentials,
+            responseType: lang_1.isPresent(options) && lang_1.isPresent(options.responseType) ? options.responseType :
+                this.responseType
         });
     };
     return RequestOptions;

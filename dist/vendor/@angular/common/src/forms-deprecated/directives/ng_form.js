@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -12,9 +19,12 @@ var model_1 = require('../model');
 var validators_1 = require('../validators');
 var control_container_1 = require('./control_container');
 var shared_1 = require('./shared');
-exports.formDirectiveProvider = 
-/*@ts2dart_const*/ { provide: control_container_1.ControlContainer, useExisting: core_1.forwardRef(function () { return NgForm; }) };
+exports.formDirectiveProvider = {
+    provide: control_container_1.ControlContainer,
+    useExisting: core_1.forwardRef(function () { return NgForm; })
+};
 var _formWarningDisplayed = false;
+var resolvedPromise = Promise.resolve(null);
 var NgForm = (function (_super) {
     __extends(NgForm, _super);
     function NgForm(validators, asyncValidators) {
@@ -28,7 +38,7 @@ var NgForm = (function (_super) {
         // TODO(kara): Update this when the new forms module becomes the default
         if (!_formWarningDisplayed) {
             _formWarningDisplayed = true;
-            console.warn("\n      *It looks like you're using the old forms module. This will be opt-in in the next RC, and\n      will eventually be removed in favor of the new forms module. For more information, see:\n      https://docs.google.com/document/u/1/d/1RIezQqE4aEhBRmArIAS1mRIZtWFf6JxN_7B4meyWK0Y/pub\n    ");
+            console.warn("\n      *It looks like you're using the old forms module. This will be opt-in in the next RC, and\n      will eventually be removed in favor of the new forms module. For more information, see:\n      https://docs.google.com/document/d/1RIezQqE4aEhBRmArIAS1mRIZtWFf6JxN_7B4meyWK0Y/preview\n    ");
         }
     };
     Object.defineProperty(NgForm.prototype, "submitted", {
@@ -58,7 +68,7 @@ var NgForm = (function (_super) {
     });
     NgForm.prototype.addControl = function (dir) {
         var _this = this;
-        async_1.PromiseWrapper.scheduleMicrotask(function () {
+        resolvedPromise.then(function () {
             var container = _this._findContainer(dir.path);
             var ctrl = new model_1.Control();
             shared_1.setUpControl(ctrl, dir);
@@ -69,7 +79,7 @@ var NgForm = (function (_super) {
     NgForm.prototype.getControl = function (dir) { return this.form.find(dir.path); };
     NgForm.prototype.removeControl = function (dir) {
         var _this = this;
-        async_1.PromiseWrapper.scheduleMicrotask(function () {
+        resolvedPromise.then(function () {
             var container = _this._findContainer(dir.path);
             if (lang_1.isPresent(container)) {
                 container.removeControl(dir.name);
@@ -78,7 +88,7 @@ var NgForm = (function (_super) {
     };
     NgForm.prototype.addControlGroup = function (dir) {
         var _this = this;
-        async_1.PromiseWrapper.scheduleMicrotask(function () {
+        resolvedPromise.then(function () {
             var container = _this._findContainer(dir.path);
             var group = new model_1.ControlGroup({});
             shared_1.setUpControlGroup(group, dir);
@@ -88,7 +98,7 @@ var NgForm = (function (_super) {
     };
     NgForm.prototype.removeControlGroup = function (dir) {
         var _this = this;
-        async_1.PromiseWrapper.scheduleMicrotask(function () {
+        resolvedPromise.then(function () {
             var container = _this._findContainer(dir.path);
             if (lang_1.isPresent(container)) {
                 container.removeControl(dir.name);
@@ -100,14 +110,14 @@ var NgForm = (function (_super) {
     };
     NgForm.prototype.updateModel = function (dir, value) {
         var _this = this;
-        async_1.PromiseWrapper.scheduleMicrotask(function () {
+        resolvedPromise.then(function () {
             var ctrl = _this.form.find(dir.path);
             ctrl.updateValue(value);
         });
     };
     NgForm.prototype.onSubmit = function () {
         this._submitted = true;
-        async_1.ObservableWrapper.callEmit(this.ngSubmit, null);
+        this.ngSubmit.emit(null);
         return false;
     };
     /** @internal */

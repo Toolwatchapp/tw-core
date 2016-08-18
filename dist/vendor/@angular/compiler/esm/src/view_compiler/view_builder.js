@@ -1,26 +1,40 @@
-import { ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
-import { ViewType, isDefaultChangeDetectionStrategy } from '../../core_private';
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+import { ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorStatus, ViewType, isDefaultChangeDetectionStrategy } from '../../core_private';
+import { AnimationCompiler } from '../animation/animation_compiler';
+import { CompileIdentifierMetadata } from '../compile_metadata';
 import { ListWrapper, SetWrapper, StringMapWrapper } from '../facade/collection';
 import { StringWrapper, isPresent } from '../facade/lang';
 import { Identifiers, identifierToken } from '../identifiers';
 import * as o from '../output/output_ast';
+import { templateVisitAll } from '../template_parser/template_ast';
+import { createDiTokenExpression } from '../util';
 import { CompileElement, CompileNode } from './compile_element';
 import { CompileView } from './compile_view';
-import { ChangeDetectionStrategyEnum, DetectChangesVars, InjectMethodVars, ViewConstructorVars, ViewEncapsulationEnum, ViewProperties, ViewTypeEnum } from './constants';
-import { templateVisitAll } from '../template_ast';
-import { getViewFactoryName, createFlatArray, createDiTokenExpression } from './util';
-import { CompileIdentifierMetadata } from '../compile_metadata';
-import { AnimationCompiler } from '../animation/animation_compiler';
+import { ChangeDetectorStatusEnum, DetectChangesVars, InjectMethodVars, ViewConstructorVars, ViewEncapsulationEnum, ViewProperties, ViewTypeEnum } from './constants';
+import { createFlatArray, getViewFactoryName } from './util';
 const IMPLICIT_TEMPLATE_VAR = '\$implicit';
 const CLASS_ATTR = 'class';
 const STYLE_ATTR = 'style';
 const NG_CONTAINER_TAG = 'ng-container';
 var parentRenderNodeVar = o.variable('parentRenderNode');
 var rootSelectorVar = o.variable('rootSelector');
-export class ViewCompileDependency {
-    constructor(comp, factoryPlaceholder) {
+export class ViewFactoryDependency {
+    constructor(comp, placeholder) {
         this.comp = comp;
-        this.factoryPlaceholder = factoryPlaceholder;
+        this.placeholder = placeholder;
+    }
+}
+export class ComponentFactoryDependency {
+    constructor(comp, placeholder) {
+        this.comp = comp;
+        this.placeholder = placeholder;
     }
 }
 export function buildView(view, template, targetDependencies) {
@@ -161,8 +175,14 @@ class ViewBuilderVisitor {
         this.view.nodes.push(compileElement);
         var compViewExpr = null;
         if (isPresent(component)) {
-            var nestedComponentIdentifier = new CompileIdentifierMetadata({ name: getViewFactoryName(component, 0) });
-            this.targetDependencies.push(new ViewCompileDependency(component, nestedComponentIdentifier));
+            let nestedComponentIdentifier = new CompileIdentifierMetadata({ name: getViewFactoryName(component, 0) });
+            this.targetDependencies.push(new ViewFactoryDependency(component.type, nestedComponentIdentifier));
+            let entryComponentIdentifiers = component.entryComponents.map((entryComponent) => {
+                var id = new CompileIdentifierMetadata({ name: entryComponent.name });
+                this.targetDependencies.push(new ComponentFactoryDependency(entryComponent, id));
+                return id;
+            });
+            compileElement.createComponentFactoryResolver(entryComponentIdentifiers);
             compViewExpr = o.variable(`compView_${nodeIndex}`); // fix highlighting: `
             compileElement.setComponentView(compViewExpr);
             this.view.createMethod.addStmt(compViewExpr
@@ -204,7 +224,7 @@ class ViewBuilderVisitor {
         var directives = ast.directives.map(directiveAst => directiveAst.directive);
         var compileElement = new CompileElement(parent, this.view, nodeIndex, renderNode, ast, null, directives, ast.providers, ast.hasViewContainer, true, ast.references);
         this.view.nodes.push(compileElement);
-        var compiledAnimations = this._animationCompiler.compileComponent(this.view.component);
+        var compiledAnimations = this._animationCompiler.compileComponent(this.view.component, [ast]);
         this.nestedViewCount++;
         var embeddedView = new CompileView(this.view.component, this.view.genConfig, this.view.pipeMetas, o.NULL_EXPR, compiledAnimations, this.view.viewIndex + this.nestedViewCount, compileElement, templateVariableBindings);
         this.nestedViewCount += buildView(embeddedView, ast.children, this.targetDependencies);
@@ -337,7 +357,7 @@ function createViewClass(view, renderCompTypeVar, nodeDebugInfosVar) {
         o.variable(view.className), renderCompTypeVar, ViewTypeEnum.fromValue(view.viewType),
         ViewConstructorVars.viewUtils, ViewConstructorVars.parentInjector,
         ViewConstructorVars.declarationEl,
-        ChangeDetectionStrategyEnum.fromValue(getChangeDetectionMode(view))
+        ChangeDetectorStatusEnum.fromValue(getChangeDetectionMode(view))
     ];
     if (view.genConfig.genDebugInfo) {
         superConstructorArgs.push(nodeDebugInfosVar);
@@ -376,12 +396,14 @@ function createViewFactory(view, viewClass, renderCompTypeVar) {
         templateUrlInfo = view.component.template.templateUrl;
     }
     if (view.viewIndex === 0) {
+        var animationsExpr = o.literalMap(view.animations.map(entry => [entry.name, entry.fnVariable]));
         initRenderCompTypeStmts = [new o.IfStmt(renderCompTypeVar.identical(o.NULL_EXPR), [
                 renderCompTypeVar
                     .set(ViewConstructorVars.viewUtils.callMethod('createRenderComponentType', [
                     o.literal(templateUrlInfo),
                     o.literal(view.component.template.ngContentSelectors.length),
-                    ViewEncapsulationEnum.fromValue(view.component.template.encapsulation), view.styles
+                    ViewEncapsulationEnum.fromValue(view.component.template.encapsulation), view.styles,
+                    animationsExpr
                 ]))
                     .toStmt()
             ])];
@@ -473,11 +495,11 @@ function getChangeDetectionMode(view) {
     var mode;
     if (view.viewType === ViewType.COMPONENT) {
         mode = isDefaultChangeDetectionStrategy(view.component.changeDetection) ?
-            ChangeDetectionStrategy.CheckAlways :
-            ChangeDetectionStrategy.CheckOnce;
+            ChangeDetectorStatus.CheckAlways :
+            ChangeDetectorStatus.CheckOnce;
     }
     else {
-        mode = ChangeDetectionStrategy.CheckAlways;
+        mode = ChangeDetectorStatus.CheckAlways;
     }
     return mode;
 }

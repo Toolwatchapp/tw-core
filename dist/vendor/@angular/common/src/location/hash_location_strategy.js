@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -24,16 +31,14 @@ var HashLocationStrategy = (function (_super) {
         this._platformLocation.onHashChange(fn);
     };
     HashLocationStrategy.prototype.getBaseHref = function () { return this._baseHref; };
-    HashLocationStrategy.prototype.path = function () {
+    HashLocationStrategy.prototype.path = function (includeHash) {
+        if (includeHash === void 0) { includeHash = false; }
         // the hash value is always prefixed with a `#`
         // and if it is empty then it will stay empty
         var path = this._platformLocation.hash;
         if (!lang_1.isPresent(path))
             path = '#';
-        // Dart will complain if a call to substring is
-        // executed with a position value that extends the
-        // length of string.
-        return (path.length > 0 ? path.substring(1) : path);
+        return path.length > 0 ? path.substring(1) : path;
     };
     HashLocationStrategy.prototype.prepareExternalUrl = function (internal) {
         var url = location_1.Location.joinWithSlash(this._baseHref, internal);

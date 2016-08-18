@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { BaseException } from '../facade/exceptions';
 import { isBlank, isFunction, isType, normalizeBool, stringify } from '../facade/lang';
 /**
@@ -14,11 +21,10 @@ import { isBlank, isFunction, isType, normalizeBool, stringify } from '../facade
  *
  * expect(injector.get("message")).toEqual('Hello');
  * ```
- * @ts2dart_const
  * @deprecated
  */
 export class Provider {
-    constructor(token /** TODO #9100 */, { useClass, useValue, useExisting, useFactory, deps, multi }) {
+    constructor(token, { useClass, useValue, useExisting, useFactory, deps, multi }) {
         this.token = token;
         this.useClass = useClass;
         this.useValue = useValue;
@@ -63,10 +69,9 @@ export class Provider {
  * See {@link Provider} instead.
  *
  * @deprecated
- * @ts2dart_const
  */
 export class Binding extends Provider {
-    constructor(token /** TODO #9100 */, { toClass, toValue, toAlias, toFactory, deps, multi }) {
+    constructor(token, { toClass, toValue, toAlias, toFactory, deps, multi }) {
         super(token, {
             useClass: toClass,
             useValue: toValue,
@@ -101,11 +106,11 @@ export class Binding extends Provider {
  * to an existing `token`.
  * See {@link ProviderBuilder} for more details.
  *
- * The `token` is most commonly a class or {@link OpaqueToken-class.html}.
+ * The `token` is most commonly a class or {@link OpaqueToken}.
  *
  * @deprecated
  */
-export function bind(token /** TODO #9100 */) {
+export function bind(token) {
     return new ProviderBuilder(token);
 }
 /**
@@ -113,7 +118,7 @@ export function bind(token /** TODO #9100 */) {
  * @deprecated
  */
 export class ProviderBuilder {
-    constructor(token /** TODO #9100 */) {
+    constructor(token) {
         this.token = token;
     }
     /**
@@ -233,7 +238,7 @@ export class ProviderBuilder {
  * <!-- TODO: improve the docs -->
  * @deprecated
  */
-export function provide(token /** TODO #9100 */, { useClass, useValue, useExisting, useFactory, deps, multi }) {
+export function provide(token, { useClass, useValue, useExisting, useFactory, deps, multi }) {
     return new Provider(token, {
         useClass: useClass,
         useValue: useValue,

@@ -1,5 +1,12 @@
 /**
- * Defines template and style encapsulation options available for Component's {@link View}.
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * Defines template and style encapsulation options available for Component's {@link Component}.
  *
  * See {@link ViewMetadata#encapsulation}.
  * @stable
@@ -56,10 +63,11 @@ export var VIEW_ENCAPSULATION_VALUES = [ViewEncapsulation.Emulated, ViewEncapsul
  *   }
  * }
  * ```
- * @ts2dart_const
+ *
+ * @deprecated Use ComponentMetadata instead.
  */
 export class ViewMetadata {
-    constructor({ templateUrl, template, directives, pipes, encapsulation, styles, styleUrls, animations } = {}) {
+    constructor({ templateUrl, template, directives, pipes, encapsulation, styles, styleUrls, animations, interpolation } = {}) {
         this.templateUrl = templateUrl;
         this.template = template;
         this.styleUrls = styleUrls;
@@ -68,6 +76,7 @@ export class ViewMetadata {
         this.pipes = pipes;
         this.encapsulation = encapsulation;
         this.animations = animations;
+        this.interpolation = interpolation;
     }
 }
 //# sourceMappingURL=view.js.map

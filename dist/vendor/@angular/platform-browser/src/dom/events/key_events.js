@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -5,8 +12,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var core_1 = require('@angular/core');
-var lang_1 = require('../../facade/lang');
 var collection_1 = require('../../facade/collection');
+var lang_1 = require('../../facade/lang');
 var dom_adapter_1 = require('../dom_adapter');
 var event_manager_1 = require('./event_manager');
 var modifierKeys = ['alt', 'control', 'meta', 'shift'];

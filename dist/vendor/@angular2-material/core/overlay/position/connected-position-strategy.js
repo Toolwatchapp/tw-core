@@ -54,13 +54,13 @@ var ConnectedPositionStrategy = (function () {
             // If the overlay in the calculated position fits on-screen, put it there and we're done.
             if (this._willOverlayFitWithinViewport(overlayPoint, overlayRect, viewportRect)) {
                 this._setElementPosition(element, overlayPoint);
-                return Promise.resolve();
+                return Promise.resolve(null);
             }
         }
         // TODO(jelbourn): fallback behavior for when none of the preferred positions fit on-screen.
         // For now, just stick it in the first position and let it go off-screen.
         this._setElementPosition(element, firstOverlayPoint);
-        return Promise.resolve();
+        return Promise.resolve(null);
     };
     ConnectedPositionStrategy.prototype.withFallbackPosition = function (originPos, overlayPos) {
         this._preferredPositions.push(new connected_position_1.ConnectionPositionPair(originPos, overlayPos));
@@ -162,4 +162,4 @@ var ConnectedPositionStrategy = (function () {
     return ConnectedPositionStrategy;
 }());
 exports.ConnectedPositionStrategy = ConnectedPositionStrategy;
-//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/overlay/position/connected-position-strategy.js.map
+//# sourceMappingURL=connected-position-strategy.js.map

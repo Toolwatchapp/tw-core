@@ -1,12 +1,13 @@
 import { OnInit, EventEmitter } from '@angular/core';
 import { TranslateService } from 'ng2-translate/ng2-translate';
-import { FormBuilder, Control, ControlGroup } from '@angular/common';
+import { Control } from '@angular/common';
 import { TwAPIService } from './../../services/twapi.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 export declare class LoginComponent implements OnInit {
     private translate;
     protected twapi: TwAPIService;
     private builder;
-    loginForm: ControlGroup;
+    loginForm: FormGroup;
     email: Control;
     password: Control;
     submitAttempt: boolean;

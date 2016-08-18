@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { Injectable } from '@angular/core';
 import { isPresent, isString } from '../src/facade/lang';
 import { RequestMethod } from './enums';
@@ -27,9 +34,11 @@ import { URLSearchParams } from './url_search_params';
  * console.log('req.method:', RequestMethod[req.method]); // Post
  * console.log('options.url:', options.url); // https://google.com
  * ```
+ *
+ * @experimental
  */
 export class RequestOptions {
-    constructor({ method, headers, body, url, search, withCredentials } = {}) {
+    constructor({ method, headers, body, url, search, withCredentials, responseType } = {}) {
         this.method = isPresent(method) ? normalizeMethodName(method) : null;
         this.headers = isPresent(headers) ? headers : null;
         this.body = isPresent(body) ? body : null;
@@ -38,6 +47,7 @@ export class RequestOptions {
             (isString(search) ? new URLSearchParams((search)) : (search)) :
             null;
         this.withCredentials = isPresent(withCredentials) ? withCredentials : null;
+        this.responseType = isPresent(responseType) ? responseType : null;
     }
     /**
      * Creates a copy of the `RequestOptions` instance, using the optional input as values to override
@@ -76,7 +86,9 @@ export class RequestOptions {
                 this.search,
             withCredentials: isPresent(options) && isPresent(options.withCredentials) ?
                 options.withCredentials :
-                this.withCredentials
+                this.withCredentials,
+            responseType: isPresent(options) && isPresent(options.responseType) ? options.responseType :
+                this.responseType
         });
     }
 }

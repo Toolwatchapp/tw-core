@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { isPresent, scheduleMicroTask } from '../facade/lang';
 import { NoOpAnimationPlayer } from './animation_player';
 export class AnimationSequencePlayer {
@@ -6,6 +13,7 @@ export class AnimationSequencePlayer {
         this._currentIndex = 0;
         this._subscriptions = [];
         this._finished = false;
+        this._started = false;
         this.parentPlayer = null;
         this._players.forEach(player => { player.parentPlayer = this; });
         this._onNext(false);
@@ -40,8 +48,16 @@ export class AnimationSequencePlayer {
             this._subscriptions = [];
         }
     }
+    init() { this._players.forEach(player => player.init()); }
     onDone(fn) { this._subscriptions.push(fn); }
-    play() { this._activePlayer.play(); }
+    hasStarted() { return this._started; }
+    play() {
+        if (!isPresent(this.parentPlayer)) {
+            this.init();
+        }
+        this._started = true;
+        this._activePlayer.play();
+    }
     pause() { this._activePlayer.pause(); }
     restart() {
         if (this._players.length > 0) {

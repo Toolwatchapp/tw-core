@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var core_1 = require('@angular/core');
 var collection_1 = require('../facade/collection');
@@ -20,7 +27,7 @@ var NgClass = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(NgClass.prototype, "rawClass", {
+    Object.defineProperty(NgClass.prototype, "ngClass", {
         set: function (v) {
             this._cleanupClasses(this._rawClass);
             if (lang_1.isString(v)) {
@@ -55,7 +62,6 @@ var NgClass = (function () {
             }
         }
     };
-    NgClass.prototype.ngOnDestroy = function () { this._cleanupClasses(this._rawClass); };
     NgClass.prototype._cleanupClasses = function (rawClassVal) {
         this._applyClasses(rawClassVal, true);
         this._applyInitialClasses(false);
@@ -112,7 +118,7 @@ var NgClass = (function () {
     };
     /** @nocollapse */
     NgClass.decorators = [
-        { type: core_1.Directive, args: [{ selector: '[ngClass]', inputs: ['rawClass: ngClass', 'initialClasses: class'] },] },
+        { type: core_1.Directive, args: [{ selector: '[ngClass]' },] },
     ];
     /** @nocollapse */
     NgClass.ctorParameters = [
@@ -121,6 +127,11 @@ var NgClass = (function () {
         { type: core_1.ElementRef, },
         { type: core_1.Renderer, },
     ];
+    /** @nocollapse */
+    NgClass.propDecorators = {
+        'initialClasses': [{ type: core_1.Input, args: ['class',] },],
+        'ngClass': [{ type: core_1.Input },],
+    };
     return NgClass;
 }());
 exports.NgClass = NgClass;

@@ -1,9 +1,15 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { Directive, Host, Inject, Optional, Self, SkipSelf, forwardRef } from '@angular/core';
 import { NG_ASYNC_VALIDATORS, NG_VALIDATORS } from '../validators';
 import { ControlContainer } from './control_container';
 import { composeAsyncValidators, composeValidators, controlPath } from './shared';
-export const controlGroupProvider = 
-/*@ts2dart_const*/ /* @ts2dart_Provider */ {
+export const controlGroupProvider = {
     provide: ControlContainer,
     useExisting: forwardRef(() => NgControlGroup)
 };

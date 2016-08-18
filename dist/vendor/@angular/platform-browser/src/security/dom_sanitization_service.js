@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -5,8 +12,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var core_1 = require('@angular/core');
-var core_private_1 = require('../../core_private');
-exports.SecurityContext = core_private_1.SecurityContext;
+exports.SecurityContext = core_1.SecurityContext;
 var html_sanitizer_1 = require('./html_sanitizer');
 var style_sanitizer_1 = require('./style_sanitizer');
 var url_sanitizer_1 = require('./url_sanitizer');
@@ -33,6 +39,13 @@ var url_sanitizer_1 = require('./url_sanitizer');
  * It is not required (and not recommended) to bypass security if the value is safe, e.g. a URL that
  * does not start with a suspicious protocol, or an HTML snippet that does not contain dangerous
  * code. The sanitizer leaves safe values intact.
+ *
+ * @security Calling any of the `bypassSecurityTrust...` APIs disables Angular's built-in
+ * sanitization for the value passed in. Carefully check and audit all values and code paths going
+ * into this call. Make sure any user data is appropriately escaped for this security context.
+ * For more detail, see the [Security Guide](http://g.co/ng/security).
+ *
+ * @stable
  */
 var DomSanitizationService = (function () {
     function DomSanitizationService() {
@@ -49,41 +62,44 @@ var DomSanitizationServiceImpl = (function (_super) {
         if (value == null)
             return null;
         switch (ctx) {
-            case core_private_1.SecurityContext.NONE:
+            case core_1.SecurityContext.NONE:
                 return value;
-            case core_private_1.SecurityContext.HTML:
+            case core_1.SecurityContext.HTML:
                 if (value instanceof SafeHtmlImpl)
                     return value.changingThisBreaksApplicationSecurity;
                 this.checkNotSafeValue(value, 'HTML');
                 return html_sanitizer_1.sanitizeHtml(String(value));
-            case core_private_1.SecurityContext.STYLE:
+            case core_1.SecurityContext.STYLE:
                 if (value instanceof SafeStyleImpl)
                     return value.changingThisBreaksApplicationSecurity;
                 this.checkNotSafeValue(value, 'Style');
                 return style_sanitizer_1.sanitizeStyle(value);
-            case core_private_1.SecurityContext.SCRIPT:
+            case core_1.SecurityContext.SCRIPT:
                 if (value instanceof SafeScriptImpl)
                     return value.changingThisBreaksApplicationSecurity;
                 this.checkNotSafeValue(value, 'Script');
                 throw new Error('unsafe value used in a script context');
-            case core_private_1.SecurityContext.URL:
-                if (value instanceof SafeUrlImpl)
+            case core_1.SecurityContext.URL:
+                if (value instanceof SafeResourceUrlImpl || value instanceof SafeUrlImpl) {
+                    // Allow resource URLs in URL contexts, they are strictly more trusted.
                     return value.changingThisBreaksApplicationSecurity;
+                }
                 this.checkNotSafeValue(value, 'URL');
                 return url_sanitizer_1.sanitizeUrl(String(value));
-            case core_private_1.SecurityContext.RESOURCE_URL:
+            case core_1.SecurityContext.RESOURCE_URL:
                 if (value instanceof SafeResourceUrlImpl) {
                     return value.changingThisBreaksApplicationSecurity;
                 }
                 this.checkNotSafeValue(value, 'ResourceURL');
-                throw new Error('unsafe value used in a resource URL context');
+                throw new Error('unsafe value used in a resource URL context (see http://g.co/ng/security#xss)');
             default:
-                throw new Error("Unexpected SecurityContext " + ctx);
+                throw new Error("Unexpected SecurityContext " + ctx + " (see http://g.co/ng/security#xss)");
         }
     };
     DomSanitizationServiceImpl.prototype.checkNotSafeValue = function (value, expectedType) {
         if (value instanceof SafeValueImpl) {
-            throw new Error("Required a safe " + expectedType + ", got a " + value.getTypeName());
+            throw new Error(("Required a safe " + expectedType + ", got a " + value.getTypeName() + " ") +
+                "(see http://g.co/ng/security#xss)");
         }
     };
     DomSanitizationServiceImpl.prototype.bypassSecurityTrustHtml = function (value) { return new SafeHtmlImpl(value); };
@@ -105,6 +121,10 @@ var SafeValueImpl = (function () {
         this.changingThisBreaksApplicationSecurity = changingThisBreaksApplicationSecurity;
         // empty
     }
+    SafeValueImpl.prototype.toString = function () {
+        return ("SafeValue must use [property]=binding: " + this.changingThisBreaksApplicationSecurity) +
+            " (see http://g.co/ng/security#xss)";
+    };
     return SafeValueImpl;
 }());
 var SafeHtmlImpl = (function (_super) {

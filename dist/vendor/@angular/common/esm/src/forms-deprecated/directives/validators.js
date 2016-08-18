@@ -1,7 +1,14 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { Attribute, Directive, forwardRef } from '@angular/core';
 import { NumberWrapper } from '../../facade/lang';
 import { NG_VALIDATORS, Validators } from '../validators';
-const REQUIRED = Validators.required;
+export const REQUIRED = Validators.required;
 export const REQUIRED_VALIDATOR = {
     provide: NG_VALIDATORS,
     useValue: REQUIRED,

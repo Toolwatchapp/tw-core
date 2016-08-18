@@ -1,5 +1,13 @@
 /**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+/**
  * Supported http methods.
+ * @experimental
  */
 export var RequestMethod;
 (function (RequestMethod) {
@@ -15,6 +23,7 @@ export var RequestMethod;
  * All possible states in which a connection can be, based on
  * [States](http://www.w3.org/TR/XMLHttpRequest/#states) from the `XMLHttpRequest` spec, but with an
  * additional "CANCELLED" state.
+ * @experimental
  */
 export var ReadyState;
 (function (ReadyState) {
@@ -28,6 +37,7 @@ export var ReadyState;
 /**
  * Acceptable response types to be associated with a {@link Response}, based on
  * [ResponseType](https://fetch.spec.whatwg.org/#responsetype) from the Fetch spec.
+ * @experimental
  */
 export var ResponseType;
 (function (ResponseType) {
@@ -39,6 +49,7 @@ export var ResponseType;
 })(ResponseType || (ResponseType = {}));
 /**
  * Supported content type to be automatically associated with a {@link Request}.
+ * @experimental
  */
 export var ContentType;
 (function (ContentType) {
@@ -50,4 +61,15 @@ export var ContentType;
     ContentType[ContentType["BLOB"] = 5] = "BLOB";
     ContentType[ContentType["ARRAY_BUFFER"] = 6] = "ARRAY_BUFFER";
 })(ContentType || (ContentType = {}));
+/**
+ * Define which buffer to use to store the response
+ * @experimental
+ */
+export var ResponseContentType;
+(function (ResponseContentType) {
+    ResponseContentType[ResponseContentType["Text"] = 0] = "Text";
+    ResponseContentType[ResponseContentType["Json"] = 1] = "Json";
+    ResponseContentType[ResponseContentType["ArrayBuffer"] = 2] = "ArrayBuffer";
+    ResponseContentType[ResponseContentType["Blob"] = 3] = "Blob";
+})(ResponseContentType || (ResponseContentType = {}));
 //# sourceMappingURL=enums.js.map

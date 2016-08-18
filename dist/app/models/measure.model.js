@@ -79,4 +79,4 @@ exports.Measure = Measure;
     MeasureStatus[MeasureStatus["ShouldBeRenewed"] = 16] = "ShouldBeRenewed";
 })(exports.MeasureStatus || (exports.MeasureStatus = {}));
 var MeasureStatus = exports.MeasureStatus;
-//# sourceMappingURL=measure.model.js.map
+//# sourceMappingURL=../../measure.model.js.map

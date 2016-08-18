@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -5,9 +12,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var lang_1 = require('../facade/lang');
+var util_1 = require('../util');
 var abstract_emitter_1 = require('./abstract_emitter');
 var abstract_js_emitter_1 = require('./abstract_js_emitter');
-var util_1 = require('../util');
 function jitStatements(sourceUrl, statements, resultVar) {
     var converter = new JitEmitterVisitor();
     var ctx = abstract_emitter_1.EmitterVisitorContext.createRoot([resultVar]);

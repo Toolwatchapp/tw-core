@@ -24,7 +24,8 @@ var TwAPIService = (function () {
     function TwAPIService(http) {
         this.http = http;
         this.baseUrl = "https://toolwatch.io/api/";
-        this.accurateTime();
+        console.log('in');
+        // this.accurateTime();
     }
     TwAPIService.resetTime = function () {
         TwAPIService.time = undefined;
@@ -101,7 +102,7 @@ var TwAPIService = (function () {
         }).catch(this.handleError);
     };
     TwAPIService.prototype.getWatches = function () {
-        return this.http.get(this.baseUrl + "watches", TwAPIService.options)
+        return this.http.get(this.baseUrl + "watches", TwAPIService.optionsGet)
             .map(function (res) { return model_factory_1.ModelFactory.buildWatches(res.json()); })
             .toPromise().then(function (res) {
             ga_service_1.GAService.event('API', 'WATCHES', 'GET');
@@ -269,7 +270,13 @@ var TwAPIService = (function () {
      */
     TwAPIService.prototype.fetchTime = function (statusCallback) {
         var beforeTime = window.performance.now();
-        return this.http.get(this.baseUrl + "time", TwAPIService.options).toPromise().then(function (response) {
+        console.log("beforeTime", beforeTime);
+        console.log("TwAPIService.options", TwAPIService.optionsGet);
+        console.log("this.baseUrl", this.baseUrl);
+        return this.http.get(this.baseUrl + "time", TwAPIService.optionsGet)
+            .toPromise()
+            .then(function (response) {
+            console.log("response", response);
             if (statusCallback !== undefined) {
                 statusCallback();
             }
@@ -277,7 +284,7 @@ var TwAPIService = (function () {
             var timeDiff = (now - beforeTime) / 2;
             var serverTime = response.json().time - timeDiff;
             return Date.now() - serverTime;
-        }).catch(this.handleError);
+        }, function (reject) { return console.error(reject); }).catch(this.handleError);
     };
     /**
      * Update a measure and the watch it belongs to
@@ -358,7 +365,7 @@ var TwAPIService = (function () {
      * @param {any} error [description]
      */
     TwAPIService.prototype.handleError = function (error) {
-        console.error('An error occurred', error);
+        console.error('An error occurred', error || "plop");
         return Promise.reject(error.message || error);
     };
     /**
@@ -478,6 +485,8 @@ var TwAPIService = (function () {
     //Defines headers and request options
     TwAPIService.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
     TwAPIService.options = new http_1.RequestOptions({ headers: TwAPIService.headers });
+    // Regression RC5. Doesn't accept get without body
+    TwAPIService.optionsGet = new http_1.RequestOptions({ headers: TwAPIService.headers, body: "" });
     TwAPIService.assetsUrl = "app/assets";
     TwAPIService = __decorate([
         aspect_1.Wove(logger_aspect_1.LoggerAspect),
@@ -487,4 +496,4 @@ var TwAPIService = (function () {
     return TwAPIService;
 }());
 exports.TwAPIService = TwAPIService;
-//# sourceMappingURL=twapi.service.js.map
+//# sourceMappingURL=../../twapi.service.js.map

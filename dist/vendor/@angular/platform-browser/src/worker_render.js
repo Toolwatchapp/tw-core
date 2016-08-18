@@ -1,9 +1,17 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var core_1 = require('@angular/core');
 var core_private_1 = require('../core_private');
 var browser_1 = require('./browser');
 var browser_adapter_1 = require('./browser/browser_adapter');
 var testability_1 = require('./browser/testability');
+var animation_driver_1 = require('./dom/animation_driver');
 var dom_adapter_1 = require('./dom/dom_adapter');
 var dom_renderer_1 = require('./dom/dom_renderer');
 var dom_tokens_1 = require('./dom/dom_tokens');
@@ -13,7 +21,6 @@ var hammer_gestures_1 = require('./dom/events/hammer_gestures');
 var key_events_1 = require('./dom/events/key_events');
 var shared_styles_host_1 = require('./dom/shared_styles_host');
 var exceptions_1 = require('./facade/exceptions');
-var lang_1 = require('./facade/lang');
 var api_1 = require('./web_workers/shared/api');
 var client_message_broker_1 = require('./web_workers/shared/client_message_broker');
 var message_bus_1 = require('./web_workers/shared/message_bus');
@@ -22,7 +29,6 @@ var render_store_1 = require('./web_workers/shared/render_store');
 var serializer_1 = require('./web_workers/shared/serializer');
 var service_message_broker_1 = require('./web_workers/shared/service_message_broker');
 var renderer_1 = require('./web_workers/ui/renderer');
-var WORKER_RENDER_PLATFORM_MARKER = new core_1.OpaqueToken('WorkerRenderPlatformMarker');
 var WebWorkerInstance = (function () {
     function WebWorkerInstance() {
     }
@@ -39,7 +45,7 @@ var WebWorkerInstance = (function () {
 }());
 exports.WebWorkerInstance = WebWorkerInstance;
 /**
- * @experimental
+ * @experimental WebWorker support is currently experimental.
  */
 exports.WORKER_SCRIPT = new core_1.OpaqueToken('WebWorkerScript');
 /**
@@ -47,21 +53,14 @@ exports.WORKER_SCRIPT = new core_1.OpaqueToken('WebWorkerScript');
  * created.
  *
  * TODO(vicb): create an interface for startable services to implement
- * @experimental
+ * @experimental WebWorker support is currently experimental.
  */
 exports.WORKER_UI_STARTABLE_MESSAGING_SERVICE = new core_1.OpaqueToken('WorkerRenderStartableMsgService');
 /**
- * * @experimental
+ * @experimental WebWorker support is currently experimental.
  */
-exports.WORKER_UI_PLATFORM_PROVIDERS = [
-    core_1.PLATFORM_COMMON_PROVIDERS, { provide: WORKER_RENDER_PLATFORM_MARKER, useValue: true },
-    { provide: core_1.PLATFORM_INITIALIZER, useValue: initWebWorkerRenderPlatform, multi: true }
-];
-/**
- * * @experimental
- */
-exports.WORKER_UI_APPLICATION_PROVIDERS = [
-    core_1.APPLICATION_COMMON_PROVIDERS,
+exports._WORKER_UI_PLATFORM_PROVIDERS = [
+    { provide: core_1.NgZone, useFactory: createNgZone, deps: [] },
     renderer_1.MessageBasedRenderer,
     { provide: exports.WORKER_UI_STARTABLE_MESSAGING_SERVICE, useExisting: renderer_1.MessageBasedRenderer, multi: true },
     browser_1.BROWSER_SANITIZATION_PROVIDERS,
@@ -78,7 +77,7 @@ exports.WORKER_UI_APPLICATION_PROVIDERS = [
     { provide: shared_styles_host_1.SharedStylesHost, useExisting: shared_styles_host_1.DomSharedStylesHost },
     { provide: service_message_broker_1.ServiceMessageBrokerFactory, useClass: service_message_broker_1.ServiceMessageBrokerFactory_ },
     { provide: client_message_broker_1.ClientMessageBrokerFactory, useClass: client_message_broker_1.ClientMessageBrokerFactory_ },
-    { provide: core_private_1.AnimationDriver, useFactory: _resolveDefaultAnimationDriver },
+    { provide: animation_driver_1.AnimationDriver, useFactory: _resolveDefaultAnimationDriver },
     serializer_1.Serializer,
     { provide: api_1.ON_WEB_WORKER, useValue: false },
     render_store_1.RenderStore,
@@ -86,43 +85,39 @@ exports.WORKER_UI_APPLICATION_PROVIDERS = [
     core_1.Testability,
     event_manager_1.EventManager,
     WebWorkerInstance,
-    { provide: core_1.APP_INITIALIZER, useFactory: initWebWorkerAppFn, multi: true, deps: [core_1.Injector] },
+    {
+        provide: core_1.PLATFORM_INITIALIZER,
+        useFactory: initWebWorkerRenderPlatform,
+        multi: true,
+        deps: [core_1.Injector]
+    },
     { provide: message_bus_1.MessageBus, useFactory: messageBusFactory, deps: [WebWorkerInstance] }
 ];
+/**
+ * * @deprecated Use `platformWorkerUi()` or create a custom platform factory via
+ * `createPlatformFactory(platformWorkerUi, ...)`
+ */
+exports.WORKER_UI_PLATFORM_PROVIDERS = [core_1.PLATFORM_COMMON_PROVIDERS, exports._WORKER_UI_PLATFORM_PROVIDERS];
+/**
+ * @deprecated Worker UI only has a platform but no application
+ */
+exports.WORKER_UI_APPLICATION_PROVIDERS = [];
 function initializeGenericWorkerRenderer(injector) {
     var bus = injector.get(message_bus_1.MessageBus);
     var zone = injector.get(core_1.NgZone);
     bus.attachToZone(zone);
     // initialize message services after the bus has been created
     var services = injector.get(exports.WORKER_UI_STARTABLE_MESSAGING_SERVICE);
-    zone.runGuarded(function () { services.forEach(function (svc /** TODO #9100 */) { svc.start(); }); });
+    zone.runGuarded(function () { services.forEach(function (svc) { svc.start(); }); });
 }
 function messageBusFactory(instance) {
     return instance.bus;
 }
-function initWebWorkerRenderPlatform() {
-    browser_adapter_1.BrowserDomAdapter.makeCurrent();
-    core_private_1.wtfInit();
-    testability_1.BrowserGetTestability.init();
-}
-/**
- * * @experimental
- */
-function workerUiPlatform() {
-    if (lang_1.isBlank(core_1.getPlatform())) {
-        core_1.createPlatform(core_1.ReflectiveInjector.resolveAndCreate(exports.WORKER_UI_PLATFORM_PROVIDERS));
-    }
-    return core_1.assertPlatform(WORKER_RENDER_PLATFORM_MARKER);
-}
-exports.workerUiPlatform = workerUiPlatform;
-function _exceptionHandler() {
-    return new core_1.ExceptionHandler(dom_adapter_1.getDOM());
-}
-function _document() {
-    return dom_adapter_1.getDOM().defaultDoc();
-}
-function initWebWorkerAppFn(injector) {
+function initWebWorkerRenderPlatform(injector) {
     return function () {
+        browser_adapter_1.BrowserDomAdapter.makeCurrent();
+        core_private_1.wtfInit();
+        testability_1.BrowserGetTestability.init();
         var scriptUri;
         try {
             scriptUri = injector.get(exports.WORKER_SCRIPT);
@@ -134,6 +129,23 @@ function initWebWorkerAppFn(injector) {
         spawnWebWorker(scriptUri, instance);
         initializeGenericWorkerRenderer(injector);
     };
+}
+/**
+ * @experimental WebWorker support is currently experimental.
+ */
+exports.platformWorkerUi = core_1.createPlatformFactory(core_1.platformCore, 'workerUi', exports._WORKER_UI_PLATFORM_PROVIDERS);
+/**
+ * @deprecated Use {@link platformWorkerUi} instead
+ */
+exports.workerUiPlatform = exports.platformWorkerUi;
+function _exceptionHandler() {
+    return new core_1.ExceptionHandler(dom_adapter_1.getDOM());
+}
+function _document() {
+    return dom_adapter_1.getDOM().defaultDoc();
+}
+function createNgZone() {
+    return new core_1.NgZone({ enableLongStackTrace: core_1.isDevMode() });
 }
 /**
  * Spawns a new class and initializes the WebWorkerInstance
@@ -148,6 +160,6 @@ function spawnWebWorker(uri, instance) {
 function _resolveDefaultAnimationDriver() {
     // web workers have not been tested or configured to
     // work with animations just yet...
-    return new core_private_1.NoOpAnimationDriver();
+    return animation_driver_1.AnimationDriver.NOOP;
 }
 //# sourceMappingURL=worker_render.js.map

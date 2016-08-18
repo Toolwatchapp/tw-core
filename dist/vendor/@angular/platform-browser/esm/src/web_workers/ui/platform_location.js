@@ -1,6 +1,12 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { Injectable } from '@angular/core';
 import { BrowserPlatformLocation } from '../../browser/location/browser_platform_location';
-import { ObservableWrapper, PromiseWrapper } from '../../facade/async';
 import { FunctionWrapper } from '../../facade/lang';
 import { MessageBus } from '../shared/message_bus';
 import { ROUTER_CHANNEL } from '../shared/messaging_api';
@@ -26,12 +32,12 @@ export class MessageBasedPlatformLocation {
         this._broker.registerMethod('back', null, FunctionWrapper.bind(this._platformLocation.back, this._platformLocation));
     }
     _getLocation() {
-        return PromiseWrapper.resolve(this._platformLocation.location);
+        return Promise.resolve(this._platformLocation.location);
     }
     _sendUrlChangeEvent(e) {
         let loc = this._serializer.serialize(this._platformLocation.location, LocationType);
         let serializedEvent = { 'type': e.type };
-        ObservableWrapper.callEmit(this._channelSink, { 'event': serializedEvent, 'location': loc });
+        this._channelSink.emit({ 'event': serializedEvent, 'location': loc });
     }
     _setPathname(pathname) { this._platformLocation.pathname = pathname; }
 }

@@ -1,5 +1,11 @@
-import { Injectable } from '@angular/core';
-import { SecurityContext } from '../../core_private';
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+import { Injectable, SecurityContext } from '@angular/core';
 import { sanitizeHtml } from './html_sanitizer';
 import { sanitizeStyle } from './style_sanitizer';
 import { sanitizeUrl } from './url_sanitizer';
@@ -27,6 +33,13 @@ export { SecurityContext };
  * It is not required (and not recommended) to bypass security if the value is safe, e.g. a URL that
  * does not start with a suspicious protocol, or an HTML snippet that does not contain dangerous
  * code. The sanitizer leaves safe values intact.
+ *
+ * @security Calling any of the `bypassSecurityTrust...` APIs disables Angular's built-in
+ * sanitization for the value passed in. Carefully check and audit all values and code paths going
+ * into this call. Make sure any user data is appropriately escaped for this security context.
+ * For more detail, see the [Security Guide](http://g.co/ng/security).
+ *
+ * @stable
  */
 export class DomSanitizationService {
 }
@@ -53,8 +66,10 @@ export class DomSanitizationServiceImpl extends DomSanitizationService {
                 this.checkNotSafeValue(value, 'Script');
                 throw new Error('unsafe value used in a script context');
             case SecurityContext.URL:
-                if (value instanceof SafeUrlImpl)
+                if (value instanceof SafeResourceUrlImpl || value instanceof SafeUrlImpl) {
+                    // Allow resource URLs in URL contexts, they are strictly more trusted.
                     return value.changingThisBreaksApplicationSecurity;
+                }
                 this.checkNotSafeValue(value, 'URL');
                 return sanitizeUrl(String(value));
             case SecurityContext.RESOURCE_URL:
@@ -62,14 +77,15 @@ export class DomSanitizationServiceImpl extends DomSanitizationService {
                     return value.changingThisBreaksApplicationSecurity;
                 }
                 this.checkNotSafeValue(value, 'ResourceURL');
-                throw new Error('unsafe value used in a resource URL context');
+                throw new Error('unsafe value used in a resource URL context (see http://g.co/ng/security#xss)');
             default:
-                throw new Error(`Unexpected SecurityContext ${ctx}`);
+                throw new Error(`Unexpected SecurityContext ${ctx} (see http://g.co/ng/security#xss)`);
         }
     }
     checkNotSafeValue(value, expectedType) {
         if (value instanceof SafeValueImpl) {
-            throw new Error(`Required a safe ${expectedType}, got a ${value.getTypeName()}`);
+            throw new Error(`Required a safe ${expectedType}, got a ${value.getTypeName()} ` +
+                `(see http://g.co/ng/security#xss)`);
         }
     }
     bypassSecurityTrustHtml(value) { return new SafeHtmlImpl(value); }
@@ -88,6 +104,10 @@ class SafeValueImpl {
     constructor(changingThisBreaksApplicationSecurity) {
         this.changingThisBreaksApplicationSecurity = changingThisBreaksApplicationSecurity;
         // empty
+    }
+    toString() {
+        return `SafeValue must use [property]=binding: ${this.changingThisBreaksApplicationSecurity}` +
+            ` (see http://g.co/ng/security#xss)`;
     }
 }
 class SafeHtmlImpl extends SafeValueImpl {

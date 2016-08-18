@@ -1,5 +1,12 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { Directive, ElementRef, Renderer, forwardRef } from '@angular/core';
-import { NumberWrapper } from '../../facade/lang';
+import { NumberWrapper, isBlank } from '../../facade/lang';
 import { NG_VALUE_ACCESSOR } from './control_value_accessor';
 export const NUMBER_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -14,7 +21,9 @@ export class NumberValueAccessor {
         this.onTouched = () => { };
     }
     writeValue(value) {
-        this._renderer.setElementProperty(this._elementRef.nativeElement, 'value', value);
+        // The value needs to be normalized for IE9, otherwise it is set to 'null' when null
+        const normalizedValue = isBlank(value) ? '' : value;
+        this._renderer.setElementProperty(this._elementRef.nativeElement, 'value', normalizedValue);
     }
     registerOnChange(fn) {
         this.onChange = (value) => { fn(value == '' ? null : NumberWrapper.parseFloat(value)); };

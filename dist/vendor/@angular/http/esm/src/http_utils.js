@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { makeTypeError } from '../src/facade/exceptions';
 import { isString } from '../src/facade/lang';
 import { RequestMethod } from './enums';
@@ -21,6 +28,13 @@ export function getResponseURL(xhr) {
         return xhr.getResponseHeader('X-Request-URL');
     }
     return;
+}
+export function stringToArrayBuffer(input) {
+    let view = new Uint16Array(input.length);
+    for (var i = 0, strLen = input.length; i < strLen; i++) {
+        view[i] = input.charCodeAt(i);
+    }
+    return view.buffer;
 }
 export { isJsObject } from '../src/facade/lang';
 //# sourceMappingURL=http_utils.js.map

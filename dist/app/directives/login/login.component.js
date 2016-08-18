@@ -12,12 +12,10 @@ var core_1 = require('@angular/core');
 var ng2_translate_1 = require('ng2-translate/ng2-translate');
 var common_1 = require('@angular/common');
 var twapi_service_1 = require('./../../services/twapi.service');
-var http_1 = require('@angular/http');
-var button_1 = require('@angular2-material/button');
 var global_validator_1 = require('./../global-validator');
 var ga_service_1 = require('./../../services/ga.service');
-var aspect_1 = require('aspect.js/dist/lib/aspect');
-var logger_aspect_1 = require('./../../aspects/logger.aspect');
+var forms_1 = require('@angular/forms');
+// @Wove(LoggerAspect)
 var LoginComponent = (function () {
     /**
      * Constructor w/ service injection
@@ -35,6 +33,14 @@ var LoginComponent = (function () {
         this.userLogged = new core_1.EventEmitter();
         this.loginAttempt = new core_1.EventEmitter();
         this.loginError = new core_1.EventEmitter();
+        this.twapi.http.get('https://toolwatch.io/api/time')
+            .toPromise()
+            .then(function (res) { return console.log(res); });
+        this.twapi.fetchTime()
+            .then(function (res) { return console.log(res); });
+        this.twapi.login("vincentsatiat@gmail.com", "qwerty")
+            .then(function (user) { return console.log(user); });
+        console.log("aawdawd");
         //Lang definition
         translate.setDefaultLang('en');
         translate.use('en');
@@ -93,18 +99,16 @@ var LoginComponent = (function () {
         __metadata('design:type', Object)
     ], LoginComponent.prototype, "loginError", void 0);
     LoginComponent = __decorate([
-        aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Component({
             selector: 'app-login',
-            templateUrl: 'base/dist/app/directives/login/login.component.html',
-            styleUrls: ['base/dist/app/directives/login/login.component.css'],
+            templateUrl: 'app/directives/login/login.component.html',
+            styleUrls: ['app/directives/login/login.component.css'],
             pipes: [ng2_translate_1.TranslatePipe],
-            providers: [twapi_service_1.TwAPIService, http_1.HTTP_PROVIDERS],
-            directives: [common_1.FORM_DIRECTIVES, button_1.MD_BUTTON_DIRECTIVES]
+            directives: [forms_1.FORM_DIRECTIVES, forms_1.REACTIVE_FORM_DIRECTIVES]
         }), 
-        __metadata('design:paramtypes', [ng2_translate_1.TranslateService, twapi_service_1.TwAPIService, common_1.FormBuilder])
+        __metadata('design:paramtypes', [ng2_translate_1.TranslateService, twapi_service_1.TwAPIService, forms_1.FormBuilder])
     ], LoginComponent);
     return LoginComponent;
 }());
 exports.LoginComponent = LoginComponent;
-//# sourceMappingURL=login.component.js.map
+//# sourceMappingURL=../../../login.component.js.map

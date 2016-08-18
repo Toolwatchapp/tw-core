@@ -1,9 +1,17 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+var change_detection_util_1 = require('../change_detection/change_detection_util');
 var exceptions_1 = require('../facade/exceptions');
 /**
  * An error thrown if application changes model breaking the top-down data flow.
@@ -42,8 +50,13 @@ var exceptions_1 = require('../facade/exceptions');
 var ExpressionChangedAfterItHasBeenCheckedException = (function (_super) {
     __extends(ExpressionChangedAfterItHasBeenCheckedException, _super);
     function ExpressionChangedAfterItHasBeenCheckedException(oldValue, currValue, context) {
-        _super.call(this, "Expression has changed after it was checked. " +
-            ("Previous value: '" + oldValue + "'. Current value: '" + currValue + "'"));
+        var msg = "Expression has changed after it was checked. Previous value: '" + oldValue + "'. Current value: '" + currValue + "'.";
+        if (oldValue === change_detection_util_1.UNINITIALIZED) {
+            msg +=
+                " It seems like the view has been created after its parent and its children have been dirty checked." +
+                    " Has it been created in a change detection hook ?";
+        }
+        _super.call(this, msg);
     }
     return ExpressionChangedAfterItHasBeenCheckedException;
 }(exceptions_1.BaseException));

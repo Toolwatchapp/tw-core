@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { setRootDomAdapter } from '../dom/dom_adapter';
 import { ListWrapper } from '../facade/collection';
 import { DateWrapper, global, isBlank, isFunction, isPresent, setValueOnPath } from '../facade/lang';
@@ -383,9 +390,7 @@ export class BrowserDomAdapter extends GenericBrowserDomAdapter {
         return window.requestAnimationFrame(callback);
     }
     cancelAnimationFrame(id) { window.cancelAnimationFrame(id); }
-    supportsWebAnimation() {
-        return isFunction(document.body['animate']);
-    }
+    supportsWebAnimation() { return isFunction(Element.prototype['animate']); }
     performanceNow() {
         // performance.now() is not available in all browsers, see
         // http://caniuse.com/#search=performance.now
@@ -424,13 +429,13 @@ function relativePath(url /** TODO #9100 */) {
     return (urlParsingNode.pathname.charAt(0) === '/') ? urlParsingNode.pathname :
         '/' + urlParsingNode.pathname;
 }
-export function parseCookieValue(cookie, name) {
+export function parseCookieValue(cookieStr, name) {
     name = encodeURIComponent(name);
-    let cookies = cookie.split(';');
-    for (let cookie of cookies) {
-        let [key, value] = cookie.split('=', 2);
-        if (key.trim() === name) {
-            return decodeURIComponent(value);
+    for (const cookie of cookieStr.split(';')) {
+        const eqIndex = cookie.indexOf('=');
+        const [cookieName, cookieValue] = eqIndex == -1 ? [cookie, ''] : [cookie.slice(0, eqIndex), cookie.slice(eqIndex + 1)];
+        if (cookieName.trim() === name) {
+            return decodeURIComponent(cookieValue);
         }
     }
     return null;

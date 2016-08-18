@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var collection_1 = require('../../facade/collection');
 var exceptions_1 = require('../../facade/exceptions');
@@ -9,6 +16,7 @@ var normalize_validator_1 = require('./normalize_validator');
 var number_value_accessor_1 = require('./number_value_accessor');
 var radio_control_value_accessor_1 = require('./radio_control_value_accessor');
 var select_control_value_accessor_1 = require('./select_control_value_accessor');
+var select_multiple_control_value_accessor_1 = require('./select_multiple_control_value_accessor');
 function controlPath(name, parent) {
     var p = collection_1.ListWrapper.clone(parent.path);
     p.push(name);
@@ -17,9 +25,9 @@ function controlPath(name, parent) {
 exports.controlPath = controlPath;
 function setUpControl(control, dir) {
     if (lang_1.isBlank(control))
-        _throwError(dir, 'Cannot find control');
+        _throwError(dir, 'Cannot find control with');
     if (lang_1.isBlank(dir.valueAccessor))
-        _throwError(dir, 'No value accessor for');
+        _throwError(dir, 'No value accessor for form control with');
     control.validator = validators_1.Validators.compose([control.validator, dir.validator]);
     control.asyncValidator = validators_1.Validators.composeAsync([control.asyncValidator, dir.asyncValidator]);
     dir.valueAccessor.writeValue(control.value);
@@ -37,14 +45,23 @@ function setUpControl(control, dir) {
 exports.setUpControl = setUpControl;
 function setUpControlGroup(control, dir) {
     if (lang_1.isBlank(control))
-        _throwError(dir, 'Cannot find control');
+        _throwError(dir, 'Cannot find control with');
     control.validator = validators_1.Validators.compose([control.validator, dir.validator]);
     control.asyncValidator = validators_1.Validators.composeAsync([control.asyncValidator, dir.asyncValidator]);
 }
 exports.setUpControlGroup = setUpControlGroup;
 function _throwError(dir, message) {
-    var path = dir.path.join(' -> ');
-    throw new exceptions_1.BaseException(message + " '" + path + "'");
+    var messageEnd;
+    if (dir.path.length > 1) {
+        messageEnd = "path: '" + dir.path.join(' -> ') + "'";
+    }
+    else if (dir.path[0]) {
+        messageEnd = "name: '" + dir.path + "'";
+    }
+    else {
+        messageEnd = 'unspecified name';
+    }
+    throw new exceptions_1.BaseException(message + " " + messageEnd);
 }
 function composeValidators(validators) {
     return lang_1.isPresent(validators) ? validators_1.Validators.compose(validators.map(normalize_validator_1.normalizeValidator)) : null;
@@ -77,14 +94,15 @@ function selectValueAccessor(dir, valueAccessors) {
         }
         else if (lang_1.hasConstructor(v, checkbox_value_accessor_1.CheckboxControlValueAccessor) || lang_1.hasConstructor(v, number_value_accessor_1.NumberValueAccessor) ||
             lang_1.hasConstructor(v, select_control_value_accessor_1.SelectControlValueAccessor) ||
+            lang_1.hasConstructor(v, select_multiple_control_value_accessor_1.SelectMultipleControlValueAccessor) ||
             lang_1.hasConstructor(v, radio_control_value_accessor_1.RadioControlValueAccessor)) {
             if (lang_1.isPresent(builtinAccessor))
-                _throwError(dir, 'More than one built-in value accessor matches');
+                _throwError(dir, 'More than one built-in value accessor matches form control with');
             builtinAccessor = v;
         }
         else {
             if (lang_1.isPresent(customAccessor))
-                _throwError(dir, 'More than one custom value accessor matches');
+                _throwError(dir, 'More than one custom value accessor matches form control with');
             customAccessor = v;
         }
     });
@@ -94,7 +112,7 @@ function selectValueAccessor(dir, valueAccessors) {
         return builtinAccessor;
     if (lang_1.isPresent(defaultAccessor))
         return defaultAccessor;
-    _throwError(dir, 'No valid value accessor for');
+    _throwError(dir, 'No valid value accessor for form control with');
     return null;
 }
 exports.selectValueAccessor = selectValueAccessor;

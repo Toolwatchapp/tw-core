@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { ListWrapper } from '../facade/collection';
 import { isBlank, isPresent } from '../facade/lang';
 import { Identifiers } from '../identifiers';
@@ -83,14 +90,15 @@ function mapNestedViews(declarationAppElement, view, expressions) {
         return o.replaceVarInExpression(o.THIS_EXPR.name, o.variable('nestedView'), expr);
     });
     return declarationAppElement.callMethod('mapNestedViews', [
-        o.variable(view.className), o.fn([new o.FnParam('nestedView', view.classType)], [new o.ReturnStatement(o.literalArr(adjustedExpressions))])
+        o.variable(view.className),
+        o.fn([new o.FnParam('nestedView', view.classType)], [new o.ReturnStatement(o.literalArr(adjustedExpressions))], o.DYNAMIC_TYPE)
     ]);
 }
 export function createQueryList(query, directiveInstance, propertyName, compileView) {
-    compileView.fields.push(new o.ClassField(propertyName, o.importType(Identifiers.QueryList)));
+    compileView.fields.push(new o.ClassField(propertyName, o.importType(Identifiers.QueryList, [o.DYNAMIC_TYPE])));
     var expr = o.THIS_EXPR.prop(propertyName);
     compileView.createMethod.addStmt(o.THIS_EXPR.prop(propertyName)
-        .set(o.importExpr(Identifiers.QueryList).instantiate([]))
+        .set(o.importExpr(Identifiers.QueryList, [o.DYNAMIC_TYPE]).instantiate([]))
         .toStmt());
     return expr;
 }

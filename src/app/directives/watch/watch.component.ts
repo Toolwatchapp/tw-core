@@ -5,7 +5,6 @@ import { Watch } from './../../models/watch.model';
 import { User } from './../../models/user.model';
 import {TwAPIService} from './../../services/twapi.service';
 import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
-import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 import { GAService } from './../../services/ga.service';
 import { Wove } from 'aspect.js/dist/lib/aspect';
 import { LoggerAspect } from './../../aspects/logger.aspect';
@@ -17,7 +16,7 @@ import { LoggerAspect } from './../../aspects/logger.aspect';
   // styleUrls: ['app/directives/watch/watch.component.css'],
   pipes: [TranslatePipe],
   providers: [TwAPIService, HTTP_PROVIDERS],
-  directives: [FORM_DIRECTIVES, MD_BUTTON_DIRECTIVES]
+  directives: [FORM_DIRECTIVES]
 })
 /**
  * From to add, delete and update watches

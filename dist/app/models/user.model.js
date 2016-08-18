@@ -56,4 +56,4 @@ exports.User = User;
     EmailPreferences[EmailPreferences["WatchStories"] = 512] = "WatchStories";
 })(exports.EmailPreferences || (exports.EmailPreferences = {}));
 var EmailPreferences = exports.EmailPreferences;
-//# sourceMappingURL=user.model.js.map
+//# sourceMappingURL=../../user.model.js.map

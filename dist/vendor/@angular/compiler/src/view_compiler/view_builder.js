@@ -1,31 +1,47 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var core_1 = require('@angular/core');
 var core_private_1 = require('../../core_private');
+var animation_compiler_1 = require('../animation/animation_compiler');
+var compile_metadata_1 = require('../compile_metadata');
 var collection_1 = require('../facade/collection');
 var lang_1 = require('../facade/lang');
 var identifiers_1 = require('../identifiers');
 var o = require('../output/output_ast');
+var template_ast_1 = require('../template_parser/template_ast');
+var util_1 = require('../util');
 var compile_element_1 = require('./compile_element');
 var compile_view_1 = require('./compile_view');
 var constants_1 = require('./constants');
-var template_ast_1 = require('../template_ast');
-var util_1 = require('./util');
-var compile_metadata_1 = require('../compile_metadata');
-var animation_compiler_1 = require('../animation/animation_compiler');
+var util_2 = require('./util');
 var IMPLICIT_TEMPLATE_VAR = '\$implicit';
 var CLASS_ATTR = 'class';
 var STYLE_ATTR = 'style';
 var NG_CONTAINER_TAG = 'ng-container';
 var parentRenderNodeVar = o.variable('parentRenderNode');
 var rootSelectorVar = o.variable('rootSelector');
-var ViewCompileDependency = (function () {
-    function ViewCompileDependency(comp, factoryPlaceholder) {
+var ViewFactoryDependency = (function () {
+    function ViewFactoryDependency(comp, placeholder) {
         this.comp = comp;
-        this.factoryPlaceholder = factoryPlaceholder;
+        this.placeholder = placeholder;
     }
-    return ViewCompileDependency;
+    return ViewFactoryDependency;
 }());
-exports.ViewCompileDependency = ViewCompileDependency;
+exports.ViewFactoryDependency = ViewFactoryDependency;
+var ComponentFactoryDependency = (function () {
+    function ComponentFactoryDependency(comp, placeholder) {
+        this.comp = comp;
+        this.placeholder = placeholder;
+    }
+    return ComponentFactoryDependency;
+}());
+exports.ComponentFactoryDependency = ComponentFactoryDependency;
 function buildView(view, template, targetDependencies) {
     var builderVisitor = new ViewBuilderVisitor(view, targetDependencies);
     template_ast_1.templateVisitAll(builderVisitor, template, view.declarationElement.isNull() ? view.declarationElement : view.declarationElement.parent);
@@ -133,6 +149,7 @@ var ViewBuilderVisitor = (function () {
         return null;
     };
     ViewBuilderVisitor.prototype.visitElement = function (ast, parent) {
+        var _this = this;
         var nodeIndex = this.view.nodes.length;
         var createRenderNodeExpr;
         var debugContextExpr = this.view.createMethod.resetDebugInfoExpr(nodeIndex, ast);
@@ -166,8 +183,14 @@ var ViewBuilderVisitor = (function () {
         this.view.nodes.push(compileElement);
         var compViewExpr = null;
         if (lang_1.isPresent(component)) {
-            var nestedComponentIdentifier = new compile_metadata_1.CompileIdentifierMetadata({ name: util_1.getViewFactoryName(component, 0) });
-            this.targetDependencies.push(new ViewCompileDependency(component, nestedComponentIdentifier));
+            var nestedComponentIdentifier = new compile_metadata_1.CompileIdentifierMetadata({ name: util_2.getViewFactoryName(component, 0) });
+            this.targetDependencies.push(new ViewFactoryDependency(component.type, nestedComponentIdentifier));
+            var entryComponentIdentifiers = component.entryComponents.map(function (entryComponent) {
+                var id = new compile_metadata_1.CompileIdentifierMetadata({ name: entryComponent.name });
+                _this.targetDependencies.push(new ComponentFactoryDependency(entryComponent, id));
+                return id;
+            });
+            compileElement.createComponentFactoryResolver(entryComponentIdentifiers);
             compViewExpr = o.variable("compView_" + nodeIndex); // fix highlighting: `
             compileElement.setComponentView(compViewExpr);
             this.view.createMethod.addStmt(compViewExpr
@@ -186,7 +209,7 @@ var ViewBuilderVisitor = (function () {
                 codeGenContentNodes = constants_1.ViewProperties.projectableNodes;
             }
             else {
-                codeGenContentNodes = o.literalArr(compileElement.contentNodesByNgContentIndex.map(function (nodes) { return util_1.createFlatArray(nodes); }));
+                codeGenContentNodes = o.literalArr(compileElement.contentNodesByNgContentIndex.map(function (nodes) { return util_2.createFlatArray(nodes); }));
             }
             this.view.createMethod.addStmt(compViewExpr
                 .callMethod('create', [compileElement.getComponent(), codeGenContentNodes, o.NULL_EXPR])
@@ -209,7 +232,7 @@ var ViewBuilderVisitor = (function () {
         var directives = ast.directives.map(function (directiveAst) { return directiveAst.directive; });
         var compileElement = new compile_element_1.CompileElement(parent, this.view, nodeIndex, renderNode, ast, null, directives, ast.providers, ast.hasViewContainer, true, ast.references);
         this.view.nodes.push(compileElement);
-        var compiledAnimations = this._animationCompiler.compileComponent(this.view.component);
+        var compiledAnimations = this._animationCompiler.compileComponent(this.view.component, [ast]);
         this.nestedViewCount++;
         var embeddedView = new compile_view_1.CompileView(this.view.component, this.view.genConfig, this.view.pipeMetas, o.NULL_EXPR, compiledAnimations, this.view.viewIndex + this.nestedViewCount, compileElement, templateVariableBindings);
         this.nestedViewCount += buildView(embeddedView, ast.children, this.targetDependencies);
@@ -343,7 +366,7 @@ function createViewClass(view, renderCompTypeVar, nodeDebugInfosVar) {
         o.variable(view.className), renderCompTypeVar, constants_1.ViewTypeEnum.fromValue(view.viewType),
         constants_1.ViewConstructorVars.viewUtils, constants_1.ViewConstructorVars.parentInjector,
         constants_1.ViewConstructorVars.declarationEl,
-        constants_1.ChangeDetectionStrategyEnum.fromValue(getChangeDetectionMode(view))
+        constants_1.ChangeDetectorStatusEnum.fromValue(getChangeDetectionMode(view))
     ];
     if (view.genConfig.genDebugInfo) {
         superConstructorArgs.push(nodeDebugInfosVar);
@@ -382,12 +405,14 @@ function createViewFactory(view, viewClass, renderCompTypeVar) {
         templateUrlInfo = view.component.template.templateUrl;
     }
     if (view.viewIndex === 0) {
+        var animationsExpr = o.literalMap(view.animations.map(function (entry) { return [entry.name, entry.fnVariable]; }));
         initRenderCompTypeStmts = [new o.IfStmt(renderCompTypeVar.identical(o.NULL_EXPR), [
                 renderCompTypeVar
                     .set(constants_1.ViewConstructorVars.viewUtils.callMethod('createRenderComponentType', [
                     o.literal(templateUrlInfo),
                     o.literal(view.component.template.ngContentSelectors.length),
-                    constants_1.ViewEncapsulationEnum.fromValue(view.component.template.encapsulation), view.styles
+                    constants_1.ViewEncapsulationEnum.fromValue(view.component.template.encapsulation), view.styles,
+                    animationsExpr
                 ]))
                     .toStmt()
             ])];
@@ -416,7 +441,7 @@ function generateCreateMethod(view) {
     return parentRenderNodeStmts.concat(view.createMethod.finish(), [
         o.THIS_EXPR
             .callMethod('init', [
-            util_1.createFlatArray(view.rootNodesOrAppElements),
+            util_2.createFlatArray(view.rootNodesOrAppElements),
             o.literalArr(view.nodes.map(function (node) { return node.renderNode; })), o.literalArr(view.disposables),
             o.literalArr(view.subscriptions)
         ])
@@ -479,11 +504,11 @@ function getChangeDetectionMode(view) {
     var mode;
     if (view.viewType === core_private_1.ViewType.COMPONENT) {
         mode = core_private_1.isDefaultChangeDetectionStrategy(view.component.changeDetection) ?
-            core_1.ChangeDetectionStrategy.CheckAlways :
-            core_1.ChangeDetectionStrategy.CheckOnce;
+            core_private_1.ChangeDetectorStatus.CheckAlways :
+            core_private_1.ChangeDetectorStatus.CheckOnce;
     }
     else {
-        mode = core_1.ChangeDetectionStrategy.CheckAlways;
+        mode = core_private_1.ChangeDetectorStatus.CheckAlways;
     }
     return mode;
 }

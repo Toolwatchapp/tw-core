@@ -1,0 +1,2 @@
+"use strict";
+//# sourceMappingURL=generic-component-type.js.map

@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
@@ -18,6 +25,8 @@ var XSSI_PREFIX = /^\)\]\}',?\n/;
  *
  * This class would typically not be created or interacted with directly inside applications, though
  * the {@link MockConnection} may be interacted with in tests.
+ *
+ * @experimental
  */
 var XHRConnection = (function () {
     function XHRConnection(req, browserXHR, baseResponseOptions) {
@@ -65,7 +74,12 @@ var XHRConnection = (function () {
             };
             // error event handler
             var onError = function (err) {
-                var responseOptions = new base_response_options_1.ResponseOptions({ body: err, type: enums_1.ResponseType.Error });
+                var responseOptions = new base_response_options_1.ResponseOptions({
+                    body: err,
+                    type: enums_1.ResponseType.Error,
+                    status: _xhr.status,
+                    statusText: _xhr.statusText,
+                });
                 if (lang_1.isPresent(baseResponseOptions)) {
                     responseOptions = baseResponseOptions.merge(responseOptions);
                 }
@@ -74,6 +88,25 @@ var XHRConnection = (function () {
             _this.setDetectedContentType(req, _xhr);
             if (lang_1.isPresent(req.headers)) {
                 req.headers.forEach(function (values, name) { return _xhr.setRequestHeader(name, values.join(',')); });
+            }
+            // Select the correct buffer type to store the response
+            if (lang_1.isPresent(req.responseType) && lang_1.isPresent(_xhr.responseType)) {
+                switch (req.responseType) {
+                    case enums_1.ResponseContentType.ArrayBuffer:
+                        _xhr.responseType = 'arraybuffer';
+                        break;
+                    case enums_1.ResponseContentType.Json:
+                        _xhr.responseType = 'json';
+                        break;
+                    case enums_1.ResponseContentType.Text:
+                        _xhr.responseType = 'text';
+                        break;
+                    case enums_1.ResponseContentType.Blob:
+                        _xhr.responseType = 'blob';
+                        break;
+                    default:
+                        throw new Error('The selected responseType is not supported');
+                }
             }
             _xhr.addEventListener('load', onLoad);
             _xhr.addEventListener('error', onError);
@@ -95,18 +128,18 @@ var XHRConnection = (function () {
             case enums_1.ContentType.NONE:
                 break;
             case enums_1.ContentType.JSON:
-                _xhr.setRequestHeader('Content-Type', 'application/json');
+                _xhr.setRequestHeader('content-type', 'application/json');
                 break;
             case enums_1.ContentType.FORM:
-                _xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+                _xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
                 break;
             case enums_1.ContentType.TEXT:
-                _xhr.setRequestHeader('Content-Type', 'text/plain');
+                _xhr.setRequestHeader('content-type', 'text/plain');
                 break;
             case enums_1.ContentType.BLOB:
                 var blob = req.blob();
                 if (blob.type) {
-                    _xhr.setRequestHeader('Content-Type', blob.type);
+                    _xhr.setRequestHeader('content-type', blob.type);
                 }
                 break;
         }
@@ -116,12 +149,14 @@ var XHRConnection = (function () {
 exports.XHRConnection = XHRConnection;
 /**
  * `XSRFConfiguration` sets up Cross Site Request Forgery (XSRF) protection for the application
- * using a cookie. See https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF) for more
- * information on XSRF.
+ * using a cookie. See {@link https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)}
+ * for more information on XSRF.
  *
  * Applications can configure custom cookie and header names by binding an instance of this class
  * with different `cookieName` and `headerName` values. See the main HTTP documentation for more
  * details.
+ *
+ * @experimental
  */
 var CookieXSRFStrategy = (function () {
     function CookieXSRFStrategy(_cookieName, _headerName) {

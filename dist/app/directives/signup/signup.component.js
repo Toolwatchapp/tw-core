@@ -13,7 +13,6 @@ var ng2_translate_1 = require('ng2-translate/ng2-translate');
 var common_1 = require('@angular/common');
 var twapi_service_1 = require('./../../services/twapi.service');
 var http_1 = require('@angular/http');
-var button_1 = require('@angular2-material/button');
 var global_validator_1 = require('./../global-validator');
 var ga_service_1 = require('./../../services/ga.service');
 var aspect_1 = require('aspect.js/dist/lib/aspect');
@@ -126,11 +125,11 @@ var SignupComponent = (function () {
             // styleUrls: ['app/directives/signup/signup.component.css'],
             pipes: [ng2_translate_1.TranslatePipe],
             providers: [twapi_service_1.TwAPIService, http_1.HTTP_PROVIDERS],
-            directives: [common_1.FORM_DIRECTIVES, button_1.MD_BUTTON_DIRECTIVES]
+            directives: [common_1.FORM_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [ng2_translate_1.TranslateService, twapi_service_1.TwAPIService, common_1.FormBuilder])
     ], SignupComponent);
     return SignupComponent;
 }());
 exports.SignupComponent = SignupComponent;
-//# sourceMappingURL=signup.component.js.map
+//# sourceMappingURL=../../../signup.component.js.map

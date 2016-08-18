@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+import { NgModule } from '@angular/core';
 import { BrowserJsonp } from './src/backends/browser_jsonp';
 import { BrowserXhr } from './src/backends/browser_xhr';
 import { JSONPBackend, JSONPBackend_ } from './src/backends/jsonp_backend';
@@ -11,13 +19,13 @@ export { JSONPBackend, JSONPConnection } from './src/backends/jsonp_backend';
 export { CookieXSRFStrategy, XHRBackend, XHRConnection } from './src/backends/xhr_backend';
 export { BaseRequestOptions, RequestOptions } from './src/base_request_options';
 export { BaseResponseOptions, ResponseOptions } from './src/base_response_options';
-export { ReadyState, RequestMethod, ResponseType } from './src/enums';
+export { ReadyState, RequestMethod, ResponseContentType, ResponseType } from './src/enums';
 export { Headers } from './src/headers';
 export { Http, Jsonp } from './src/http';
 export { Connection, ConnectionBackend, XSRFStrategy } from './src/interfaces';
 export { Request } from './src/static_request';
 export { Response } from './src/static_response';
-export { URLSearchParams } from './src/url_search_params';
+export { QueryEncoder, URLSearchParams } from './src/url_search_params';
 /**
  * Provides a basic set of injectables to use the {@link Http} service in any application.
  *
@@ -160,6 +168,8 @@ export { URLSearchParams } from './src/url_search_params';
  *         useValue: new CookieXSRFStrategy('MY-XSRF-COOKIE-NAME', 'X-MY-XSRF-HEADER-NAME')}])
  *   .catch(err => console.error(err));
  * ```
+ *
+ * @deprecated
  */
 export const HTTP_PROVIDERS = [
     // TODO(pascal): use factory type annotations once supported in DI
@@ -169,8 +179,17 @@ export const HTTP_PROVIDERS = [
     { provide: RequestOptions, useClass: BaseRequestOptions },
     { provide: ResponseOptions, useClass: BaseResponseOptions },
     XHRBackend,
-    { provide: XSRFStrategy, useValue: new CookieXSRFStrategy() },
+    { provide: XSRFStrategy, useFactory: _createDefaultCookieXSRFStrategy },
 ];
+/**
+ * @experimental
+ */
+export function _createDefaultCookieXSRFStrategy() {
+    return new CookieXSRFStrategy();
+}
+/**
+ * @experimental
+ */
 export function httpFactory(xhrBackend, requestOptions) {
     return new Http(xhrBackend, requestOptions);
 }
@@ -286,6 +305,8 @@ export const HTTP_BINDINGS = HTTP_PROVIDERS;
  *   }
  * });
  * ```
+ *
+ * @experimental
  */
 export const JSONP_PROVIDERS = [
     // TODO(pascal): use factory type annotations once supported in DI
@@ -305,4 +326,16 @@ function jsonpFactory(jsonpBackend, requestOptions) {
  * @deprecated
  */
 export const JSON_BINDINGS = JSONP_PROVIDERS;
+export class HttpModule {
+}
+/** @nocollapse */
+HttpModule.decorators = [
+    { type: NgModule, args: [{ providers: HTTP_PROVIDERS },] },
+];
+export class JsonpModule {
+}
+/** @nocollapse */
+JsonpModule.decorators = [
+    { type: NgModule, args: [{ providers: JSONP_PROVIDERS },] },
+];
 //# sourceMappingURL=http.js.map

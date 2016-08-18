@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -11,8 +18,7 @@ var control_container_1 = require('./control_container');
 var control_value_accessor_1 = require('./control_value_accessor');
 var ng_control_1 = require('./ng_control');
 var shared_1 = require('./shared');
-exports.controlNameBinding = 
-/*@ts2dart_const*/ /* @ts2dart_Provider */ {
+exports.controlNameBinding = {
     provide: ng_control_1.NgControl,
     useExisting: core_1.forwardRef(function () { return NgControlName; })
 };
@@ -41,7 +47,7 @@ var NgControlName = (function (_super) {
     NgControlName.prototype.ngOnDestroy = function () { this.formDirective.removeControl(this); };
     NgControlName.prototype.viewToModelUpdate = function (newValue) {
         this.viewModel = newValue;
-        async_1.ObservableWrapper.callEmit(this.update, newValue);
+        this.update.emit(newValue);
     };
     Object.defineProperty(NgControlName.prototype, "path", {
         get: function () { return shared_1.controlPath(this.name, this._parent); },

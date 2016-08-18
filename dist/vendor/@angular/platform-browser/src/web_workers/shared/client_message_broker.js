@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -5,13 +12,12 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var core_1 = require('@angular/core');
-var async_1 = require('../../facade/async');
 var collection_1 = require('../../facade/collection');
 var lang_1 = require('../../facade/lang');
 var message_bus_1 = require('./message_bus');
 var serializer_1 = require('./serializer');
 /**
- * @experimental
+ * @experimental WebWorker support in Angular is experimental.
  */
 var ClientMessageBrokerFactory = (function () {
     function ClientMessageBrokerFactory() {
@@ -47,7 +53,7 @@ var ClientMessageBrokerFactory_ = (function (_super) {
 }(ClientMessageBrokerFactory));
 exports.ClientMessageBrokerFactory_ = ClientMessageBrokerFactory_;
 /**
- * @experimental
+ * @experimental WebWorker support in Angular is experimental.
  */
 var ClientMessageBroker = (function () {
     function ClientMessageBroker() {
@@ -65,7 +71,7 @@ var ClientMessageBroker_ = (function (_super) {
         this._sink = messageBus.to(channel);
         this._serializer = _serializer;
         var source = messageBus.from(channel);
-        async_1.ObservableWrapper.subscribe(source, function (message) { return _this._handleMessage(message); });
+        source.subscribe({ next: function (message) { return _this._handleMessage(message); } });
     }
     ClientMessageBroker_.prototype._generateMessageId = function (name) {
         var time = lang_1.stringify(lang_1.DateWrapper.toMillis(lang_1.DateWrapper.now()));
@@ -93,14 +99,15 @@ var ClientMessageBroker_ = (function (_super) {
         var promise;
         var id = null;
         if (returnType != null) {
-            var completer = async_1.PromiseWrapper.completer();
+            var completer_1;
+            promise = new Promise(function (resolve, reject) { completer_1 = { resolve: resolve, reject: reject }; });
             id = this._generateMessageId(args.method);
-            this._pending.set(id, completer);
-            async_1.PromiseWrapper.catchError(completer.promise, function (err, stack) {
+            this._pending.set(id, completer_1);
+            promise.catch(function (err) {
                 lang_1.print(err);
-                completer.reject(err, stack);
+                completer_1.reject(err);
             });
-            promise = async_1.PromiseWrapper.then(completer.promise, function (value) {
+            promise = promise.then(function (value) {
                 if (_this._serializer == null) {
                     return value;
                 }
@@ -117,7 +124,7 @@ var ClientMessageBroker_ = (function (_super) {
         if (id != null) {
             message['id'] = id;
         }
-        async_1.ObservableWrapper.callEmit(this._sink, message);
+        this._sink.emit(message);
         return promise;
     };
     ClientMessageBroker_.prototype._handleMessage = function (message) {
@@ -130,7 +137,7 @@ var ClientMessageBroker_ = (function (_super) {
                     this._pending.get(id).resolve(data.value);
                 }
                 else {
-                    this._pending.get(id).reject(data.value, null);
+                    this._pending.get(id).reject(data.value);
                 }
                 this._pending.delete(id);
             }
@@ -160,7 +167,7 @@ var MessageData = (function () {
     return MessageData;
 }());
 /**
- * @experimental
+ * @experimental WebWorker support in Angular is experimental.
  */
 var FnArg = (function () {
     function FnArg(value /** TODO #9100 */, type) {
@@ -171,7 +178,7 @@ var FnArg = (function () {
 }());
 exports.FnArg = FnArg;
 /**
- * @experimental
+ * @experimental WebWorker support in Angular is experimental.
  */
 var UiArguments = (function () {
     function UiArguments(method, args) {

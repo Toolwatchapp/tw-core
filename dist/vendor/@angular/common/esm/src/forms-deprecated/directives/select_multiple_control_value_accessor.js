@@ -1,8 +1,15 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { Directive, ElementRef, Host, Input, Optional, Renderer, forwardRef } from '@angular/core';
 import { MapWrapper } from '../../facade/collection';
 import { StringWrapper, isBlank, isPresent, isPrimitive, isString, looseIdentical } from '../../facade/lang';
 import { NG_VALUE_ACCESSOR } from './control_value_accessor';
-const SELECT_MULTIPLE_VALUE_ACCESSOR = {
+export const SELECT_MULTIPLE_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => SelectMultipleControlValueAccessor),
     multi: true
@@ -89,7 +96,7 @@ export class SelectMultipleControlValueAccessor {
 SelectMultipleControlValueAccessor.decorators = [
     { type: Directive, args: [{
                 selector: 'select[multiple][ngControl],select[multiple][ngFormControl],select[multiple][ngModel]',
-                host: { '(input)': 'onChange($event.target)', '(blur)': 'onTouched()' },
+                host: { '(change)': 'onChange($event.target)', '(blur)': 'onTouched()' },
                 providers: [SELECT_MULTIPLE_VALUE_ACCESSOR]
             },] },
 ];

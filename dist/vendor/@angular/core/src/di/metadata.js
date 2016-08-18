@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var lang_1 = require('../facade/lang');
 /**
@@ -39,11 +46,10 @@ var lang_1 = require('../facade/lang');
  * var injector = Injector.resolveAndCreate([Engine, Car]);
  * expect(injector.get(Car).engine instanceof Engine).toBe(true);
  * ```
- * @ts2dart_const
  * @stable
  */
 var InjectMetadata = (function () {
-    function InjectMetadata(token /** TODO #9100 */) {
+    function InjectMetadata(token) {
         this.token = token;
     }
     InjectMetadata.prototype.toString = function () { return "@Inject(" + lang_1.stringify(this.token) + ")"; };
@@ -70,7 +76,6 @@ exports.InjectMetadata = InjectMetadata;
  * var injector = Injector.resolveAndCreate([Car]);
  * expect(injector.get(Car).engine).toBeNull();
  * ```
- * @ts2dart_const
  * @stable
  */
 var OptionalMetadata = (function () {
@@ -83,7 +88,6 @@ exports.OptionalMetadata = OptionalMetadata;
 /**
  * `DependencyMetadata` is used by the framework to extend DI.
  * This is internal to Angular and should not be used directly.
- * @ts2dart_const
  * @stable
  */
 var DependencyMetadata = (function () {
@@ -127,7 +131,6 @@ exports.DependencyMetadata = DependencyMetadata;
  * var injector = Injector.resolveAndCreate([NeedsService, UsefulService]);
  * expect(() => injector.get(NeedsService)).toThrowError();
  * ```
- * @ts2dart_const
  * @stable
  */
 var InjectableMetadata = (function () {
@@ -162,7 +165,6 @@ exports.InjectableMetadata = InjectableMetadata;
  * var child = inj.resolveAndCreateChild([NeedsDependency]);
  * expect(() => child.get(NeedsDependency)).toThrowError();
  * ```
- * @ts2dart_const
  * @stable
  */
 var SelfMetadata = (function () {
@@ -196,7 +198,6 @@ exports.SelfMetadata = SelfMetadata;
  * var inj = Injector.resolveAndCreate([Dependency, NeedsDependency]);
  * expect(() => inj.get(NeedsDependency)).toThrowError();
  * ```
- * @ts2dart_const
  * @stable
  */
 var SkipSelfMetadata = (function () {
@@ -259,7 +260,6 @@ exports.SkipSelfMetadata = SkipSelfMetadata;
  *
  * bootstrap(App);
  *```
- * @ts2dart_const
  * @stable
  */
 var HostMetadata = (function () {

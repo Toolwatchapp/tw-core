@@ -21,4 +21,4 @@ var GlobalValidator = (function () {
     return GlobalValidator;
 }());
 exports.GlobalValidator = GlobalValidator;
-//# sourceMappingURL=global-validator.js.map
+//# sourceMappingURL=../../global-validator.js.map

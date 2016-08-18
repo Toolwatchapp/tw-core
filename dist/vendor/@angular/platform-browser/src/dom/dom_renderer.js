@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -7,18 +14,19 @@ var __extends = (this && this.__extends) || function (d, b) {
 var core_1 = require('@angular/core');
 var exceptions_1 = require('../facade/exceptions');
 var lang_1 = require('../facade/lang');
-var shared_styles_host_1 = require('./shared_styles_host');
-var core_private_1 = require('../../core_private');
-var event_manager_1 = require('./events/event_manager');
-var dom_tokens_1 = require('./dom_tokens');
+var animation_driver_1 = require('./animation_driver');
 var dom_adapter_1 = require('./dom_adapter');
+var dom_tokens_1 = require('./dom_tokens');
+var event_manager_1 = require('./events/event_manager');
+var shared_styles_host_1 = require('./shared_styles_host');
 var util_1 = require('./util');
 var NAMESPACE_URIS = {
     'xlink': 'http://www.w3.org/1999/xlink',
-    'svg': 'http://www.w3.org/2000/svg'
+    'svg': 'http://www.w3.org/2000/svg',
+    'xhtml': 'http://www.w3.org/1999/xhtml'
 };
 var TEMPLATE_COMMENT_TEXT = 'template bindings={}';
-var TEMPLATE_BINDINGS_EXP = /^template bindings=(.*)$/g;
+var TEMPLATE_BINDINGS_EXP = /^template bindings=(.*)$/;
 var DomRootRenderer = (function () {
     function DomRootRenderer(document, eventManager, sharedStylesHost, animationDriver) {
         this.document = document;
@@ -52,7 +60,7 @@ var DomRootRenderer_ = (function (_super) {
         { type: undefined, decorators: [{ type: core_1.Inject, args: [dom_tokens_1.DOCUMENT,] },] },
         { type: event_manager_1.EventManager, },
         { type: shared_styles_host_1.DomSharedStylesHost, },
-        { type: core_private_1.AnimationDriver, },
+        { type: animation_driver_1.AnimationDriver, },
     ];
     return DomRootRenderer_;
 }(DomRootRenderer));
@@ -185,7 +193,8 @@ var DomRenderer = (function () {
     DomRenderer.prototype.setBindingDebugInfo = function (renderElement, propertyName, propertyValue) {
         var dashCasedPropertyName = util_1.camelCaseToDashCase(propertyName);
         if (dom_adapter_1.getDOM().isCommentNode(renderElement)) {
-            var existingBindings = lang_1.RegExpWrapper.firstMatch(TEMPLATE_BINDINGS_EXP, lang_1.StringWrapper.replaceAll(dom_adapter_1.getDOM().getText(renderElement), /\n/g, ''));
+            var existingBindings = lang_1.StringWrapper.replaceAll(dom_adapter_1.getDOM().getText(renderElement), /\n/g, '')
+                .match(TEMPLATE_BINDINGS_EXP);
             var parsedBindings = lang_1.Json.parse(existingBindings[1]);
             parsedBindings[dashCasedPropertyName] = propertyValue;
             dom_adapter_1.getDOM().setText(renderElement, lang_1.StringWrapper.replace(TEMPLATE_COMMENT_TEXT, '{}', lang_1.Json.stringify(parsedBindings)));
@@ -273,12 +282,12 @@ function _flattenStyles(compId, styles, target) {
     }
     return target;
 }
-var NS_PREFIX_RE = /^:([^:]+):(.+)/g;
+var NS_PREFIX_RE = /^:([^:]+):(.+)$/;
 function splitNamespace(name) {
     if (name[0] != ':') {
         return [null, name];
     }
-    var match = lang_1.RegExpWrapper.firstMatch(NS_PREFIX_RE, name);
+    var match = name.match(NS_PREFIX_RE);
     return [match[1], match[2]];
 }
 //# sourceMappingURL=dom_renderer.js.map

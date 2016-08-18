@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var exceptions_1 = require('../facade/exceptions');
 var lang_1 = require('../facade/lang');
@@ -188,7 +195,6 @@ var AbstractEmitterVisitor = (function () {
             name = this.getBuiltinMethodName(expr.builtin);
             if (lang_1.isBlank(name)) {
                 // some builtins just mean to skip the call.
-                // e.g. `bind` in Dart.
                 return null;
             }
         }

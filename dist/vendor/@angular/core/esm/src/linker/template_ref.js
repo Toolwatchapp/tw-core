@@ -1,5 +1,10 @@
-import { isBlank } from '../facade/lang';
-const EMPTY_CONTEXT = new Object();
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 /**
  * Represents an Embedded Template that can be used to instantiate Embedded Views.
  *
@@ -36,10 +41,7 @@ export class TemplateRef_ extends TemplateRef {
     }
     createEmbeddedView(context) {
         var view = this._viewFactory(this._appElement.parentView.viewUtils, this._appElement.parentInjector, this._appElement);
-        if (isBlank(context)) {
-            context = EMPTY_CONTEXT;
-        }
-        view.create(context, null, null);
+        view.create(context || {}, null, null);
         return view.ref;
     }
     get elementRef() { return this._appElement.elementRef; }

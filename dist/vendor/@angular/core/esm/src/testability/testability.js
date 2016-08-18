@@ -1,5 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { Injectable } from '../di/decorators';
-import { ObservableWrapper } from '../facade/async';
 import { Map, MapWrapper } from '../facade/collection';
 import { BaseException } from '../facade/exceptions';
 import { scheduleMicroTask } from '../facade/lang';
@@ -24,17 +30,21 @@ export class Testability {
     }
     /** @internal */
     _watchAngularEvents() {
-        ObservableWrapper.subscribe(this._ngZone.onUnstable, (_) => {
-            this._didWork = true;
-            this._isZoneStable = false;
+        this._ngZone.onUnstable.subscribe({
+            next: () => {
+                this._didWork = true;
+                this._isZoneStable = false;
+            }
         });
         this._ngZone.runOutsideAngular(() => {
-            ObservableWrapper.subscribe(this._ngZone.onStable, (_) => {
-                NgZone.assertNotInAngularZone();
-                scheduleMicroTask(() => {
-                    this._isZoneStable = true;
-                    this._runCallbacksIfReady();
-                });
+            this._ngZone.onStable.subscribe({
+                next: () => {
+                    NgZone.assertNotInAngularZone();
+                    scheduleMicroTask(() => {
+                        this._isZoneStable = true;
+                        this._runCallbacksIfReady();
+                    });
+                }
             });
         });
     }
@@ -114,7 +124,6 @@ TestabilityRegistry.decorators = [
 ];
 /** @nocollapse */
 TestabilityRegistry.ctorParameters = [];
-/* @ts2dart_const */
 class _NoopGetTestability {
     addToWindow(registry) { }
     findTestabilityInTree(registry, elem, findInAncestors) {

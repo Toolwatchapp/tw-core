@@ -26,7 +26,7 @@ var DomPortalHost = (function (_super) {
             throw new portal_errors_1.MdComponentPortalAttachedToDomWithoutOriginError();
         }
         return this._componentResolver.resolveComponent(portal.component).then(function (componentFactory) {
-            var ref = portal.viewContainerRef.createComponent(componentFactory, portal.viewContainerRef.length, portal.viewContainerRef.parentInjector);
+            var ref = portal.viewContainerRef.createComponent(componentFactory, portal.viewContainerRef.length, portal.injector || portal.viewContainerRef.parentInjector);
             var hostView = ref.hostView;
             _this._hostDomElement.appendChild(hostView.rootNodes[0]);
             _this.setDisposeFn(function () { return ref.destroy(); });
@@ -56,4 +56,4 @@ var DomPortalHost = (function (_super) {
     return DomPortalHost;
 }(portal_1.BasePortalHost));
 exports.DomPortalHost = DomPortalHost;
-//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/portal/dom-portal-host.js.map
+//# sourceMappingURL=dom-portal-host.js.map

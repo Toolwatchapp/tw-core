@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var core_private_1 = require('../../core_private');
 var compile_metadata_1 = require('../compile_metadata');
@@ -17,6 +24,7 @@ var CompileView = (function () {
         this.genConfig = genConfig;
         this.pipeMetas = pipeMetas;
         this.styles = styles;
+        this.animations = animations;
         this.viewIndex = viewIndex;
         this.declarationElement = declarationElement;
         this.templateVariableBindings = templateVariableBindings;
@@ -36,8 +44,6 @@ var CompileView = (function () {
         this.literalArrayCount = 0;
         this.literalMapCount = 0;
         this.pipeCount = 0;
-        this.animations = new Map();
-        animations.forEach(function (entry) { return _this.animations.set(entry.name, entry); });
         this.createMethod = new compile_method_1.CompileMethod(this);
         this.injectorGetMethod = new compile_method_1.CompileMethod(this);
         this.updateContentQueriesMethod = new compile_method_1.CompileMethod(this);
@@ -61,7 +67,7 @@ var CompileView = (function () {
         }
         this.componentContext =
             util_1.getPropertyInView(o.THIS_EXPR.prop('context'), this, this.componentView);
-        var viewQueries = new compile_metadata_1.CompileTokenMap();
+        var viewQueries = new compile_metadata_1.CompileIdentifierMap();
         if (this.viewType === core_private_1.ViewType.COMPONENT) {
             var directiveInstance = o.THIS_EXPR.prop('context');
             collection_1.ListWrapper.forEachWithIndex(this.component.viewQueries, function (queryMeta, queryIndex) {
@@ -141,7 +147,6 @@ var CompileView = (function () {
     };
     CompileView.prototype.afterNodes = function () {
         var _this = this;
-        this.pipes.forEach(function (pipe) { return pipe.create(); });
         this.viewQueries.values().forEach(function (queries) { return queries.forEach(function (query) { return query.afterChildren(_this.createMethod, _this.updateViewQueriesMethod); }); });
     };
     return CompileView;

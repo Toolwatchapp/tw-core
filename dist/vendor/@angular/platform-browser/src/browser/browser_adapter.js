@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -405,9 +412,7 @@ var BrowserDomAdapter = (function (_super) {
         return window.requestAnimationFrame(callback);
     };
     BrowserDomAdapter.prototype.cancelAnimationFrame = function (id) { window.cancelAnimationFrame(id); };
-    BrowserDomAdapter.prototype.supportsWebAnimation = function () {
-        return lang_1.isFunction(document.body['animate']);
-    };
+    BrowserDomAdapter.prototype.supportsWebAnimation = function () { return lang_1.isFunction(Element.prototype['animate']); };
     BrowserDomAdapter.prototype.performanceNow = function () {
         // performance.now() is not available in all browsers, see
         // http://caniuse.com/#search=performance.now
@@ -448,14 +453,14 @@ function relativePath(url /** TODO #9100 */) {
     return (urlParsingNode.pathname.charAt(0) === '/') ? urlParsingNode.pathname :
         '/' + urlParsingNode.pathname;
 }
-function parseCookieValue(cookie, name) {
+function parseCookieValue(cookieStr, name) {
     name = encodeURIComponent(name);
-    var cookies = cookie.split(';');
-    for (var _i = 0, cookies_1 = cookies; _i < cookies_1.length; _i++) {
-        var cookie_1 = cookies_1[_i];
-        var _a = cookie_1.split('=', 2), key = _a[0], value = _a[1];
-        if (key.trim() === name) {
-            return decodeURIComponent(value);
+    for (var _i = 0, _a = cookieStr.split(';'); _i < _a.length; _i++) {
+        var cookie = _a[_i];
+        var eqIndex = cookie.indexOf('=');
+        var _b = eqIndex == -1 ? [cookie, ''] : [cookie.slice(0, eqIndex), cookie.slice(eqIndex + 1)], cookieName = _b[0], cookieValue = _b[1];
+        if (cookieName.trim() === name) {
+            return decodeURIComponent(cookieValue);
         }
     }
     return null;

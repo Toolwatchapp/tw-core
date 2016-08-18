@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -5,11 +12,13 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var core_1 = require('@angular/core');
-var async_1 = require('../../facade/async');
 var collection_1 = require('../../facade/collection');
 var lang_1 = require('../../facade/lang');
 var message_bus_1 = require('../shared/message_bus');
 var serializer_1 = require('../shared/serializer');
+/**
+ * @experimental WebWorker support in Angular is currently experimental.
+ */
 var ServiceMessageBrokerFactory = (function () {
     function ServiceMessageBrokerFactory() {
     }
@@ -41,7 +50,12 @@ var ServiceMessageBrokerFactory_ = (function (_super) {
 }(ServiceMessageBrokerFactory));
 exports.ServiceMessageBrokerFactory_ = ServiceMessageBrokerFactory_;
 /**
- * @experimental
+ * Helper class for UIComponents that allows components to register methods.
+ * If a registered method message is received from the broker on the worker,
+ * the UIMessageBroker deserializes its arguments and calls the registered method.
+ * If that method returns a promise, the UIMessageBroker returns the result to the worker.
+ *
+ * @experimental WebWorker support in Angular is currently experimental.
  */
 var ServiceMessageBroker = (function () {
     function ServiceMessageBroker() {
@@ -49,12 +63,6 @@ var ServiceMessageBroker = (function () {
     return ServiceMessageBroker;
 }());
 exports.ServiceMessageBroker = ServiceMessageBroker;
-/**
- * Helper class for UIComponents that allows components to register methods.
- * If a registered method message is received from the broker on the worker,
- * the UIMessageBroker deserializes its arguments and calls the registered method.
- * If that method returns a promise, the UIMessageBroker returns the result to the worker.
- */
 var ServiceMessageBroker_ = (function (_super) {
     __extends(ServiceMessageBroker_, _super);
     function ServiceMessageBroker_(messageBus, _serializer, channel /** TODO #9100 */) {
@@ -65,7 +73,7 @@ var ServiceMessageBroker_ = (function (_super) {
         this._methods = new collection_1.Map();
         this._sink = messageBus.to(channel);
         var source = messageBus.from(channel);
-        async_1.ObservableWrapper.subscribe(source, function (message) { return _this._handleMessage(message); });
+        source.subscribe({ next: function (message) { return _this._handleMessage(message); } });
     }
     ServiceMessageBroker_.prototype.registerMethod = function (methodName, signature, method, returnType) {
         var _this = this;
@@ -91,15 +99,15 @@ var ServiceMessageBroker_ = (function (_super) {
     };
     ServiceMessageBroker_.prototype._wrapWebWorkerPromise = function (id, promise, type) {
         var _this = this;
-        async_1.PromiseWrapper.then(promise, function (result) {
-            async_1.ObservableWrapper.callEmit(_this._sink, { 'type': 'result', 'value': _this._serializer.serialize(result, type), 'id': id });
+        promise.then(function (result) {
+            _this._sink.emit({ 'type': 'result', 'value': _this._serializer.serialize(result, type), 'id': id });
         });
     };
     return ServiceMessageBroker_;
 }(ServiceMessageBroker));
 exports.ServiceMessageBroker_ = ServiceMessageBroker_;
 /**
- * @experimental
+ * @experimental WebWorker support in Angular is currently experimental.
  */
 var ReceivedMessage = (function () {
     function ReceivedMessage(data) {

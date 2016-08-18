@@ -12,9 +12,9 @@ var MdError = (function (_super) {
     __extends(MdError, _super);
     function MdError(value) {
         _super.call(this);
-        _super.prototype.message = value;
+        this.message = value;
     }
     return MdError;
 }(Error));
 exports.MdError = MdError;
-//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/errors/error.js.map
+//# sourceMappingURL=error.js.map

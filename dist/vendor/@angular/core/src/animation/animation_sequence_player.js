@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var lang_1 = require('../facade/lang');
 var animation_player_1 = require('./animation_player');
@@ -8,6 +15,7 @@ var AnimationSequencePlayer = (function () {
         this._currentIndex = 0;
         this._subscriptions = [];
         this._finished = false;
+        this._started = false;
         this.parentPlayer = null;
         this._players.forEach(function (player) { player.parentPlayer = _this; });
         this._onNext(false);
@@ -43,8 +51,16 @@ var AnimationSequencePlayer = (function () {
             this._subscriptions = [];
         }
     };
+    AnimationSequencePlayer.prototype.init = function () { this._players.forEach(function (player) { return player.init(); }); };
     AnimationSequencePlayer.prototype.onDone = function (fn) { this._subscriptions.push(fn); };
-    AnimationSequencePlayer.prototype.play = function () { this._activePlayer.play(); };
+    AnimationSequencePlayer.prototype.hasStarted = function () { return this._started; };
+    AnimationSequencePlayer.prototype.play = function () {
+        if (!lang_1.isPresent(this.parentPlayer)) {
+            this.init();
+        }
+        this._started = true;
+        this._activePlayer.play();
+    };
     AnimationSequencePlayer.prototype.pause = function () { this._activePlayer.pause(); };
     AnimationSequencePlayer.prototype.restart = function () {
         if (this._players.length > 0) {

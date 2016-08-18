@@ -5,7 +5,7 @@ import { Measure } from './../models/measure.model';
 import { BlogPost } from './../models/blog-post.model';
 import 'rxjs/add/operator/toPromise';
 export declare class TwAPIService {
-    private http;
+    http: Http;
     /**
      * All the HTTP code used by the toolwatch API are defined here.
      * Http codes can be to refine the error types
@@ -120,6 +120,7 @@ export declare class TwAPIService {
     private static time;
     private static headers;
     private static options;
+    private static optionsGet;
     private baseUrl;
     static assetsUrl: string;
     private static apikey;
@@ -217,7 +218,7 @@ export declare class TwAPIService {
      * Fetch offset between atomic clock and js time
      * @param {() => void} statusCallback
      */
-    private fetchTime(statusCallback?);
+    fetchTime(statusCallback?: () => void): Promise<number>;
     /**
      * Update a measure and the watch it belongs to
      * @param  {Watch}          watch

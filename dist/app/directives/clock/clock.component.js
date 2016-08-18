@@ -66,4 +66,4 @@ var ClockComponent = (function () {
     return ClockComponent;
 }());
 exports.ClockComponent = ClockComponent;
-//# sourceMappingURL=clock.component.js.map
+//# sourceMappingURL=../../../clock.component.js.map

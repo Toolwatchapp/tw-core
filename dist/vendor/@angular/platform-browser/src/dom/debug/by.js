@@ -1,8 +1,17 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var dom_adapter_1 = require('../../dom/dom_adapter');
 var lang_1 = require('../../facade/lang');
 /**
  * Predicates for use with {@link DebugElement}'s query functions.
+ *
+ * @experimental All debugging apis are currently experimental.
  */
 var By = (function () {
     function By() {
@@ -12,7 +21,7 @@ var By = (function () {
      *
      * ## Example
      *
-     * {@example platform/dom/debug/ts/by/by.ts region='by_all'}
+     * {@example platform-browser/dom/debug/ts/by/by.ts region='by_all'}
      */
     By.all = function () { return function (debugElement) { return true; }; };
     /**
@@ -20,7 +29,7 @@ var By = (function () {
      *
      * ## Example
      *
-     * {@example platform/dom/debug/ts/by/by.ts region='by_css'}
+     * {@example platform-browser/dom/debug/ts/by/by.ts region='by_css'}
      */
     By.css = function (selector) {
         return function (debugElement) {
@@ -34,7 +43,7 @@ var By = (function () {
      *
      * ## Example
      *
-     * {@example platform/dom/debug/ts/by/by.ts region='by_directive'}
+     * {@example platform-browser/dom/debug/ts/by/by.ts region='by_directive'}
      */
     By.directive = function (type) {
         return function (debugElement) { return debugElement.providerTokens.indexOf(type) !== -1; };

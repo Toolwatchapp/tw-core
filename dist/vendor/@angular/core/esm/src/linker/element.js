@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { ListWrapper } from '../facade/collection';
 import { BaseException } from '../facade/exceptions';
 import { isPresent } from '../facade/lang';
@@ -37,6 +44,31 @@ export class AppElement {
             });
         }
         return result;
+    }
+    moveView(view, currentIndex) {
+        var previousIndex = this.nestedViews.indexOf(view);
+        if (view.type === ViewType.COMPONENT) {
+            throw new BaseException(`Component views can't be moved!`);
+        }
+        var nestedViews = this.nestedViews;
+        if (nestedViews == null) {
+            nestedViews = [];
+            this.nestedViews = nestedViews;
+        }
+        ListWrapper.removeAt(nestedViews, previousIndex);
+        ListWrapper.insert(nestedViews, currentIndex, view);
+        var refRenderNode;
+        if (currentIndex > 0) {
+            var prevView = nestedViews[currentIndex - 1];
+            refRenderNode = prevView.lastRootNode;
+        }
+        else {
+            refRenderNode = this.nativeElement;
+        }
+        if (isPresent(refRenderNode)) {
+            view.renderer.attachViewAfter(refRenderNode, view.flatRootNodes);
+        }
+        view.markContentChildAsMoved(this);
     }
     attachView(view, viewIndex) {
         if (view.type === ViewType.COMPONENT) {

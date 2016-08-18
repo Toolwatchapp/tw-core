@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 "use strict";
 var core_1 = require('@angular/core');
 var async_1 = require('../../facade/async');
@@ -12,9 +19,7 @@ var PostMessageBusSink = (function () {
     PostMessageBusSink.prototype.attachToZone = function (zone) {
         var _this = this;
         this._zone = zone;
-        this._zone.runOutsideAngular(function () {
-            async_1.ObservableWrapper.subscribe(_this._zone.onStable, function (_) { _this._handleOnEventDone(); });
-        });
+        this._zone.runOutsideAngular(function () { _this._zone.onStable.subscribe({ next: function () { _this._handleOnEventDone(); } }); });
     };
     PostMessageBusSink.prototype.initChannel = function (channel, runInZone) {
         var _this = this;

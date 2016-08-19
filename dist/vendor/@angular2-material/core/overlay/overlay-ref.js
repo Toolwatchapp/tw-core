@@ -11,13 +11,9 @@ var OverlayRef = (function () {
     }
     OverlayRef.prototype.attach = function (portal) {
         var _this = this;
-        var attachPromise = this._portalHost.attach(portal);
-        // Don't chain the .then() call in the return because we want the result of portalHost.attach
-        // to be returned from this method.
-        attachPromise.then(function () {
-            _this.updatePosition();
+        return this._portalHost.attach(portal).then(function () {
+            _this._updatePosition();
         });
-        return attachPromise;
     };
     OverlayRef.prototype.detach = function () {
         return this._portalHost.detach();
@@ -33,7 +29,7 @@ var OverlayRef = (function () {
         return this._state;
     };
     /** Updates the position of the overlay based on the position strategy. */
-    OverlayRef.prototype.updatePosition = function () {
+    OverlayRef.prototype._updatePosition = function () {
         if (this._state.positionStrategy) {
             this._state.positionStrategy.apply(this._pane);
         }
@@ -41,4 +37,4 @@ var OverlayRef = (function () {
     return OverlayRef;
 }());
 exports.OverlayRef = OverlayRef;
-//# sourceMappingURL=overlay-ref.js.map
+//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/overlay/overlay-ref.js.map

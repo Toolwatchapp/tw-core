@@ -165,7 +165,7 @@ export class TwAPIService {
 	// Regression RC5. Doesn't accept get without body
 	private static optionsGet: RequestOptions = new RequestOptions({ headers: TwAPIService.headers, body:"" });
 	
-	private baseUrl:string = "https://toolwatch.io/api/";
+	private baseUrl:string = "/api/";
 	public static assetsUrl = "app/assets"
 	private static apikey:string;
 
@@ -174,8 +174,7 @@ export class TwAPIService {
 	 * @param {Http} private http 
 	 */
 	constructor(public http: Http) {
-		console.log('in')
-		// this.accurateTime();
+		this.accurateTime();
 	}
 
 	public static resetTime(){
@@ -490,8 +489,6 @@ export class TwAPIService {
 					offset:medianOffset
 				};
 
-				console.log(TwAPIService.time);
-
 				return TwAPIService.time.syncDate;
 			});
 		//Only compute the difference from last time;
@@ -521,15 +518,10 @@ export class TwAPIService {
 		: Promise<number> {
 
 		let beforeTime: number = window.performance.now();
-		console.log("beforeTime", beforeTime);
-		console.log("TwAPIService.options", TwAPIService.optionsGet);
-		console.log("this.baseUrl", this.baseUrl);
 		return this.http.get(this.baseUrl + "time", TwAPIService.optionsGet)
 			.toPromise()
 			.then(
 				response => {
-
-					console.log("response", response);
 					if (statusCallback !== undefined){
 						statusCallback();
 					}

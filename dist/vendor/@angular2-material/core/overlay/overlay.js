@@ -8,13 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var core_1 = require('@angular/core');
 var overlay_state_1 = require('./overlay-state');
 var dom_portal_host_1 = require('../portal/dom-portal-host');
 var overlay_ref_1 = require('./overlay-ref');
 var overlay_position_builder_1 = require('./position/overlay-position-builder');
 var viewport_ruler_1 = require('./position/viewport-ruler');
-var overlay_container_1 = require('./overlay-container');
+/** Token used to inject the DOM element that serves as the overlay container. */
+exports.OVERLAY_CONTAINER_TOKEN = new core_1.OpaqueToken('overlayContainer');
 /** Next overlay unique ID. */
 var nextUniqueId = 0;
 /** The default state for newly created overlays. */
@@ -28,8 +32,8 @@ var defaultState = new overlay_state_1.OverlayState();
  * An overlay *is* a PortalHost, so any kind of Portal can be loaded into one.
  */
 var Overlay = (function () {
-    function Overlay(_overlayContainer, _componentResolver, _positionBuilder) {
-        this._overlayContainer = _overlayContainer;
+    function Overlay(_overlayContainerElement, _componentResolver, _positionBuilder) {
+        this._overlayContainerElement = _overlayContainerElement;
         this._componentResolver = _componentResolver;
         this._positionBuilder = _positionBuilder;
     }
@@ -58,7 +62,7 @@ var Overlay = (function () {
         var pane = document.createElement('div');
         pane.id = "md-overlay-" + nextUniqueId++;
         pane.classList.add('md-overlay-pane');
-        this._overlayContainer.getContainerElement().appendChild(pane);
+        this._overlayContainerElement.appendChild(pane);
         return Promise.resolve(pane);
     };
     /**
@@ -79,8 +83,9 @@ var Overlay = (function () {
         return new overlay_ref_1.OverlayRef(this._createPortalHost(pane), pane, state);
     };
     Overlay = __decorate([
-        core_1.Injectable(), 
-        __metadata('design:paramtypes', [overlay_container_1.OverlayContainer, core_1.ComponentResolver, overlay_position_builder_1.OverlayPositionBuilder])
+        core_1.Injectable(),
+        __param(0, core_1.Inject(exports.OVERLAY_CONTAINER_TOKEN)), 
+        __metadata('design:paramtypes', [HTMLElement, core_1.ComponentResolver, overlay_position_builder_1.OverlayPositionBuilder])
     ], Overlay);
     return Overlay;
 }());
@@ -90,6 +95,16 @@ exports.OVERLAY_PROVIDERS = [
     viewport_ruler_1.ViewportRuler,
     overlay_position_builder_1.OverlayPositionBuilder,
     Overlay,
-    overlay_container_1.OverlayContainer,
 ];
-//# sourceMappingURL=overlay.js.map
+// Re-export overlay-related modules so they can be imported directly from here.
+var overlay_state_2 = require('./overlay-state');
+exports.OverlayState = overlay_state_2.OverlayState;
+var overlay_ref_2 = require('./overlay-ref');
+exports.OverlayRef = overlay_ref_2.OverlayRef;
+var overlay_container_1 = require('./overlay-container');
+exports.createOverlayContainer = overlay_container_1.createOverlayContainer;
+var overlay_directives_1 = require('./overlay-directives');
+exports.OVERLAY_DIRECTIVES = overlay_directives_1.OVERLAY_DIRECTIVES;
+exports.ConnectedOverlayDirective = overlay_directives_1.ConnectedOverlayDirective;
+exports.OverlayOrigin = overlay_directives_1.OverlayOrigin;
+//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/overlay/overlay.js.map

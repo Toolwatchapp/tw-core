@@ -6,4 +6,4 @@ describe('Astro', function () {
         expect(new astro_1.Astro()).toBeTruthy();
     });
 });
-//# sourceMappingURL=../../../astro.spec.js.map
+//# sourceMappingURL=astro.spec.js.map

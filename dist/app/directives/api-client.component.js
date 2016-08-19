@@ -32,4 +32,4 @@ var ApiClientAppComponent = (function () {
     return ApiClientAppComponent;
 }());
 exports.ApiClientAppComponent = ApiClientAppComponent;
-//# sourceMappingURL=../../api-client.component.js.map
+//# sourceMappingURL=api-client.component.js.map

@@ -11,7 +11,6 @@
  *   <component myField>
  * or:
  *   <component myField="">
- * @deprecated
  */
 function booleanFieldValueFactory() {
     return function booleanFieldValueMetadata(target, key) {
@@ -27,4 +26,4 @@ function booleanFieldValueFactory() {
     };
 }
 exports.BooleanFieldValue = booleanFieldValueFactory;
-//# sourceMappingURL=field-value.js.map
+//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/annotations/field-value.js.map

@@ -28,11 +28,6 @@ var MdGestureConfig = (function (_super) {
             'dragright',
             'dragleft',
             'longpress',
-            'slide',
-            'slidestart',
-            'slideend',
-            'slideright',
-            'slideleft'
         ];
     }
     /*
@@ -49,31 +44,20 @@ var MdGestureConfig = (function (_super) {
      * */
     MdGestureConfig.prototype.buildHammer = function (element) {
         var mc = new Hammer(element);
-        // Default Hammer Recognizers.
+        // create custom gesture recognizers
+        var drag = new Hammer.Pan({ event: 'drag', threshold: 6 });
+        var longpress = new Hammer.Press({ event: 'longpress', time: 500 });
+        // ensure custom recognizers can coexist with the default gestures (i.e. pan, press, swipe)
         var pan = new Hammer.Pan();
-        var swipe = new Hammer.Swipe();
         var press = new Hammer.Press();
-        // Notice that a HammerJS recognizer can only depend on one other recognizer once.
-        // Otherwise the previous `recognizeWith` will be dropped.
-        var slide = this._createRecognizer(pan, { event: 'slide', threshold: 0 }, swipe);
-        var drag = this._createRecognizer(slide, { event: 'drag', threshold: 6 }, swipe);
-        var longpress = this._createRecognizer(press, { event: 'longpress', time: 500 });
-        // Overwrite the default `pan` event to use the swipe event.
+        var swipe = new Hammer.Swipe();
+        drag.recognizeWith(pan);
+        drag.recognizeWith(swipe);
         pan.recognizeWith(swipe);
-        // Add customized gestures to Hammer manager
-        mc.add([swipe, press, pan, drag, slide, longpress]);
+        longpress.recognizeWith(press);
+        // add customized gestures to Hammer manager
+        mc.add([drag, pan, swipe, press, longpress]);
         return mc;
-    };
-    /** Creates a new recognizer, without affecting the default recognizers of HammerJS */
-    MdGestureConfig.prototype._createRecognizer = function (base, options) {
-        var inheritances = [];
-        for (var _i = 2; _i < arguments.length; _i++) {
-            inheritances[_i - 2] = arguments[_i];
-        }
-        var recognizer = new base.constructor(options);
-        inheritances.push(base);
-        inheritances.forEach(function (item) { return recognizer.recognizeWith(item); });
-        return recognizer;
     };
     MdGestureConfig = __decorate([
         core_1.Injectable(), 
@@ -82,4 +66,4 @@ var MdGestureConfig = (function (_super) {
     return MdGestureConfig;
 }(platform_browser_1.HammerGestureConfig));
 exports.MdGestureConfig = MdGestureConfig;
-//# sourceMappingURL=MdGestureConfig.js.map
+//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/gestures/MdGestureConfig.js.map

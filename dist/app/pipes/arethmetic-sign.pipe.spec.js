@@ -13,4 +13,4 @@
 //       expect(pipe.transform(-2)).toBe("-2");
 //   }));
 // });
-//# sourceMappingURL=../../arethmetic-sign.pipe.spec.js.map
+//# sourceMappingURL=arethmetic-sign.pipe.spec.js.map

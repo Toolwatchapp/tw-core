@@ -51,4 +51,4 @@ var LoggerAspect = (function () {
     return LoggerAspect;
 }());
 exports.LoggerAspect = LoggerAspect;
-//# sourceMappingURL=../../logger.aspect.js.map
+//# sourceMappingURL=logger.aspect.js.map

@@ -23,9 +23,8 @@ var TwAPIService = (function () {
      */
     function TwAPIService(http) {
         this.http = http;
-        this.baseUrl = "https://toolwatch.io/api/";
-        console.log('in');
-        // this.accurateTime();
+        this.baseUrl = "/api/";
+        this.accurateTime();
     }
     TwAPIService.resetTime = function () {
         TwAPIService.time = undefined;
@@ -250,7 +249,6 @@ var TwAPIService = (function () {
                     syncAnchor: window.performance.now(),
                     offset: medianOffset
                 };
-                console.log(TwAPIService.time);
                 return TwAPIService.time.syncDate;
             });
         }
@@ -270,13 +268,9 @@ var TwAPIService = (function () {
      */
     TwAPIService.prototype.fetchTime = function (statusCallback) {
         var beforeTime = window.performance.now();
-        console.log("beforeTime", beforeTime);
-        console.log("TwAPIService.options", TwAPIService.optionsGet);
-        console.log("this.baseUrl", this.baseUrl);
         return this.http.get(this.baseUrl + "time", TwAPIService.optionsGet)
             .toPromise()
             .then(function (response) {
-            console.log("response", response);
             if (statusCallback !== undefined) {
                 statusCallback();
             }
@@ -496,4 +490,4 @@ var TwAPIService = (function () {
     return TwAPIService;
 }());
 exports.TwAPIService = TwAPIService;
-//# sourceMappingURL=../../twapi.service.js.map
+//# sourceMappingURL=twapi.service.js.map

@@ -73,7 +73,7 @@ var PortalHostDirective = (function (_super) {
             portal.viewContainerRef :
             this._viewContainerRef;
         return this._componentResolver.resolveComponent(portal.component).then(function (componentFactory) {
-            var ref = viewContainerRef.createComponent(componentFactory, viewContainerRef.length, portal.injector || viewContainerRef.parentInjector);
+            var ref = viewContainerRef.createComponent(componentFactory, viewContainerRef.length, viewContainerRef.parentInjector);
             _this.setDisposeFn(function () { return ref.destroy(); });
             return ref;
         });
@@ -90,9 +90,9 @@ var PortalHostDirective = (function (_super) {
     /** Detatches the currently attached Portal (if there is one) and attaches the given Portal. */
     PortalHostDirective.prototype._replaceAttachedPortal = function (p) {
         var _this = this;
-        var maybeDetach = this.hasAttached() ? this.detach() : Promise.resolve(null);
+        var maybeDetach = this.hasAttached() ? this.detach() : Promise.resolve();
         maybeDetach.then(function () {
-            if (p) {
+            if (p != null) {
                 _this.attach(p);
                 _this._portal = p;
             }
@@ -109,17 +109,4 @@ var PortalHostDirective = (function (_super) {
 }(portal_1.BasePortalHost));
 exports.PortalHostDirective = PortalHostDirective;
 exports.PORTAL_DIRECTIVES = [TemplatePortalDirective, PortalHostDirective];
-var PortalModule = (function () {
-    function PortalModule() {
-    }
-    PortalModule = __decorate([
-        core_1.NgModule({
-            exports: exports.PORTAL_DIRECTIVES,
-            declarations: exports.PORTAL_DIRECTIVES,
-        }), 
-        __metadata('design:paramtypes', [])
-    ], PortalModule);
-    return PortalModule;
-}());
-exports.PortalModule = PortalModule;
-//# sourceMappingURL=portal-directives.js.map
+//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/portal/portal-directives.js.map

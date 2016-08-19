@@ -46,4 +46,4 @@
 // })
 // class WatchComponentTestController {
 // }
-//# sourceMappingURL=../../../watch.component.spec.js.map
+//# sourceMappingURL=watch.component.spec.js.map

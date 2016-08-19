@@ -1,12 +1,11 @@
 // Turn on full stack traces in errors to help debugging
-Error.stackTraceLimit = Infinity;
+Error.stackTraceLimit=Infinity;
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 100;
 
 // Cancel Karma's synchronous start,
 // we will call `__karma__.start()` later, once all the specs are loaded.
-__karma__.loaded = function() {
-};
+__karma__.loaded = function() {};
 
 System.config({
     baseURL: '/base/',
@@ -16,30 +15,21 @@ System.config({
         'rxjs': 'node_modules/rxjs'
     },
     packages: {
-        '@angular/common': {main: 'index.js', defaultExtension: 'js'},
-        '@angular/compiler': {main: 'index.js', defaultExtension: 'js'},
-        '@angular/core': {main: 'index.js', defaultExtension: 'js'},
-        '@angular/http': {main: 'index.js', defaultExtension: 'js'},
-        '@angular/platform-browser': {main: 'index.js', defaultExtension: 'js'}
+        '@angular/common': { main: 'index.js', defaultExtension: 'js' },
+        '@angular/compiler': { main: 'index.js', defaultExtension: 'js' },
+        '@angular/core': { main: 'index.js', defaultExtension: 'js' },
+        '@angular/http': { main: 'index.js', defaultExtension: 'js' },
+        '@angular/platform-browser': { main: 'index.js', defaultExtension: 'js' }
     }
 });
 
-// Set up the test injector, then import all the specs, execute their `main()`
-// method and kick off Karma (Jasmine).
-System.import('@angular/core/testing')
-    .then(function(coreTesting){
-        return System.import('@angular/platform-browser-dynamic/testing')
-            .then(function(browserTesting) {
-                coreTesting.TestBed.initTestEnvironment(
-                    browserTesting.BrowserDynamicTestingModule,
-                    browserTesting.platformBrowserDynamicTesting());
-            });
-    })
-    .then(function() {
+System.import('@angular/platform-browser/src/browser/browser_adapter').then(function(browser_adapter) {
+    browser_adapter.BrowserDomAdapter.makeCurrent();
+}).then(function() {
         return Promise.all(
             Object.keys(window.__karma__.files) // All files served by Karma.
                 .filter(onlySpecFiles)
-                .map(window.file2moduleName)        // Normalize paths to module names.
+                .map(file2moduleName)
                 .map(function(path) {
                     return System.import(path).then(function(module) {
                         if (module.hasOwnProperty('main')) {
@@ -53,8 +43,10 @@ System.import('@angular/core/testing')
     .then(function() {
         __karma__.start();
     }, function(error) {
-        __karma__.error(error.stack || error);
+        console.error(error.stack || error);
+        __karma__.start();
     });
+
 
 function onlySpecFiles(path) {
     return /[\.|_]spec\.js$/.test(path);

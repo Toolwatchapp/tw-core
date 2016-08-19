@@ -14,6 +14,7 @@ var common_1 = require('@angular/common');
 var twapi_service_1 = require('./../../services/twapi.service');
 var global_validator_1 = require('./../global-validator');
 var ga_service_1 = require('./../../services/ga.service');
+var form_helper_1 = require('./../../helpers/form.helper');
 var forms_1 = require('@angular/forms');
 // @Wove(LoggerAspect)
 var LoginComponent = (function () {
@@ -33,23 +34,12 @@ var LoginComponent = (function () {
         this.userLogged = new core_1.EventEmitter();
         this.loginAttempt = new core_1.EventEmitter();
         this.loginError = new core_1.EventEmitter();
-        this.twapi.http.get('https://toolwatch.io/api/time')
-            .toPromise()
-            .then(function (res) { return console.log(res); });
-        this.twapi.fetchTime()
-            .then(function (res) { return console.log(res); });
-        this.twapi.login("vincentsatiat@gmail.com", "qwerty")
-            .then(function (user) { return console.log(user); });
-        console.log("aawdawd");
         //Lang definition
         translate.setDefaultLang('en');
         translate.use('en');
-        //Form constraints
-        this.password = new common_1.Control('', common_1.Validators.required);
-        this.email = new common_1.Control('', common_1.Validators.compose([common_1.Validators.required, global_validator_1.GlobalValidator.mailFormat]));
-        this.loginForm = builder.group({
-            email: this.email,
-            password: this.password
+        this.loginForm = form_helper_1.FormHelper.group(this.builder, {
+            email: new forms_1.FormControl("", [common_1.Validators.required, global_validator_1.GlobalValidator.mailFormat]),
+            password: [common_1.Validators.required, common_1.Validators.minLength(5)]
         });
     }
     /**
@@ -58,12 +48,12 @@ var LoginComponent = (function () {
      */
     LoginComponent.prototype.onSubmit = function (user) {
         var _this = this;
-        this.loginAttempt.emit(true);
         this.submitAttempt = true;
         this.error = false;
         this.credientials = false;
         //Form constraints are ok
         if (this.loginForm.valid) {
+            this.loginAttempt.emit(true);
             this.twapi.login(user.email, user.password).then(function (res) {
                 _this.userLogged.emit(res);
                 ga_service_1.GAService.event('CTA', 'LOGIN', 'SUCCESS');
@@ -79,9 +69,6 @@ var LoginComponent = (function () {
                         break;
                 }
             });
-        }
-        else {
-            this.loginAttempt.emit(false);
         }
     };
     LoginComponent.prototype.ngOnInit = function () {
@@ -104,11 +91,11 @@ var LoginComponent = (function () {
             templateUrl: 'app/directives/login/login.component.html',
             styleUrls: ['app/directives/login/login.component.css'],
             pipes: [ng2_translate_1.TranslatePipe],
-            directives: [forms_1.FORM_DIRECTIVES, forms_1.REACTIVE_FORM_DIRECTIVES]
+            directives: [forms_1.REACTIVE_FORM_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [ng2_translate_1.TranslateService, twapi_service_1.TwAPIService, forms_1.FormBuilder])
     ], LoginComponent);
     return LoginComponent;
 }());
 exports.LoginComponent = LoginComponent;
-//# sourceMappingURL=../../../login.component.js.map
+//# sourceMappingURL=login.component.js.map

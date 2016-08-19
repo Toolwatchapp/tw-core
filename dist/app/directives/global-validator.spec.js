@@ -11,4 +11,4 @@
 //     expect(new GlobalValidator()).toBeTruthy();
 //   });
 // });
-//# sourceMappingURL=../../global-validator.spec.js.map
+//# sourceMappingURL=global-validator.spec.js.map

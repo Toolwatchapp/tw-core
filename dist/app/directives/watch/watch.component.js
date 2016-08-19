@@ -141,4 +141,4 @@ var WatchComponent = (function () {
     return WatchComponent;
 }());
 exports.WatchComponent = WatchComponent;
-//# sourceMappingURL=../../../watch.component.js.map
+//# sourceMappingURL=watch.component.js.map

@@ -63,17 +63,4 @@ var Dir = (function () {
     return Dir;
 }());
 exports.Dir = Dir;
-var RtlModule = (function () {
-    function RtlModule() {
-    }
-    RtlModule = __decorate([
-        core_1.NgModule({
-            exports: [Dir],
-            declarations: [Dir]
-        }), 
-        __metadata('design:paramtypes', [])
-    ], RtlModule);
-    return RtlModule;
-}());
-exports.RtlModule = RtlModule;
-//# sourceMappingURL=dir.js.map
+//# sourceMappingURL=/usr/local/google/home/jelbourn/material2/tmp/broccoli_type_script_compiler-input_base_path-OxHzApZr.tmp/0/core/rtl/dir.js.map

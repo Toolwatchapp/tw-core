@@ -1,6 +1,5 @@
 import { OnInit, EventEmitter } from '@angular/core';
 import { TranslateService } from 'ng2-translate/ng2-translate';
-import { Control } from '@angular/common';
 import { TwAPIService } from './../../services/twapi.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 export declare class LoginComponent implements OnInit {
@@ -8,8 +7,6 @@ export declare class LoginComponent implements OnInit {
     protected twapi: TwAPIService;
     private builder;
     loginForm: FormGroup;
-    email: Control;
-    password: Control;
     submitAttempt: boolean;
     credientials: boolean;
     error: boolean;

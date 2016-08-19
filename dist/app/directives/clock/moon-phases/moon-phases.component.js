@@ -46,4 +46,4 @@ var MoonPhasesComponent = (function (_super) {
     return MoonPhasesComponent;
 }(astro_1.Astro));
 exports.MoonPhasesComponent = MoonPhasesComponent;
-//# sourceMappingURL=../../../../moon-phases.component.js.map
+//# sourceMappingURL=moon-phases.component.js.map

@@ -5,12 +5,13 @@ import {TwAPIService} from './../../services/twapi.service'
 import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
 import { GlobalValidator } from './../global-validator';
 import { GAService } from './../../services/ga.service';
+import { FormHelper } from './../../helpers/form.helper';
 
-import {  
-  FORM_DIRECTIVES,  
+import {   
   REACTIVE_FORM_DIRECTIVES,  
   FormBuilder,  
-  FormGroup  
+  FormGroup,
+  FormControl
 } from '@angular/forms';
 
 import { Wove } from 'aspect.js/dist/lib/aspect';
@@ -22,7 +23,7 @@ import { LoggerAspect } from './../../aspects/logger.aspect';
   templateUrl: 'app/directives/login/login.component.html',
   styleUrls: ['app/directives/login/login.component.css'],
   pipes: [TranslatePipe],
-  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES]
+  directives: [REACTIVE_FORM_DIRECTIVES]
 })
 /**
  * Login component. Provides a login form with controlled and
@@ -31,8 +32,6 @@ import { LoggerAspect } from './../../aspects/logger.aspect';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
-  email:Control;
-  password: Control;
   submitAttempt:boolean = false;
   credientials = false;
   error = false;
@@ -49,30 +48,15 @@ export class LoginComponent implements OnInit {
   constructor(private translate: TranslateService, 
     protected twapi: TwAPIService, private builder: FormBuilder) { 
 
-
-    this.twapi.http.get('https://toolwatch.io/api/time')
-    .toPromise()
-    .then(res => console.log(res));
-
-    this.twapi.fetchTime()
-    .then( res => console.log(res));
-
-    this.twapi.login("vincentsatiat@gmail.com", "qwerty")
-    .then(user => console.log(user));
-  	
-    console.log("aawdawd");
     //Lang definition
 	  translate.setDefaultLang('en');
 	  translate.use('en');
 
-    //Form constraints
-    this.password = new Control('', Validators.required);
-    this.email = new Control('', Validators.compose([Validators.required, GlobalValidator.mailFormat]));
-
-    this.loginForm = builder.group({
-      email: this.email,
-      password: this.password
+    this.loginForm = FormHelper.group(this.builder, {
+      email: new FormControl("", [<any>Validators.required, <any>GlobalValidator.mailFormat]),
+      password: [<any>Validators.required, <any>Validators.minLength(5)]
     });
+
   }
 
   /**
@@ -81,14 +65,15 @@ export class LoginComponent implements OnInit {
    */
   onSubmit(user:{email:string, password:string}){
 
-    this.loginAttempt.emit(true);
-
     this.submitAttempt = true;
     this.error = false;
     this.credientials = false;
-
+    
     //Form constraints are ok
     if(this.loginForm.valid){
+
+      this.loginAttempt.emit(true);
+
       this.twapi.login(user.email, user.password).then(
         res => { 
           this.userLogged.emit(res);
@@ -108,12 +93,11 @@ export class LoginComponent implements OnInit {
           }
         }
       );
-    }else{
-      this.loginAttempt.emit(false);
     }
   }
 
   ngOnInit() {
+
   }
 
 }

@@ -17,13 +17,13 @@
   "main": "main.js",
   "private": true,
   "dependencies": {
-    "@angular/common": "2.0.0-rc.5",
-    "@angular/compiler": "2.0.0-rc.5",
-    "@angular/core": "2.0.0-rc.5",
-    "@angular/http": "2.0.0-rc.5",
-    "@angular/platform-browser": "2.0.0-rc.5",
-    "@angular/forms": "^0.3.0",
-    "@angular/platform-browser-dynamic": "2.0.0-rc.5",
+    "@angular/common": "2.0.0-rc.4",
+    "@angular/compiler": "2.0.0-rc.4",
+    "@angular/core": "2.0.0-rc.4",
+    "@angular/forms": "0.2.0",
+    "@angular/http": "2.0.0-rc.4",
+    "@angular/platform-browser": "2.0.0-rc.4",
+    "@angular/platform-browser-dynamic": "2.0.0-rc.4",
     "aspect.js": "github:Toolwatchapp/aspect.js",
     "bootstrap": "^3.3.6",
     "es6-shim": "^0.35.0",
@@ -35,7 +35,7 @@
     "suncalc": "^1.7.0",
     "systemjs": "0.19.26",
     "universal-analytics": "^0.3.11",
-    "zone.js": "^0.6.12"
+    "zone.js": "0.6.12"
   },
   "devDependencies": {
     "angular-cli": "^1.0.0-beta.5",

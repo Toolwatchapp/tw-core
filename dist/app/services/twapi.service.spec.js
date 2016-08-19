@@ -20,4 +20,4 @@
 //     expect(service).toBeTruthy();
 //   }));
 // });
-//# sourceMappingURL=../../twapi.service.spec.js.map
+//# sourceMappingURL=twapi.service.spec.js.map

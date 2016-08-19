@@ -50,4 +50,4 @@ var ClockComponentTestController = (function () {
     ], ClockComponentTestController);
     return ClockComponentTestController;
 }());
-//# sourceMappingURL=../../../clock.component.spec.js.map
+//# sourceMappingURL=clock.component.spec.js.map

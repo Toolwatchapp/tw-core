@@ -42,10 +42,6 @@ var Watch = (function () {
         var lastMeasure = this.currentMeasure();
         if (lastMeasure !== null
             && lastMeasure.status & measure_model_1.MeasureStatus.BaseMeasure) {
-            console.log(lastMeasure.measureUserTime, Date.now());
-            console.log(lastMeasure.measureUserTime - Date.now() / 1000);
-            console.log((lastMeasure.measureUserTime - Date.now() / 1000) / 3600);
-            console.log(Math.abs((lastMeasure.measureUserTime - Date.now() / 1000) / 3600));
             if (Math.abs((lastMeasure.measureUserTime - Date.now() / 1000) / 3600) < 12) {
                 this.next = WatchAction.Waiting;
                 this.waiting = Math.round(12 - Math.abs((lastMeasure.measureUserTime - Date.now() / 1000) / 3600));
@@ -99,4 +95,4 @@ var WatchAction = exports.WatchAction;
     WatchStatus[WatchStatus["HaveMoreMeasures"] = 4] = "HaveMoreMeasures";
 })(exports.WatchStatus || (exports.WatchStatus = {}));
 var WatchStatus = exports.WatchStatus;
-//# sourceMappingURL=../../watch.model.js.map
+//# sourceMappingURL=watch.model.js.map

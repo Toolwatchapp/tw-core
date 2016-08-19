@@ -46,4 +46,4 @@
 // })
 // class SignupComponentTestController {
 // }
-//# sourceMappingURL=../../../signup.component.spec.js.map
+//# sourceMappingURL=signup.component.spec.js.map

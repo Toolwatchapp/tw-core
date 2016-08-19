@@ -43,4 +43,4 @@
 // })
 // class MoonPhasesComponentTestController {
 // }
-//# sourceMappingURL=../../../../moon-phases.component.spec.js.map
+//# sourceMappingURL=moon-phases.component.spec.js.map

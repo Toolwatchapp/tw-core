@@ -10,13 +10,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var ng2_translate_1 = require('ng2-translate/ng2-translate');
-var common_1 = require('@angular/common');
 var twapi_service_1 = require('./../../services/twapi.service');
 var http_1 = require('@angular/http');
 var global_validator_1 = require('./../global-validator');
 var ga_service_1 = require('./../../services/ga.service');
-var aspect_1 = require('aspect.js/dist/lib/aspect');
-var logger_aspect_1 = require('./../../aspects/logger.aspect');
+var form_helper_1 = require('./../../helpers/form.helper');
+var forms_1 = require('@angular/forms');
 var SignupComponent = (function () {
     /**
     * Constructor w/ service injection
@@ -29,9 +28,6 @@ var SignupComponent = (function () {
         this.translate = translate;
         this.twapi = twapi;
         this.builder = builder;
-        this.firstName = new common_1.Control();
-        this.lastName = new common_1.Control();
-        this.country = new common_1.Control();
         this.submitAttempt = false;
         this.emailTaken = false;
         this.error = false;
@@ -43,29 +39,14 @@ var SignupComponent = (function () {
         translate.get("countries").subscribe(function (result) {
             _this.countries = result;
         });
-        //Form constraints
-        this.password = new common_1.Control('', common_1.Validators.required);
-        this.email = new common_1.Control('', common_1.Validators.compose([common_1.Validators.required,
-            global_validator_1.GlobalValidator.mailFormat]));
-        this.emailRepeat = new common_1.Control('', common_1.Validators.compose([common_1.Validators.required,
-            global_validator_1.GlobalValidator.mailFormat]));
-        this.password = new common_1.Control('', common_1.Validators.compose([common_1.Validators.required,
-            common_1.Validators.minLength(8)]));
-        this.passwordRepeat = new common_1.Control('', common_1.Validators.compose([common_1.Validators.required,
-            common_1.Validators.minLength(8)]));
-        this.signupForm = builder.group({
-            email: this.email,
-            password: this.password,
-            emailRepeat: this.emailRepeat,
-            passwordRepeat: this.passwordRepeat,
-            lastName: this.lastName,
-            firstName: this.firstName,
-            country: this.country
-        }, {
-            validator: common_1.Validators.compose([
-                global_validator_1.GlobalValidator.match("email", "emailRepeat", { "emailMatch": true }),
-                global_validator_1.GlobalValidator.match("password", "passwordRepeat", { "passwordMatch": true }),
-            ])
+        this.signupForm = form_helper_1.FormHelper.group(this.builder, {
+            email: [forms_1.Validators.required, global_validator_1.GlobalValidator.mailFormat],
+            emailRepeat: [forms_1.Validators.required, global_validator_1.GlobalValidator.mailFormat],
+            password: [forms_1.Validators.required, forms_1.Validators.minLength(8)],
+            passwordRepeat: [forms_1.Validators.required, forms_1.Validators.minLength(8)],
+            lastName: [],
+            firstName: [],
+            country: []
         });
     }
     /**
@@ -93,8 +74,11 @@ var SignupComponent = (function () {
      */
     SignupComponent.prototype.onSubmit = function (user) {
         var _this = this;
+        console.log(user);
         this.submitAttempt = true;
-        if (this.signupForm.valid) {
+        if (this.signupForm.valid &&
+            user.password == user.passwordRepeat &&
+            user.email == user.emailRepeat) {
             this.twapi.signup(user.email, user.password, user.firstName, user.lastName, this.query).then(function (res) {
                 ga_service_1.GAService.event('CTA', 'SIGNUP', 'SUCCESS');
                 _this.userLogged.emit(res);
@@ -118,16 +102,15 @@ var SignupComponent = (function () {
         __metadata('design:type', Object)
     ], SignupComponent.prototype, "userLogged", void 0);
     SignupComponent = __decorate([
-        aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Component({
             selector: 'app-signup',
             templateUrl: 'base/dist/app/directives/signup/signup.component.html',
             // styleUrls: ['app/directives/signup/signup.component.css'],
             pipes: [ng2_translate_1.TranslatePipe],
             providers: [twapi_service_1.TwAPIService, http_1.HTTP_PROVIDERS],
-            directives: [common_1.FORM_DIRECTIVES]
+            directives: [forms_1.REACTIVE_FORM_DIRECTIVES]
         }), 
-        __metadata('design:paramtypes', [ng2_translate_1.TranslateService, twapi_service_1.TwAPIService, common_1.FormBuilder])
+        __metadata('design:paramtypes', [ng2_translate_1.TranslateService, twapi_service_1.TwAPIService, forms_1.FormBuilder])
     ], SignupComponent);
     return SignupComponent;
 }());

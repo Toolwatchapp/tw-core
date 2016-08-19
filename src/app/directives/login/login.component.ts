@@ -17,7 +17,6 @@ import {
 import { Wove } from 'aspect.js/dist/lib/aspect';
 import { LoggerAspect } from './../../aspects/logger.aspect';
 
-// @Wove(LoggerAspect)
 @Component({
   selector: 'app-login',
   templateUrl: 'app/directives/login/login.component.html',
@@ -53,7 +52,7 @@ export class LoginComponent implements OnInit {
 	  translate.use('en');
 
     this.loginForm = FormHelper.group(this.builder, {
-      email: new FormControl("", [<any>Validators.required, <any>GlobalValidator.mailFormat]),
+      email: [<any>Validators.required, <any>GlobalValidator.mailFormat],
       password: [<any>Validators.required, <any>Validators.minLength(5)]
     });
 

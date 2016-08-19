@@ -1,19 +1,12 @@
 import { OnInit, EventEmitter } from '@angular/core';
 import { TranslateService } from 'ng2-translate/ng2-translate';
-import { FormBuilder, Control, ControlGroup } from '@angular/common';
 import { TwAPIService } from './../../services/twapi.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 export declare class SignupComponent implements OnInit {
     private translate;
     private twapi;
     private builder;
-    signupForm: ControlGroup;
-    email: Control;
-    emailRepeat: Control;
-    password: Control;
-    passwordRepeat: Control;
-    firstName: Control;
-    lastName: Control;
-    country: Control;
+    signupForm: FormGroup;
     submitAttempt: boolean;
     emailTaken: boolean;
     error: boolean;

@@ -1,36 +1,34 @@
 import { Component, Output, OnInit, EventEmitter } from '@angular/core';
 import {TRANSLATE_PROVIDERS, TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
-import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators}  from '@angular/common';
 import {TwAPIService} from './../../services/twapi.service'
 import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
 import { GlobalValidator } from './../global-validator';
 import { GAService } from './../../services/ga.service';
+import { FormHelper } from './../../helpers/form.helper';
 
-import { Wove } from 'aspect.js/dist/lib/aspect';
-import { LoggerAspect } from './../../aspects/logger.aspect';
+import {   
+  REACTIVE_FORM_DIRECTIVES,  
+  FormBuilder,  
+  FormGroup,
+  FormControl,
+  Validators
+} from '@angular/forms';
 
-@Wove(LoggerAspect)
+
 @Component({
   selector: 'app-signup',
   templateUrl: 'base/dist/app/directives/signup/signup.component.html',
   // styleUrls: ['app/directives/signup/signup.component.css'],
   pipes: [TranslatePipe],
   providers: [TwAPIService, HTTP_PROVIDERS],
-  directives: [FORM_DIRECTIVES]
+  directives: [REACTIVE_FORM_DIRECTIVES]
 })
 /**
  * Signup form. Emits a userLogged event on new user signup
  */
 export class SignupComponent implements OnInit {
 
-  signupForm: ControlGroup;
-  email:Control;
-  emailRepeat:Control;
-  password: Control;
-  passwordRepeat: Control;
-  firstName: Control = new Control();
-  lastName: Control = new Control();
-  country: Control = new Control();
+  signupForm: FormGroup;
   submitAttempt:boolean = false;
   emailTaken:boolean = false;
   error:boolean = false;
@@ -56,59 +54,15 @@ export class SignupComponent implements OnInit {
       this.countries = result;
     });
 
-    //Form constraints
-    this.password = new Control('', Validators.required);
-    this.email = new Control(
-      '', 
-      Validators.compose(
-        [Validators.required, 
-        GlobalValidator.mailFormat]
-      )
-    );
-    this.emailRepeat = new Control(
-      '', 
-      Validators.compose(
-        [Validators.required, 
-        GlobalValidator.mailFormat]
-      )
-    );
-    this.password = new Control(
-      '',
-      Validators.compose(
-        [Validators.required,
-        Validators.minLength(8)]
-      )
-    );
-    this.passwordRepeat = new Control(
-      '',
-      Validators.compose(
-        [Validators.required,
-          Validators.minLength(8)]
-      )
-    );
-
-
-    this.signupForm = builder.group({
-        email: this.email,
-        password: this.password,
-        emailRepeat: this.emailRepeat,
-        passwordRepeat: this.passwordRepeat,
-        lastName: this.lastName,
-        firstName: this.firstName,
-        country: this.country
-      }, { 
-        validator: Validators.compose([
-          GlobalValidator.match(
-            "email",
-            "emailRepeat",
-            { "emailMatch": true }),
-          GlobalValidator.match(
-            "password",
-            "passwordRepeat",
-            { "passwordMatch": true }),
-          ]) 
-      }
-    );
+    this.signupForm = FormHelper.group(this.builder, {
+        email: [<any>Validators.required, <any>GlobalValidator.mailFormat],
+        emailRepeat: [<any>Validators.required, <any>GlobalValidator.mailFormat],
+        password: [<any>Validators.required, <any>Validators.minLength(8)],
+        passwordRepeat: [<any>Validators.required, <any>Validators.minLength(8)],
+        lastName: [],
+        firstName: [],
+        country: []
+      });
   }
 
   /**
@@ -144,10 +98,15 @@ export class SignupComponent implements OnInit {
       lastName: string,
       firstName: string
     }) {
+
+    console.log(user);
     
     this.submitAttempt = true;
 
-    if(this.signupForm.valid){
+    if(this.signupForm.valid && 
+      user.password == user.passwordRepeat &&
+      user.email == user.emailRepeat){
+
       this.twapi.signup(user.email,
        user.password,
        user.firstName,

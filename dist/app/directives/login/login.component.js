@@ -16,7 +16,6 @@ var global_validator_1 = require('./../global-validator');
 var ga_service_1 = require('./../../services/ga.service');
 var form_helper_1 = require('./../../helpers/form.helper');
 var forms_1 = require('@angular/forms');
-// @Wove(LoggerAspect)
 var LoginComponent = (function () {
     /**
      * Constructor w/ service injection
@@ -38,7 +37,7 @@ var LoginComponent = (function () {
         translate.setDefaultLang('en');
         translate.use('en');
         this.loginForm = form_helper_1.FormHelper.group(this.builder, {
-            email: new forms_1.FormControl("", [common_1.Validators.required, global_validator_1.GlobalValidator.mailFormat]),
+            email: [common_1.Validators.required, global_validator_1.GlobalValidator.mailFormat],
             password: [common_1.Validators.required, common_1.Validators.minLength(5)]
         });
     }

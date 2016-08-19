@@ -99,8 +99,6 @@ export class SignupComponent implements OnInit {
       firstName: string
     }) {
 
-    console.log(user);
-    
     this.submitAttempt = true;
 
     if(this.signupForm.valid && 

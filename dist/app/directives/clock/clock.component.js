@@ -20,9 +20,16 @@ var ClockComponent = (function () {
         this.date = new Date();
         this.month = this.monthNames[this.date.getMonth()];
         this.day = this.dayNames[this.date.getDay()] + " " + this.date.getDate();
+        this.nextLeap = this.date.getFullYear();
+        while (!this.isLeapYear(this.nextLeap)) {
+            this.nextLeap++;
+        }
     }
     ClockComponent.prototype.ngAfterViewInit = function () {
         this.initLocalClocks();
+    };
+    ClockComponent.prototype.isLeapYear = function (year) {
+        return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
     };
     ClockComponent.prototype.initLocalClocks = function () {
         var milliseconds = this.date.getMilliseconds();

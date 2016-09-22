@@ -63,6 +63,7 @@
 	"select-measure": "select your watch",
 	"atomic-sync": "ATOMIC TIME SYNCED",
 	"leap-year": "NEXT LEAP YEAR",
+	"is-leap-year": "LEAP YEAR",
 	"about-tw-title":" About Toolwatch", 
 	"about-tw": "Toolwatch is the most convenient and easy way to measure the accuracy of your mechanical watch. Accuracy has always been the holy grail of watchmaking. Throughout the ages, watchmakers have been competing for building the most accurate and precise watch movement but the consumers do not have the tools to appreciate that effort. Now, with Toolwatch, every watch enthusiast is able to keep an eye on the accuracy of his watch(es)!",
 	"about-why-tw-title": "Why using Toolwatch?",
@@ -81,6 +82,8 @@
 	"refreshing": "Refreshing...",
 	"no-watch": "Got a watch to measure?",
 	"no-watch-sub": "Tap the button to make your first measure.",
-	"new-watch": "Add a watch"
+	"new-watch": "Add a watch",
+	"well-done": "Well Done",
+	"something-wrong": "Something's Wrong ?",
+	"something-wrong-explain": "You can modify the time by pressing on it or dismiss the measure with the back button."
 }
-

@@ -15,6 +15,7 @@ export class ClockComponent implements OnInit {
   month:string;
   day:string;
   date:Date;
+  nextLeap:number;
   monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   constructor(private elementRef: ElementRef) {
@@ -22,11 +23,21 @@ export class ClockComponent implements OnInit {
 	this.date = new Date();
 	this.month = this.monthNames[this.date.getMonth()];
 	this.day = this.dayNames[this.date.getDay()] + " " + this.date.getDate();
+
+	this.nextLeap = this.date.getFullYear();
+
+	while(!this.isLeapYear(this.nextLeap)){
+		this.nextLeap++;
+	}
   }
 
   ngAfterViewInit() {
 	  this.initLocalClocks();
   } 
+
+  isLeapYear(year:number){
+	return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+  }
 
   initLocalClocks() {
 

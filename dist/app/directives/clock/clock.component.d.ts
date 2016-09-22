@@ -4,10 +4,12 @@ export declare class ClockComponent implements OnInit {
     month: string;
     day: string;
     date: Date;
+    nextLeap: number;
     monthNames: string[];
     dayNames: string[];
     constructor(elementRef: ElementRef);
     ngAfterViewInit(): void;
+    isLeapYear(year: number): boolean;
     initLocalClocks(): void;
     ngOnInit(): void;
 }

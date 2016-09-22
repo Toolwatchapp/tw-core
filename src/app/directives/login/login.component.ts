@@ -13,10 +13,7 @@ import {
   FormGroup,
   FormControl
 } from '@angular/forms';
-
-import { Wove } from 'aspect.js/dist/lib/aspect';
-import { LoggerAspect } from './../../aspects/logger.aspect';
-
+ 
 @Component({
   selector: 'app-login',
   templateUrl: 'app/directives/login/login.component.html',
@@ -30,13 +27,13 @@ import { LoggerAspect } from './../../aspects/logger.aspect';
  */
 export class LoginComponent implements OnInit {
 
-  loginForm: FormGroup;
-  submitAttempt:boolean = false;
-  credientials = false;
-  error = false;
-  @Output() userLogged = new EventEmitter();
+  loginForm              : FormGroup;
+  submitAttempt          : boolean = false;
+  credientials           = false;
+  error                  = false;
+  @Output() userLogged   = new EventEmitter();
   @Output() loginAttempt = new EventEmitter();
-  @Output() loginError = new EventEmitter();
+  @Output() loginError   = new EventEmitter();
 
   /**
    * Constructor w/ service injection
@@ -44,15 +41,18 @@ export class LoginComponent implements OnInit {
    * @param {TwAPIService}     private twapi     [description]
    * @param {FormBuilder}      private builder   [description]
    */
-  constructor(private translate: TranslateService, 
-    protected twapi: TwAPIService, private builder: FormBuilder) { 
+  constructor(
+    private translate: TranslateService, 
+    protected twapi  : TwAPIService, 
+    private builder  : FormBuilder
+  ) { 
 
     //Lang definition
 	  translate.setDefaultLang('en');
 	  translate.use('en');
 
     this.loginForm = FormHelper.group(this.builder, {
-      email: [<any>Validators.required, <any>GlobalValidator.mailFormat],
+      email   : [<any>Validators.required, <any>GlobalValidator.mailFormat],
       password: [<any>Validators.required, <any>Validators.minLength(5)]
     });
 

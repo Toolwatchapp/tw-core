@@ -19,9 +19,14 @@ export class FormHelper{
 
         var form = builder.group(controlsConfig);
         for (var i in form.controls) {
+
           (<FormControl>form.controls[i]).updateValue('', { onlySelf: true })
         }
 
         return form;
+    }
+
+    static updateValue(form:FormGroup, index:string, value:any){
+      (<FormControl>(<FormGroup>form).controls[index]).updateValue(value);
     }
 }

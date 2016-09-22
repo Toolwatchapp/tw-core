@@ -17,6 +17,9 @@ var FormHelper = (function () {
         }
         return form;
     };
+    FormHelper.updateValue = function (form, index, value) {
+        form.controls[index].updateValue(value);
+    };
     return FormHelper;
 }());
 exports.FormHelper = FormHelper;

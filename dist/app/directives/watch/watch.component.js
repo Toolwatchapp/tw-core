@@ -9,15 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var common_1 = require('@angular/common');
 var ng2_translate_1 = require('ng2-translate/ng2-translate');
 var watch_model_1 = require('./../../models/watch.model');
-var user_model_1 = require('./../../models/user.model');
 var twapi_service_1 = require('./../../services/twapi.service');
 var http_1 = require('@angular/http');
 var ga_service_1 = require('./../../services/ga.service');
-var aspect_1 = require('aspect.js/dist/lib/aspect');
-var logger_aspect_1 = require('./../../aspects/logger.aspect');
+var form_helper_1 = require('./../../helpers/form.helper');
+var common_1 = require('@angular/common');
+var forms_1 = require('@angular/forms');
 var WatchComponent = (function () {
     /**
      * Constructor with DI
@@ -29,13 +28,8 @@ var WatchComponent = (function () {
         this.translate = translate;
         this.twapi = twapi;
         this.builder = builder;
+        this.watchModel = new watch_model_1.Watch(null, null);
         this.watchSaved = new core_1.EventEmitter();
-        this.brand = new common_1.Control('', common_1.Validators.required);
-        this.model = new common_1.Control();
-        this.caliber = new common_1.Control();
-        this.year = new common_1.Control('', common_1.Validators.compose([common_1.Validators.maxLength(4),
-            common_1.Validators.minLength(4)]));
-        this.serial = new common_1.Control();
         this.brands = [];
         this.models = [];
         this.filteredBrandList = [];
@@ -44,19 +38,28 @@ var WatchComponent = (function () {
         this.submitAttempt = false;
         translate.setDefaultLang('en');
         translate.use('en');
-        //Construct form
-        this.watchForm = builder.group({
-            brand: this.brand,
-            model: this.model,
-            caliber: this.caliber,
-            year: this.year,
-            serial: this.serial
+        console.log(this.watchModel);
+        console.log(this.user);
+        this.watchForm = form_helper_1.FormHelper.group(this.builder, {
+            id: [],
+            brand: [common_1.Validators.required],
+            name: [],
+            caliber: [],
+            year: [common_1.Validators.minLength(4), common_1.Validators.maxLength(4)],
+            serial: []
         });
-        //Create an empty watch if none was passed
-        if (this.watchModel === undefined) {
-            this.watchModel = new watch_model_1.Watch(null, null);
-        }
     }
+    WatchComponent.prototype.fillFormValue = function () {
+        form_helper_1.FormHelper.updateValue(this.watchForm, "id", this.watchModel.id);
+        form_helper_1.FormHelper.updateValue(this.watchForm, "brand", this.watchModel.brand);
+        form_helper_1.FormHelper.updateValue(this.watchForm, "name", this.watchModel.name);
+        form_helper_1.FormHelper.updateValue(this.watchForm, "caliber", this.watchModel.caliber);
+        form_helper_1.FormHelper.updateValue(this.watchForm, "year", this.watchModel.yearOfBuy);
+        form_helper_1.FormHelper.updateValue(this.watchForm, "serial", this.watchModel.serial);
+    };
+    /**
+     * Pull the brands
+     */
     WatchComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
         //Get the known brands
@@ -72,17 +75,29 @@ var WatchComponent = (function () {
         var _this = this;
         this.twapi.getModels(brand.toLowerCase()).then(function (res) { return _this.models = res; }, function (error) { return _this.models = []; });
         this.filteredBrandList = [];
-        this.watchModel.brand = brand;
+        form_helper_1.FormHelper.updateValue(this.watchForm, 'brand', brand);
     };
+    /**
+     * Select a model
+     * @param {string} model [description]
+     */
     WatchComponent.prototype.selectModel = function (model) {
         this.filteredModelList = [];
-        this.watchModel.name = model;
+        form_helper_1.FormHelper.updateValue(this.watchForm, 'name', model);
     };
+    /**
+     * Filter brands according the brand
+     * @param {string} brand [description]
+     */
     WatchComponent.prototype.filterBrand = function (brand) {
         this.filteredBrandList = this.brands.filter(function (element) {
             return element.name.toLowerCase().indexOf(brand.toLowerCase()) > -1;
         });
     };
+    /**
+     * Filters models according to model
+     * @param {string} model [description]
+     */
     WatchComponent.prototype.filterModel = function (model) {
         this.filteredModelList = this.models.filter(function (element) {
             return element.toLowerCase().indexOf(model.toLowerCase()) > -1;
@@ -90,11 +105,14 @@ var WatchComponent = (function () {
     };
     WatchComponent.prototype.ngOnInit = function () {
     };
+    /**
+     * Submit a watch
+     */
     WatchComponent.prototype.onSubmit = function () {
         var _this = this;
         this.submitAttempt = true;
         if (this.watchForm.valid) {
-            this.twapi.upsertWatch(this.watchModel).then(function (res) {
+            this.twapi.upsertWatch(this.watchFromForm()).then(function (res) {
                 ga_service_1.GAService.event('CTA', 'WATCH_UPSERT', 'SUCCESS');
                 _this.user.upsertWatch(res);
                 _this.watchSaved.emit(_this.user);
@@ -106,7 +124,7 @@ var WatchComponent = (function () {
     };
     WatchComponent.prototype.onDelete = function () {
         var _this = this;
-        this.twapi.deleteWatch(this.user, this.watchModel).then(function (res) {
+        this.twapi.deleteWatch(this.user, this.watchFromForm()).then(function (res) {
             ga_service_1.GAService.event('CTA', 'WATCH_DELETE', 'SUCCESS');
             _this.watchSaved.emit(res);
         }, function (error) {
@@ -114,29 +132,23 @@ var WatchComponent = (function () {
             _this.error = true;
         });
     };
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', watch_model_1.Watch)
-    ], WatchComponent.prototype, "watchModel", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', user_model_1.User)
-    ], WatchComponent.prototype, "user", void 0);
+    WatchComponent.prototype.watchFromForm = function () {
+        return new watch_model_1.Watch((this.watchForm.value.id == "") ? null : this.watchForm.value.id, this.watchForm.value.brand, this.watchModel.historySize, this.watchModel.measures, this.watchForm.value.name, this.watchForm.value.year, this.watchForm.value.serial, this.watchForm.value.caliber);
+    };
     __decorate([
         core_1.Output(), 
         __metadata('design:type', Object)
     ], WatchComponent.prototype, "watchSaved", void 0);
     WatchComponent = __decorate([
-        aspect_1.Wove(logger_aspect_1.LoggerAspect),
         core_1.Component({
             selector: 'watch-form',
             templateUrl: 'base/dist/app/directives/watch/watch.component.html',
-            // styleUrls: ['app/directives/watch/watch.component.css'],
+            styleUrls: ['app/directives/watch/watch.component.css'],
             pipes: [ng2_translate_1.TranslatePipe],
             providers: [twapi_service_1.TwAPIService, http_1.HTTP_PROVIDERS],
-            directives: [common_1.FORM_DIRECTIVES]
+            directives: [forms_1.REACTIVE_FORM_DIRECTIVES]
         }), 
-        __metadata('design:paramtypes', [ng2_translate_1.TranslateService, twapi_service_1.TwAPIService, common_1.FormBuilder])
+        __metadata('design:paramtypes', [ng2_translate_1.TranslateService, twapi_service_1.TwAPIService, forms_1.FormBuilder])
     ], WatchComponent);
     return WatchComponent;
 }());

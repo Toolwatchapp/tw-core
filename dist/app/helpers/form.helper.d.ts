@@ -9,4 +9,5 @@ export declare class FormHelper {
      * @return {FormGroup}
      */
     static group(builder: FormBuilder, controlsConfig: any): FormGroup;
+    static updateValue(form: FormGroup, index: string, value: any): void;
 }

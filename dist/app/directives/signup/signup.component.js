@@ -74,7 +74,6 @@ var SignupComponent = (function () {
      */
     SignupComponent.prototype.onSubmit = function (user) {
         var _this = this;
-        console.log(user);
         this.submitAttempt = true;
         if (this.signupForm.valid &&
             user.password == user.passwordRepeat &&

@@ -14,6 +14,8 @@ export class Measure{
 	accuracyAge:number;
 	percentile:number;
 	status: MeasureStatus = MeasureStatus.None;
+	serviced:boolean = false;
+	renewed:boolean = false;
 
 	constructor(id: number, measureUserTime: number, measureReferenceTime: number, 
 		status?: number, accuracyUserTime?: number, accuracyReferenceTime?: number, 
@@ -26,7 +28,7 @@ export class Measure{
 		this.accuracyReferenceTime = accuracyReferenceTime;
 		this.accuracy = accuracy;
 		this.accuracyAge = accuracyAge;
-		this.percentile = percentile;
+		this.percentile = Math.round(percentile*10)/10;
 
 		if(status >= 1){
 			this.status |= MeasureStatus.BaseMeasure;
@@ -38,6 +40,16 @@ export class Measure{
 
 		if (status >= 3) {
 			this.status |= MeasureStatus.ArchivedMeasure;
+		}
+
+		if(accuracyAge > 30){
+			this.renewed = true;
+			this.status |= MeasureStatus.ShouldBeRenewed;
+		}
+
+		if(Math.abs(accuracy) > 20){
+			this.serviced = true;
+			this.status |= MeasureStatus.ShouldBeServiced;
 		}
 
 		this.computePostAccuracyStatus(accuracy, accuracyAge);
@@ -71,17 +83,19 @@ export class Measure{
 		console.log("addAccuracy", accuracy,accuracyAge,percentile);
 		this.accuracy = accuracy;
 		this.accuracyAge = accuracyAge;
-		this.percentile = percentile;
+		this.percentile = Math.round(percentile*10)/10;
 		this.computePostAccuracyStatus(accuracy, accuracyAge);
 	}
 
 	private computePostAccuracyStatus(accuracy:number, accuracyAge:number){
 		if (accuracy != null && accuracyAge != null) {
-			if (Math.abs(accuracy) > 30) {
+			if (Math.abs(accuracy) > 20) {
 				this.status |= MeasureStatus.ShouldBeServiced;
+				this.serviced = true;
 			}
 
 			if (accuracyAge > 30) {
+				this.renewed = true;
 				this.status |= MeasureStatus.ShouldBeRenewed;
 			}
 		}
@@ -93,6 +107,6 @@ export enum MeasureStatus{
 	BaseMeasure = 1 << 0,
 	AccuracyMeasure = 1 << 1,
 	ArchivedMeasure = 1 << 2,
-	ShouldBeServiced = 1 << 3,
-	ShouldBeRenewed = 1 << 4
+	ShouldBeRenewed = 1 << 3,
+	ShouldBeServiced = 1 << 4
 }

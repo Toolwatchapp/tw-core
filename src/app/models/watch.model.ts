@@ -13,9 +13,10 @@ export class Watch{
 	yearOfBuy:number;
 	serial:string;
 	caliber:string;
-	status: WatchStatus = WatchStatus.None
+	status: WatchStatus;
 	next: WatchAction;
 	waiting:number;
+	initials:string;
 
 	constructor(id: number, brand: string, historySize: number = 0,
 		measures: Measure[] = [], name: string = "", yearOfBuy: number = null,
@@ -24,17 +25,21 @@ export class Watch{
 		this.id = id;
 		this.brand = brand;
 		this.historySize = historySize;
-		this.measures = measures;
+		this.measures = measures.sort(function(a:Measure, b:Measure){
+			return a.id - b.id;
+		});
 		this.name = name;
 		this.yearOfBuy = yearOfBuy;
 		this.serial = serial;
 		this.caliber = caliber;
+		this.initials = this.brand.charAt(0);
+		this.initials += (this.name.length > 0) ? this.name.charAt(0) : "";
 
 		if (historySize == 0){
-			this.status |= WatchStatus.NeverMeasured;
+			this.status = WatchStatus.NeverMeasured;
 			this.next = WatchAction.Measure;
 		}else if(historySize > this.measures.length){
-			this.status |= WatchStatus.HaveMoreMeasures;
+			this.status = WatchStatus.HaveMoreMeasures;
 		}
 
 		let lastMeasure = this.currentMeasure();
@@ -50,6 +55,10 @@ export class Watch{
 				this.next = WatchAction.Measure;
 			}
 		}
+
+		console.log(this);
+		console.log(this.lastCompleteMeasure());
+
 	}
 
 	public toString = () : string => {
@@ -66,6 +75,38 @@ export class Watch{
 				waiting: ${this.waiting})`;
 	}
 
+	average(amount:number){
+
+		let actualAmount:number = 0;
+		let average:number = 0;
+		let i:number = this.measures.length - 1;
+
+		while(i>= 0 && actualAmount <= amount){
+			if(this.measures[i].status & MeasureStatus.AccuracyMeasure){
+				average = average + Math.abs(this.measures[i].accuracy);
+				actualAmount++;
+			}
+			
+			i--;
+			
+		}
+		return (average/actualAmount).toFixed(1);
+	}
+
+	lastCompleteMeasure():Measure{
+		let i:number = this.measures.length - 1;
+
+		while(i >= 0){
+			if(this.measures[i].status & MeasureStatus.AccuracyMeasure){
+				return this.measures[i];
+			}
+			
+			i--;
+		}
+
+		return null;
+	}
+
 	currentMeasure():Measure{
 		if(this.measures.length !== 0){
 			return this.measures[this.measures.length - 1];
@@ -76,8 +117,6 @@ export class Watch{
 
 	upsertMeasure(measure:Measure){
 
-		console.log("this", this);
-		console.log("measure", measure);
 		for (var i = 0; i < this.measures.length; i++) {
 			console.log("i", i);
 			if(this.measures[i].id == measure.id){
@@ -86,9 +125,8 @@ export class Watch{
 				return;
 			}
 		}
-
+		this.historySize++;
 		this.measures.push(measure);
-		console.log("this2", this);
 	}
 }
 
@@ -97,7 +135,6 @@ export enum WatchAction{
 }
 
 export enum WatchStatus{
-	None = 0,
-	NeverMeasured = 1 << 1,
-	HaveMoreMeasures = 1 << 2
+	NeverMeasured,
+	HaveMoreMeasures
 }

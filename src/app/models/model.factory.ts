@@ -46,7 +46,8 @@ export class ModelFactory {
 						jsonMeasure.accuracyUserTime,
 						jsonMeasure.accuracyReferenceTime,
 						jsonMeasure.accuracy,
-						jsonMeasure.accuracyAge)
+						jsonMeasure.accuracyAge,
+						jsonMeasure.percentile)
 				}),
 				jsonWatch.name,
 				jsonWatch.yearOfBuy,

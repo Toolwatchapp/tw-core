@@ -6,6 +6,7 @@ import { Measure, MeasureStatus }  from './../models/measure.model';
 import { ModelFactory }  from './../models/model.factory';
 import { BlogPost } from './../models/blog-post.model'
 import { GAService } from './ga.service';
+import { StringHelper } from './../helpers/string.helper';
 
 import 'rxjs/add/operator/toPromise';
 import { Wove } from 'aspect.js/dist/lib/aspect';
@@ -399,6 +400,48 @@ export class TwAPIService {
                 return res
             }
 		);
+	}
+
+	/**
+	 * Given a brand, returns likely brands ordered by confidence
+	 * @param  {string}  brand [description]
+	 * @return {Promise}       [{brand:string, confidence:number}]
+	 */
+	getLikelyBrands(watch:Watch): Promise<{watch:Watch, proposals:[{brand:string, logo:string, confidence:number}]}>{
+
+		return this.http.get(
+			TwAPIService.assetsUrl + '/json/watch-brand.json')
+		.map(res => res.json())
+		.toPromise().then(
+			brands => {
+
+				var likelyBrands = {watch: watch, proposals:[]};
+
+				for (var i = brands.length - 1; i >= 0; i--) {
+
+
+					let levenshteinDistance = StringHelper.levenshtein(brands[i].name, watch.brand);
+					let confidence = levenshteinDistance / Math.max(watch.brand.length, brands[i].name.length) *100;
+					
+					likelyBrands.proposals.push(
+						{
+							brand:brands[i].name,
+							logo: brands[i].icon,
+							confidence: 100 - confidence
+						}
+					);
+				}
+
+				likelyBrands.proposals = likelyBrands.proposals.sort(function (
+					a:{brand:string, confidence:number}, 
+					b:{brand:string, confidence:number}){
+					return b.confidence - a.confidence;
+				});
+
+				return likelyBrands;
+            }
+		);
+
 	}
 
 	/**

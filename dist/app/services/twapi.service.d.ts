@@ -188,6 +188,19 @@ export declare class TwAPIService {
     deleteMeasure(watch: Watch, measure: Measure): Promise<Watch>;
     getBlogPosts(): Promise<BlogPost[]>;
     /**
+     * Given a brand, returns likely brands ordered by confidence
+     * @param  {string}  brand [description]
+     * @return {Promise}       [{brand:string, confidence:number}]
+     */
+    getLikelyBrands(watch: Watch): Promise<{
+        watch: Watch;
+        proposals: [{
+            brand: string;
+            logo: string;
+            confidence: number;
+        }];
+    }>;
+    /**
      * Return known brands
      * @return {Promise}
      */

@@ -11,8 +11,11 @@ export declare class Watch {
     status: WatchStatus;
     next: WatchAction;
     waiting: number;
+    initials: string;
     constructor(id: number, brand: string, historySize?: number, measures?: Measure[], name?: string, yearOfBuy?: number, serial?: string, caliber?: string);
     toString: () => string;
+    average(amount: number): string;
+    lastCompleteMeasure(): Measure;
     currentMeasure(): Measure;
     upsertMeasure(measure: Measure): void;
 }
@@ -22,7 +25,6 @@ export declare enum WatchAction {
     Accuracy = 2,
 }
 export declare enum WatchStatus {
-    None = 0,
-    NeverMeasured = 2,
-    HaveMoreMeasures = 4,
+    NeverMeasured = 0,
+    HaveMoreMeasures = 1,
 }

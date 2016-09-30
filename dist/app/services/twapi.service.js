@@ -13,6 +13,7 @@ var http_1 = require('@angular/http');
 var watch_model_1 = require('./../models/watch.model');
 var model_factory_1 = require('./../models/model.factory');
 var ga_service_1 = require('./ga.service');
+var string_helper_1 = require('./../helpers/string.helper');
 require('rxjs/add/operator/toPromise');
 var aspect_1 = require('aspect.js/dist/lib/aspect');
 var logger_aspect_1 = require('./../aspects/logger.aspect');
@@ -175,6 +176,31 @@ var TwAPIService = (function () {
             .toPromise().then(function (res) {
             ga_service_1.GAService.event('API', 'BLOG', 'GET');
             return res;
+        });
+    };
+    /**
+     * Given a brand, returns likely brands ordered by confidence
+     * @param  {string}  brand [description]
+     * @return {Promise}       [{brand:string, confidence:number}]
+     */
+    TwAPIService.prototype.getLikelyBrands = function (watch) {
+        return this.http.get(TwAPIService.assetsUrl + '/json/watch-brand.json')
+            .map(function (res) { return res.json(); })
+            .toPromise().then(function (brands) {
+            var likelyBrands = { watch: watch, proposals: [] };
+            for (var i = brands.length - 1; i >= 0; i--) {
+                var levenshteinDistance = string_helper_1.StringHelper.levenshtein(brands[i].name, watch.brand);
+                var confidence = levenshteinDistance / Math.max(watch.brand.length, brands[i].name.length) * 100;
+                likelyBrands.proposals.push({
+                    brand: brands[i].name,
+                    logo: brands[i].icon,
+                    confidence: 100 - confidence
+                });
+            }
+            likelyBrands.proposals = likelyBrands.proposals.sort(function (a, b) {
+                return b.confidence - a.confidence;
+            });
+            return likelyBrands;
         });
     };
     /**

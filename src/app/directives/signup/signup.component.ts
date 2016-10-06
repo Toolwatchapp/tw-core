@@ -1,27 +1,21 @@
 import { Component, Output, OnInit, EventEmitter } from '@angular/core';
-import {TRANSLATE_PROVIDERS, TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
+import {TranslateService} from 'ng2-translate/ng2-translate';
 import {TwAPIService} from './../../services/twapi.service'
-import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
+import {Http}  from '@angular/http';
 import { GlobalValidator } from './../global-validator';
 import { GAService } from './../../services/ga.service';
-import { FormHelper } from './../../helpers/form.helper';
 
 import {   
-  REACTIVE_FORM_DIRECTIVES,  
+  Validators,
   FormBuilder,  
   FormGroup,
-  FormControl,
-  Validators
+  FormControl
 } from '@angular/forms';
 
 
 @Component({
   selector: 'app-signup',
-  templateUrl: 'base/dist/app/directives/signup/signup.component.html',
-  // styleUrls: ['app/directives/signup/signup.component.css'],
-  pipes: [TranslatePipe],
-  providers: [TwAPIService, HTTP_PROVIDERS],
-  directives: [REACTIVE_FORM_DIRECTIVES]
+  templateUrl: 'signup.component.html',
 })
 /**
  * Signup form. Emits a userLogged event on new user signup
@@ -45,7 +39,7 @@ export class SignupComponent implements OnInit {
    * @param {FormBuilder}      private builder   [description]
    */
   constructor(private translate: TranslateService, 
-    private twapi: TwAPIService, private builder: FormBuilder) { 
+    private twapi: TwAPIService, private formBuilder: FormBuilder) { 
 
     translate.setDefaultLang('en');
     translate.use('en');
@@ -54,11 +48,11 @@ export class SignupComponent implements OnInit {
       this.countries = result;
     });
 
-    this.signupForm = FormHelper.group(this.builder, {
-        email: [<any>Validators.required, <any>GlobalValidator.mailFormat],
-        emailRepeat: [<any>Validators.required, <any>GlobalValidator.mailFormat],
-        password: [<any>Validators.required, <any>Validators.minLength(8)],
-        passwordRepeat: [<any>Validators.required, <any>Validators.minLength(8)],
+    this.signupForm = this.formBuilder.group({
+        email: Validators.compose([Validators.required, GlobalValidator.mailFormat]),
+        emailRepeat: Validators.compose([Validators.required, GlobalValidator.mailFormat]),
+        password: Validators.compose([Validators.required, Validators.minLength(8)]),
+        passwordRepeat: Validators.compose([Validators.required, Validators.minLength(8)]),
         lastName: [],
         firstName: [],
         country: []

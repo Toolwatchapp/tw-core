@@ -1,8 +1,5 @@
 import { Watch } from './watch.model'
-import { LoggerAspect } from './../aspects/logger.aspect'
-import {Wove} from 'aspect.js/dist/lib/aspect';
 
-@Wove(LoggerAspect)
 export class User{
 	id:number;
 	email:string;

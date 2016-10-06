@@ -1,8 +1,12 @@
-import { Control, ControlGroup } from '@angular/common';
+import { FormControl } from '@angular/forms';
+
+interface ValidationResult {
+ [key:string]:boolean;
+}
 
 export class GlobalValidator {
 
-	static mailFormat(control: Control): ValidationResult {
+	static mailFormat(control: FormControl): ValidationResult {
 
         var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
 
@@ -12,20 +16,4 @@ export class GlobalValidator {
 
         return null;
     }
-
-    static match(from: string, to: string, returnValue: ValidationResult) {
-
-		return (group: ControlGroup): ValidationResult => {
-			let fromGroup = group.controls[from];
-			let toGroup = group.controls[to];
-
-			if (fromGroup.value !== toGroup.value) {
-				return returnValue;
-			}
-		}
-    }
-}
-
-export interface ValidationResult {
-    [key: string]: boolean;
 }

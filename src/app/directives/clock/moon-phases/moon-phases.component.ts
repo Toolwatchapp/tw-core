@@ -1,10 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Astro } from './../astro';
 
-import { Wove } from 'aspect.js/dist/lib/aspect';
-import { LoggerAspect } from './../../../aspects/logger.aspect';
-
-@Wove(LoggerAspect)
 @Component({
   selector: 'moon-phases',
   template: '',

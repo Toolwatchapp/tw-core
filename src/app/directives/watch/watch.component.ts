@@ -1,27 +1,24 @@
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
-import {TRANSLATE_PROVIDERS, TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
+
+import {TranslateService} from 'ng2-translate/ng2-translate';
+
 import { Watch } from './../../models/watch.model';
 import { User } from './../../models/user.model';
 import {TwAPIService} from './../../services/twapi.service';
-import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
+import {Http, Headers}  from '@angular/http';
 import { GAService } from './../../services/ga.service';
-import { FormHelper } from './../../helpers/form.helper';
-import {Control, ControlGroup, Validators}  from '@angular/common';
 
 import {   
-  REACTIVE_FORM_DIRECTIVES,  
   FormBuilder,  
   FormGroup,
-  FormControl
+  FormControl,
+  Validators
 } from '@angular/forms';
 
 @Component({
   selector: 'watch-form',
-  templateUrl: 'base/dist/app/directives/watch/watch.component.html',
-  styleUrls: ['app/directives/watch/watch.component.css'],
-  pipes: [TranslatePipe],
-  providers: [TwAPIService, HTTP_PROVIDERS],
-  directives: [REACTIVE_FORM_DIRECTIVES]
+  templateUrl: 'watch.component.html',
+  styleUrls: ['watch.component.scss']
 })
 /**
  * From to add, delete and update watches
@@ -49,7 +46,7 @@ export class WatchComponent implements OnInit {
   constructor(
     protected translate: TranslateService,
     private twapi      : TwAPIService, 
-    private builder    : FormBuilder
+    private formBuilder    : FormBuilder
   ) {
 
     translate.setDefaultLang('en');
@@ -58,25 +55,18 @@ export class WatchComponent implements OnInit {
     console.log(this.watchModel);
     console.log(this.user);
 
-    this.watchForm = FormHelper.group(this.builder, {
-      id     : [],
-      brand  : [<any>Validators.required],
-      name   : [],
-      caliber: [],
-      year   : [<any>Validators.minLength(4),  <any>Validators.maxLength(4)],
-      serial : []
+    this.watchForm = this.formBuilder.group({
+      id     : [this.watchModel.id],
+      brand  : [this.watchModel.brand, Validators.required],
+      name   : [this.watchModel.name, Validators.required],
+      caliber: [this.watchModel.caliber],
+      year   : [this.watchModel.yearOfBuy, Validators.compose(
+        [Validators.minLength(4),  Validators.maxLength(4)]
+      )],
+      serial : [this.watchModel.serial]
     });
   }
 
-  fillFormValue(){
-
-    FormHelper.updateValue(this.watchForm, "id", this.watchModel.id);
-    FormHelper.updateValue(this.watchForm, "brand", this.watchModel.brand);
-    FormHelper.updateValue(this.watchForm, "name", this.watchModel.name);
-    FormHelper.updateValue(this.watchForm, "caliber", this.watchModel.caliber);
-    FormHelper.updateValue(this.watchForm, "year", this.watchModel.yearOfBuy);
-    FormHelper.updateValue(this.watchForm, "serial", this.watchModel.serial);
-  }
 
   /**
    * Pull the brands
@@ -101,7 +91,7 @@ export class WatchComponent implements OnInit {
       error => this.models = []
     );
     this.filteredBrandList = [];
-    FormHelper.updateValue(this.watchForm, 'brand', brand);
+    this.watchModel.brand = brand;
   }
 
   /**
@@ -110,7 +100,7 @@ export class WatchComponent implements OnInit {
    */
   selectModel(model: string) {
     this.filteredModelList = [];
-    FormHelper.updateValue(this.watchForm, 'name', model);
+    this.watchModel.name = model;
   }
 
   /**
@@ -147,7 +137,7 @@ export class WatchComponent implements OnInit {
 
       
 
-      this.twapi.upsertWatch(this.watchFromForm()).then(
+      this.twapi.upsertWatch(this.watchModel).then(
         res => {
           GAService.event('CTA', 'WATCH_UPSERT', 'SUCCESS');
           this.user.upsertWatch(res);
@@ -162,7 +152,7 @@ export class WatchComponent implements OnInit {
   }
 
   onDelete(){
-    this.twapi.deleteWatch(this.user, this.watchFromForm()).then(
+    this.twapi.deleteWatch(this.user, this.watchModel).then(
       res => {
         GAService.event('CTA', 'WATCH_DELETE', 'SUCCESS');
         this.watchSaved.emit(res)
@@ -172,18 +162,5 @@ export class WatchComponent implements OnInit {
         this.error = true
       }
     );
-  }
-
-  private watchFromForm():Watch{
-    return new Watch(
-        (this.watchForm.value.id == "") ? null : this.watchForm.value.id, 
-        this.watchForm.value.brand,
-        this.watchModel.historySize,
-        this.watchModel.measures,
-        this.watchForm.value.name,
-        this.watchForm.value.year,
-        this.watchForm.value.serial,
-        this.watchForm.value.caliber
-      );
   }
 }

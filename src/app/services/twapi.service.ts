@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Http, HTTP_PROVIDERS, RequestOptions, Headers, Response }  from '@angular/http';
+import { Http, RequestOptions, Headers, Response }  from '@angular/http';
+
+
 import { User }  from './../models/user.model';
 import { Watch, WatchAction }  from './../models/watch.model';
 import { Measure, MeasureStatus }  from './../models/measure.model';
@@ -8,11 +10,8 @@ import { BlogPost } from './../models/blog-post.model'
 import { GAService } from './ga.service';
 import { StringHelper } from './../helpers/string.helper';
 
-import 'rxjs/add/operator/toPromise';
-import { Wove } from 'aspect.js/dist/lib/aspect';
-import { LoggerAspect } from './../aspects/logger.aspect';
+import { Observable } from 'rxjs/Rx';
 
-@Wove(LoggerAspect)
 @Injectable()
 /**
  * Exposes the Toolwatch API.

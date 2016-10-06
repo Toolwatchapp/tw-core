@@ -1,14 +1,12 @@
 import { Component, Output, OnInit, EventEmitter } from '@angular/core';
-import {TRANSLATE_PROVIDERS, TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
-import {Control, ControlGroup, Validators}  from '@angular/common';
+import {TranslateService} from 'ng2-translate/ng2-translate';
 import {TwAPIService} from './../../services/twapi.service'
-import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
+import {Http}  from '@angular/http';
 import { GlobalValidator } from './../global-validator';
 import { GAService } from './../../services/ga.service';
-import { FormHelper } from './../../helpers/form.helper';
 
 import {   
-  REACTIVE_FORM_DIRECTIVES,  
+  Validators,  
   FormBuilder,  
   FormGroup,
   FormControl
@@ -16,10 +14,8 @@ import {
  
 @Component({
   selector: 'app-login',
-  templateUrl: 'app/directives/login/login.component.html',
-  styleUrls: ['app/directives/login/login.component.css'],
-  pipes: [TranslatePipe],
-  directives: [REACTIVE_FORM_DIRECTIVES]
+  templateUrl: 'login.component.html',
+  styleUrls: ['login.component.css']
 })
 /**
  * Login component. Provides a login form with controlled and
@@ -44,16 +40,16 @@ export class LoginComponent implements OnInit {
   constructor(
     private translate: TranslateService, 
     protected twapi  : TwAPIService, 
-    private builder  : FormBuilder
+    private formBuilder  : FormBuilder
   ) { 
 
     //Lang definition
 	  translate.setDefaultLang('en');
 	  translate.use('en');
 
-    this.loginForm = FormHelper.group(this.builder, {
-      email   : [<any>Validators.required, <any>GlobalValidator.mailFormat],
-      password: [<any>Validators.required, <any>Validators.minLength(5)]
+    this.loginForm = this.formBuilder.group({
+      email   : Validators.compose([Validators.required, GlobalValidator.mailFormat]),
+      password: Validators.compose([Validators.required, Validators.minLength(5)])
     });
 
   }

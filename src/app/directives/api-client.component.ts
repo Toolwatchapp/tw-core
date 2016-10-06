@@ -4,11 +4,7 @@ import {Http, HTTP_PROVIDERS, Headers}  from '@angular/http';
 import { User } from './../models/user.model';
 import { Watch } from './../models/watch.model';
 import { Measure } from './../models/measure.model';
-import { Wove, beforeMethod, Metadata } from 'aspect.js/dist/lib/aspect';
 
-
-
-@Wove()
 @Component({
   selector: 'api-client-app',
   templateUrl: 'api-client.component.html',

@@ -1,7 +1,3 @@
-import { Wove } from 'aspect.js/dist/lib/aspect';
-import { LoggerAspect } from './../../aspects/logger.aspect';
-
-@Wove(LoggerAspect)
 export class Astro {
 
 	protected PI = Math.PI;

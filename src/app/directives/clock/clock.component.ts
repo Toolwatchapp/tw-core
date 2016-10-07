@@ -2,7 +2,6 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 
 @Component({
   selector: 'clock',
-  // templateUrl: 'app/directives/clock/clock.component.html',
   template: ''
 })
 export class ClockComponent implements OnInit {

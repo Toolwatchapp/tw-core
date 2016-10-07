@@ -1,8 +1,7 @@
 import { User, }  from './user.model';
 import { Watch }  from './watch.model';
 import { BlogPost }  from './blog-post.model';
-import { Measure, MeasureStatus }  from './measure.model';
-import { Injectable } from '@angular/core';
+import { Measure }  from './measure.model';
 
 export class ModelFactory {
 

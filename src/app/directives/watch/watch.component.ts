@@ -1,24 +1,21 @@
-import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 
 import {TranslateService} from 'ng2-translate/ng2-translate';
 
 import { Watch } from './../../models/watch.model';
 import { User } from './../../models/user.model';
 import {TwAPIService} from './../../services/twapi.service';
-import {Http, Headers}  from '@angular/http';
 import { GAService } from './../../services/ga.service';
 
 import {   
   FormBuilder,  
   FormGroup,
-  FormControl,
   Validators
 } from '@angular/forms';
 
 @Component({
   selector: 'watch-form',
-  templateUrl: 'watch.component.html',
-  styleUrls: ['watch.component.scss']
+  template: ''
 })
 /**
  * From to add, delete and update watches

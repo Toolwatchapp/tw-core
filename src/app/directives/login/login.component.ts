@@ -1,21 +1,18 @@
 import { Component, Output, OnInit, EventEmitter } from '@angular/core';
 import {TranslateService} from 'ng2-translate/ng2-translate';
 import {TwAPIService} from './../../services/twapi.service'
-import {Http}  from '@angular/http';
 import { GlobalValidator } from './../global-validator';
 import { GAService } from './../../services/ga.service';
 
 import {   
   Validators,  
   FormBuilder,  
-  FormGroup,
-  FormControl
+  FormGroup
 } from '@angular/forms';
  
 @Component({
   selector: 'app-login',
-  templateUrl: 'login.component.html',
-  styleUrls: ['login.component.css']
+  template: ''
 })
 /**
  * Login component. Provides a login form with controlled and

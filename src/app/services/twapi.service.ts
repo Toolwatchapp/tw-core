@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Headers, Response }  from '@angular/http';
+import { Http, RequestOptions, Headers }  from '@angular/http';
 
 
 import { User }  from './../models/user.model';
 import { Watch, WatchAction }  from './../models/watch.model';
-import { Measure, MeasureStatus }  from './../models/measure.model';
+import { Measure }  from './../models/measure.model';
 import { ModelFactory }  from './../models/model.factory';
 import { BlogPost } from './../models/blog-post.model'
 import { GAService } from './ga.service';
 import { StringHelper } from './../helpers/string.helper';
-
 import { Observable } from 'rxjs/Rx';
+import 'rxjs/Rx';
 
 @Injectable()
 /**

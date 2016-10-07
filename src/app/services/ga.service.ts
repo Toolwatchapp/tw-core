@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import './analytics';
+//import {Analytics} from './analytics';
 declare let ga;
 
 @Injectable()
@@ -11,35 +11,35 @@ export class GAService {
 
   private static spawn(){
 
-      if(!GAService.gaCreated){
-        ga('create', 'UA-59148878-1', 'auto');
-        GAService.gaCreated = true;
-      }
+      // if(!GAService.gaCreated){
+      //   ga('create', 'UA-59148878-1', 'auto');
+      //   GAService.gaCreated = true;
+      // }
   }
 
   public static event(eventCategory:string, eventAction:string, eventLabel:string='', eventValue:number=0){
-    GAService.spawn();
-    ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue);
+    // GAService.spawn();
+    // ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue);
   }
 
   public static screenview(screenName:string){
 
-    if(GAService.appName == undefined || GAService.appVersion == undefined){
-        throw "App not configured";
-    }
+    // if(GAService.appName == undefined || GAService.appVersion == undefined){
+    //     throw "App not configured";
+    // }
 
-    GAService.spawn();
-    ga('send', 'screenview', {
-      'appName': GAService.appName,
-      'appVersion': GAService.appVersion,
-      'screenName': screenName
-    });
+    // GAService.spawn();
+    // ga('send', 'screenview', {
+    //   'appName': GAService.appName,
+    //   'appVersion': GAService.appVersion,
+    //   'screenName': screenName
+    // });
   }
 
   public static pageview(page:string){
-    GAService.spawn();
-    ga('set', 'page', page);
-    ga('send', 'pageview')
+    // GAService.spawn();
+    // ga('set', 'page', page);
+    // ga('send', 'pageview')
   }
 
 

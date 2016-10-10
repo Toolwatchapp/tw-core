@@ -409,7 +409,7 @@ export class TwAPIService {
 	getLikelyBrands(watch:Watch): Promise<{watch:Watch, proposals:[{brand:string, logo:string, confidence:number}]}>{
 
 		return this.http.get(
-			TwAPIService.assetsUrl + '/json/watch-brand.json')
+			TwAPIService.assetsUrl + '/watch-brand.json')
 		.map(res => res.json())
 		.toPromise().then(
 			brands => {
@@ -449,7 +449,7 @@ export class TwAPIService {
 	 */
 	getBrands(): Promise<[{ name: string, icon: string, models:string}]> {
 		return this.http.get(
-			TwAPIService.assetsUrl + '/json/watch-brand.json')
+			TwAPIService.assetsUrl + '/watch-brand.json')
 		.map(res => res.json())
 		.toPromise().then(
 			brands => {
@@ -466,7 +466,7 @@ export class TwAPIService {
 	 */
 	getModels(brand:string): Promise<[string]> {
 		return this.http.get(
-			TwAPIService.assetsUrl + '/json/watch-models/' + brand + ".json")
+			TwAPIService.assetsUrl + '/watch-models/' + brand + ".json")
 			.map(res => res.json())
 			.toPromise().then(
 			models => {

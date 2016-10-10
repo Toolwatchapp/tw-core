@@ -45,8 +45,8 @@ export class LoginComponent implements OnInit {
 	  translate.use('en');
 
     this.loginForm = this.formBuilder.group({
-      email   : Validators.compose([Validators.required, GlobalValidator.mailFormat]),
-      password: Validators.compose([Validators.required, Validators.minLength(5)])
+      email   : ["", Validators.compose([Validators.required, GlobalValidator.mailFormat])],
+      password: ["", Validators.compose([Validators.required, Validators.minLength(5)])]
     });
 
   }

@@ -25,10 +25,6 @@ export class ClockComponent implements OnInit {
 	}
   }
 
-  ngAfterViewInit() {
-	  this.initLocalClocks();
-  } 
-
   isLeapYear(year:number){
 	return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
   }
@@ -66,10 +62,4 @@ export class ClockComponent implements OnInit {
 		element.style.transform = 'rotateZ(' + hands[j].angle + 'deg)';
 	}
   }
-
-  ngOnInit() {
-  }
-
-
-
 }

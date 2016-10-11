@@ -48,19 +48,19 @@ export class WatchComponent implements OnInit {
 
     translate.setDefaultLang('en');
     translate.use('en');
+    this.initForm();
+  }
 
-    console.log(this.watchModel);
-    console.log(this.user);
-
+  initForm(){
     this.watchForm = this.formBuilder.group({
-      id     : [this.watchModel.id],
-      brand  : [this.watchModel.brand, Validators.required],
+      id     : this.watchModel.id,
+      brand  : [this.watchModel.brand,  Validators.required],
       name   : [this.watchModel.name, Validators.required],
-      caliber: [this.watchModel.caliber],
+      caliber: this.watchModel.caliber,
       year   : [this.watchModel.yearOfBuy, Validators.compose(
         [Validators.minLength(4),  Validators.maxLength(4)]
       )],
-      serial : [this.watchModel.serial]
+      serial : this.watchModel.serial
     });
   }
 

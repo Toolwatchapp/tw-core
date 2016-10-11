@@ -47,13 +47,13 @@ export class SignupComponent implements OnInit {
     });
 
     this.signupForm = this.formBuilder.group({
-        email: Validators.compose([Validators.required, GlobalValidator.mailFormat]),
-        emailRepeat: Validators.compose([Validators.required, GlobalValidator.mailFormat]),
-        password: Validators.compose([Validators.required, Validators.minLength(8)]),
-        passwordRepeat: Validators.compose([Validators.required, Validators.minLength(8)]),
-        lastName: [],
-        firstName: [],
-        country: []
+        email: ["", Validators.compose([Validators.required, GlobalValidator.mailFormat])],
+        emailRepeat: ["", Validators.compose([Validators.required, GlobalValidator.mailFormat])],
+        password: ["", Validators.compose([Validators.required, Validators.minLength(8)])],
+        passwordRepeat: ["", Validators.compose([Validators.required, Validators.minLength(8)])],
+        lastName: "",
+        firstName: "",
+        country: ""
       });
   }
 

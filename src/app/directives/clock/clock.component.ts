@@ -62,4 +62,7 @@ export class ClockComponent implements OnInit {
 		element.style.transform = 'rotateZ(' + hands[j].angle + 'deg)';
 	}
   }
+
+  ngOnInit() {
+  }
 }

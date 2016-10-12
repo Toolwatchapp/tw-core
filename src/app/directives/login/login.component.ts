@@ -52,6 +52,65 @@ export class LoginComponent implements OnInit {
   }
 
   /**
+   * Login an FB user
+   * @param {string}} fbUser [description]
+   */
+  onFbSubmit(fbUser:{
+    email: string, 
+    id: number,
+    last_name: string, 
+    firstname: string, 
+    timezone: string, 
+    country: string}
+  ){
+
+    this.submitAttempt = true;
+    this.error = false;
+    this.credientials = false;
+
+    //Tries to login an user using his fb email
+    this.twapi.login(fbUser.email, fbUser.id).then(
+        //success, away we go
+        res => { 
+          this.userLogged.emit(res);
+          GAService.event('CTA', 'FB_LOGIN', 'SUCCESS');
+        }, 
+        //error, maybe it's the first time the user
+        //connects with fb. Tries to signup
+        err => {
+
+          this.twapi.signup(
+             fbUser.email,
+             fbUser.id,
+             fbUser.firstName,
+             fbUser.lastName,
+             fbUser.country).then(
+             //Success signup, away we go
+              res => { 
+                GAService.event('CTA', 'FB_SIGNUP', 'SUCCESS');
+                this.userLogged.emit(res) 
+              },
+              //Error, most likely the user tries to signin
+              //using facebook while he has a regular 
+              //account with the same email.
+              error => {
+                this.loginAttempt.emit(false);
+                GAService.event('CTA', 'FB_SIGNUP', 'FAIL');
+                switch (error.status) {
+                  case TwAPIService.HTTP_UNAUTHORIZED:
+                    this.credientials = true;
+                    break;
+                  default:
+                    this.error = true;
+                    break;
+                }
+              }
+           );
+        }
+      );
+  }
+
+  /**
    * Form submit
    * @param {string}} user [description]
    */

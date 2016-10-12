@@ -124,6 +124,19 @@ export class Watch{
 		this.historySize++;
 		this.measures.push(measure);
 	}
+
+	clone():Watch{
+		return new Watch(
+			this.id,
+			this.brand,
+			this.historySize,
+			this.measures,
+			this.name,
+			this.yearOfBuy,
+			this.serial,
+			this.caliber
+		);
+	}
 }
 
 export enum WatchAction{

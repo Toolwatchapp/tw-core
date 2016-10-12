@@ -52,9 +52,6 @@ export class Watch{
 			}
 		}
 
-		console.log(this);
-		console.log(this.lastCompleteMeasure());
-
 	}
 
 	public toString = () : string => {

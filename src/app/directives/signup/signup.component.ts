@@ -20,15 +20,15 @@ import {
  */
 export class SignupComponent implements OnInit {
 
-  signupForm: FormGroup;
+  signupForm   : FormGroup;
   submitAttempt:boolean = false;
-  emailTaken:boolean = false;
-  error:boolean = false;
-  countries:[string];
+  errors       = [];
+  countries    :[string];
   filteredList = [];
-  query: string = "";
+  query        : string = "";
 
   @Output() userLogged = new EventEmitter();
+  @Output() signupAttempt = new EventEmitter();
 
    /**
    * Constructor w/ service injection
@@ -47,15 +47,22 @@ export class SignupComponent implements OnInit {
     });
 
     this.signupForm = this.formBuilder.group({
-        email: ["", Validators.compose([Validators.required, GlobalValidator.mailFormat])],
-        emailRepeat: ["", Validators.compose([Validators.required, GlobalValidator.mailFormat])],
-        password: ["", Validators.compose([Validators.required, Validators.minLength(8)])],
-        passwordRepeat: ["", Validators.compose([Validators.required, Validators.minLength(8)])],
-        lastName: "",
-        firstName: "",
-        country: ""
+        email         : ["", Validators.compose([Validators.required, GlobalValidator.mailFormat])],
+        emailRepeat   : ["", Validators.compose([Validators.required, GlobalValidator.mailFormat])],
+
+        password      : ["", Validators.compose([Validators.required, Validators.minLength(8)])],
+        passwordRepeat: ["", 
+          Validators.compose([
+            Validators.required, 
+            Validators.minLength(8)
+          ])
+        ],
+        lastName      : "",
+        firstName     : "",
+        country       : ""
       });
   }
+
 
   /**
    * Trims the filteredList accoring to the 
@@ -92,10 +99,14 @@ export class SignupComponent implements OnInit {
     }) {
 
     this.submitAttempt = true;
+    this.errors = [];
+
 
     if(this.signupForm.valid && 
       user.password == user.passwordRepeat &&
       user.email == user.emailRepeat){
+
+      this.signupAttempt.emit(true);
 
       this.twapi.signup(user.email,
        user.password,
@@ -110,14 +121,25 @@ export class SignupComponent implements OnInit {
           GAService.event('CTA', 'SIGNUP', 'FAIL');
           switch (error.status) {
             case TwAPIService.HTTP_UNAUTHORIZED:
-              this.emailTaken = true;
+              this.errors.push('email-taken');
               break;
             default:
-              this.error = true;
+              this.errors.push('error');
               break;
           }
         }
        )
+
+      this.signupAttempt.emit(false);
+    } else{
+
+      if(user.password != user.passwordRepeat){
+        this.errors.push('password-match');
+      }
+
+      if(user.email != user.emailRepeat){
+        this.errors.push('email-match');
+      }
     }
   }
 

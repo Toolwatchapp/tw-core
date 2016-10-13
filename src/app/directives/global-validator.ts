@@ -16,4 +16,15 @@ export class GlobalValidator {
 
         return null;
     }
+
+    static match(group:FormGroup, from: string, distant: string): ValidationResult {
+
+    	console.log(group);
+
+    	if (group && group.controls[from].value != group.controls[from].value) {
+            return { "noMatch": true };
+        }
+
+        return null;
+    }
 }

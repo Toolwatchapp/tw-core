@@ -21,8 +21,8 @@ import {
 export class LoginComponent implements OnInit {
 
   loginForm              : FormGroup;
-  submitAttempt          : boolean = false;
-  errors                 = []
+  errors                 = [];
+  submitAttempt:false;
   @Output() userLogged   = new EventEmitter();
   @Output() loginAttempt = new EventEmitter();
 
@@ -117,6 +117,7 @@ export class LoginComponent implements OnInit {
   onSubmit(user:{email:string, password:string}){
 
     this.errors = [];
+    this.submitAttempt = true;
     
     //Form constraints are ok
     if(this.loginForm.valid){

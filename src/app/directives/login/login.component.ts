@@ -22,11 +22,9 @@ export class LoginComponent implements OnInit {
 
   loginForm              : FormGroup;
   submitAttempt          : boolean = false;
-  credientials           = false;
-  error                  = false;
+  errors                 = []
   @Output() userLogged   = new EventEmitter();
   @Output() loginAttempt = new EventEmitter();
-  @Output() loginError   = new EventEmitter();
 
   /**
    * Constructor w/ service injection
@@ -64,9 +62,7 @@ export class LoginComponent implements OnInit {
     country: string}
   ){
 
-    this.submitAttempt = true;
-    this.error = false;
-    this.credientials = false;
+    this.errors = [];
 
     this.loginAttempt.emit(true);
 
@@ -98,18 +94,20 @@ export class LoginComponent implements OnInit {
               error => {
                 this.loginAttempt.emit(false);
                 GAService.event('CTA', 'FB_SIGNUP', 'FAIL');
-                switch (error.status) {
-                  case TwAPIService.HTTP_UNAUTHORIZED:
-                    this.credientials = true;
+                switch (err.status) {
+                  case 401:
+                    this.errors.push('credentials');
                     break;
                   default:
-                    this.error = true;
+                    this.errors.push('error');
                     break;
                 }
               }
            );
         }
       );
+
+    this.loginAttempt.emit(false);
   }
 
   /**
@@ -118,9 +116,7 @@ export class LoginComponent implements OnInit {
    */
   onSubmit(user:{email:string, password:string}){
 
-    this.submitAttempt = true;
-    this.error = false;
-    this.credientials = false;
+    this.errors = [];
     
     //Form constraints are ok
     if(this.loginForm.valid){
@@ -134,18 +130,18 @@ export class LoginComponent implements OnInit {
         }, 
         err => {
           GAService.event('CTA', 'LOGIN', 'FAIL');
-          this.loginAttempt.emit(false);
-
           switch (err.status) {
             case 401:
-              this.credientials = true;
+              this.errors.push('credentials');
               break;
             default:
-              this.error = true;
+              this.errors.push('error');
               break;
           }
         }
       );
+
+      this.loginAttempt.emit(false);
     }
   }
 

@@ -205,8 +205,8 @@ export class TwAPIService {
 				TwAPIService.user = res;
 				return res;
 			},
-            err => this.handleError(err)
-		)
+			err => this.handleError(err)
+		);
 	}  
 
 

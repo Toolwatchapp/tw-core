@@ -68,6 +68,8 @@ export class LoginComponent implements OnInit {
     this.error = false;
     this.credientials = false;
 
+    this.loginAttempt.emit(true);
+
     //Tries to login an user using his fb email
     this.twapi.login(fbUser.email, fbUser.id).then(
         //success, away we go

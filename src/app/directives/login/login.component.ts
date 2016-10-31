@@ -55,8 +55,8 @@ export class LoginComponent implements OnInit {
    */
   onFbSubmit(fbUser:{
     email: string, 
-    id: number,
-    last_name: string, 
+    id: string,
+    lastname: string, 
     firstname: string, 
     timezone: string, 
     country: string}
@@ -80,8 +80,8 @@ export class LoginComponent implements OnInit {
           this.twapi.signup(
              fbUser.email,
              fbUser.id,
-             fbUser.firstName,
-             fbUser.lastName,
+             fbUser.firstname,
+             fbUser.lastname,
              fbUser.country).then(
              //Success signup, away we go
               res => { 
@@ -117,7 +117,6 @@ export class LoginComponent implements OnInit {
   onSubmit(user:{email:string, password:string}){
 
     this.errors = [];
-    this.submitAttempt = true;
     
     //Form constraints are ok
     if(this.loginForm.valid){

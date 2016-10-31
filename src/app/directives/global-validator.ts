@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 export interface ValidationResult {
  [key:string]:boolean;

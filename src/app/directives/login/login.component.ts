@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
 
   /**
    * Login an FB user
-   * @param {string}} fbUser [description]
+   * @param {string} fbUser [description]
    */
   onFbSubmit(fbUser:{
     email: string, 

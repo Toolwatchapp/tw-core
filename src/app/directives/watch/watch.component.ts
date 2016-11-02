@@ -22,10 +22,9 @@ import {
  */
 export class WatchComponent implements OnInit {
 
-  watchModel: Watch = new Watch(null, null);
   user: User;
   @Output() watchSaved = new EventEmitter();
-
+  watchModel: Watch = new Watch(0, "aa");
   watchForm        : FormGroup;
   brands           : { name: string, icon: string, models: string }[] = [];
   models           : string[] = [];
@@ -43,27 +42,14 @@ export class WatchComponent implements OnInit {
   constructor(
     protected translate: TranslateService,
     private twapi      : TwAPIService, 
-    private formBuilder    : FormBuilder
+    private formBuilder    : FormBuilder,
   ) {
+
 
     translate.setDefaultLang('en');
     translate.use('en');
-    this.initForm();
-  }
 
-  initForm(){
-    this.watchForm = this.formBuilder.group({
-      id     : this.watchModel.id,
-      brand  : [this.watchModel.brand,  Validators.required],
-      name   : [this.watchModel.name, Validators.required],
-      caliber: this.watchModel.caliber,
-      year   : [this.watchModel.yearOfBuy, Validators.compose(
-        [Validators.minLength(4),  Validators.maxLength(4)]
-      )],
-      serial : this.watchModel.serial
-    });
   }
-
 
   /**
    * Pull the brands
@@ -122,6 +108,20 @@ export class WatchComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initForm();
+  }
+
+  initForm(){
+    this.watchForm = this.formBuilder.group({
+      id     : this.watchModel.id,
+      brand  : [this.watchModel.brand,  Validators.required],
+      name   : [this.watchModel.name, Validators.required],
+      caliber: this.watchModel.caliber,
+      year   : [this.watchModel.yearOfBuy, Validators.compose(
+        [Validators.minLength(4),  Validators.maxLength(4)]
+      )],
+      serial : this.watchModel.serial
+    });
   }
 
   /**
@@ -131,8 +131,6 @@ export class WatchComponent implements OnInit {
     this.submitAttempt = true;
 
     if (this.watchForm.valid) {
-
-      
 
       this.twapi.upsertWatch(this.watchModel).then(
         res => {

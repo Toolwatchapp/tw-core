@@ -24,7 +24,7 @@ export class WatchComponent implements OnInit {
 
   user: User;
   @Output() watchSaved = new EventEmitter();
-  watchModel: Watch = new Watch(0, "aa");
+  watchModel: Watch = new Watch(null, "");
   watchForm        : FormGroup;
   brands           : { name: string, icon: string, models: string }[] = [];
   models           : string[] = [];

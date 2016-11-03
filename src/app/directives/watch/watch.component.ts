@@ -48,7 +48,7 @@ export class WatchComponent implements OnInit {
 
     translate.setDefaultLang('en');
     translate.use('en');
-
+    this.initForm();
   }
 
   /**
@@ -108,7 +108,6 @@ export class WatchComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initForm();
   }
 
   initForm(){

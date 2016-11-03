@@ -12,6 +12,12 @@ export class KFormatter implements PipeTransform {
   	value = value.substr(1);
   	let number = Number(value);
 
-	return number > 999 ? sign + (number/1000).toFixed(0) + 'k' : sign + number;
+  	if(Math.abs(number) > 999){
+  		return sign + (number/1000).toFixed(0) + 'k';
+  	}else if(Math.abs(number) > 100){
+  		return sign + number.toFixed(0);
+  	}else{
+  		return sign + number.toFixed(1);
+  	}
   }
 }

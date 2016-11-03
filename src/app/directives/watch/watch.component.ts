@@ -135,25 +135,31 @@ export class WatchComponent implements OnInit {
         res => {
           GAService.event('CTA', 'WATCH_UPSERT', 'SUCCESS');
           this.user.upsertWatch(res);
-          this.watchSaved.emit(this.user)
+          this.watchSaved.emit(this.user);
+          this.submitAttempt = false;
         },
         error => {
           GAService.event('CTA', 'WATCH_UPSERT', 'FAIL');
-          this.error = true
+          this.error = true;
+          this.submitAttempt = false;
         }
       );
     }
+
   }
 
   onDelete(){
+    this.submitAttempt = true;
     this.twapi.deleteWatch(this.user, this.watchModel).then(
       res => {
         GAService.event('CTA', 'WATCH_DELETE', 'SUCCESS');
-        this.watchSaved.emit(res)
+        this.watchSaved.emit(res);
+        this.submitAttempt = false;
       },
       error => {
         GAService.event('CTA', 'WATCH_DELETE', 'FAIL');
-        this.error = true
+        this.error = true;
+        this.submitAttempt = false;
       }
     );
   }

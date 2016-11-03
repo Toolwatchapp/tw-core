@@ -233,6 +233,7 @@ export class TwAPIService {
 
                 GAService.event('API', 'AUTOLOGIN');
                 TwAPIService.user = res;
+                res.key = key;
                 return res;
             },
             err => this.handleError(err)

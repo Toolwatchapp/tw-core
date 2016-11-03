@@ -49,20 +49,12 @@ export class WatchComponent implements OnInit {
     translate.setDefaultLang('en');
     translate.use('en');
     this.initForm();
-  }
-
-  /**
-   * Pull the brands
-   */
-  ngAfterViewInit() {
-    //Get the known brands
     this.twapi.getBrands().then(
       res => {
         this.brands = res;
       }
     );
   }
-
 
   /**
    * [selectBrand description]

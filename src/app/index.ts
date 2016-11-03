@@ -11,6 +11,7 @@ export * from './services/ga.service'
  */
 export * from './pipes/arethmetic-sign.pipe'
 export * from './pipes/leading-zero.pipe'
+export * from './pipes/k-formatter.pipe'
 /**
  * MODEL
  */

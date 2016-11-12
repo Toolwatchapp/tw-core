@@ -38,6 +38,10 @@ export class Watch{
 			this.status = WatchStatus.HaveMoreMeasures;
 		}
 
+		this.computeNext();
+	}
+
+	computeNext(){
 		let lastMeasure = this.currentMeasure();
 		if (lastMeasure !== null 
 			&& lastMeasure.status & MeasureStatus.BaseMeasure){
@@ -51,7 +55,6 @@ export class Watch{
 				this.next = WatchAction.Measure;
 			}
 		}
-
 	}
 
 	public toString = () : string => {
@@ -114,7 +117,6 @@ export class Watch{
 			console.log("i", i);
 			if(this.measures[i].id == measure.id){
 				this.measures[i] = measure;
-				console.log("return", this, this.measures[i], measure);
 				return;
 			}
 		}

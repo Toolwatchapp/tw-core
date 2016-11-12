@@ -382,6 +382,9 @@ export class TwAPIService {
 					}
 				);
 
+				watch.computeNext();
+				watch.historySize--;
+
                 GAService.event('API', 'MEASURE', 'DELETE');
 
 				return watch;
@@ -625,6 +628,7 @@ export class TwAPIService {
                 GAService.event('API', 'MEASURE', 'FIRST');
 				measure.id = response.json().measureId;
 				watch.measures.push(measure);
+				watch.historySize++;
 				return watch;
 			}
 		).catch(this.handleError);

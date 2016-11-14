@@ -23,7 +23,6 @@ export * from './models/blog-post.model'
  * DIRECTIVES
  */
 export * from './directives/clock/clock.component'
-export * from './directives/clock/astro'
 export * from './directives/clock/moon-phases/moon-phases.component'
 export * from './directives/login/login.component'
 export * from './directives/signup/signup.component'

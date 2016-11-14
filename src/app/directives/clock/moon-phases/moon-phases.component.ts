@@ -1,5 +1,4 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { Astro } from './../astro';
 
 @Component({
   selector: 'moon-phases',
@@ -9,19 +8,23 @@ import { Astro } from './../astro';
              </div>
              `
 })
-export class MoonPhasesComponent extends Astro implements OnInit {
+export class MoonPhasesComponent implements OnInit {
+
+  angleMoon:number;
   
   constructor(private elementRef: ElementRef) {
-  	super();
-	  this.illum = this.getMoonIllumination(new Date());
-	  this.pos = this.getMoonPosition(new Date(), 0, 0);
-	  this.angleMoon = this.illum.angle - this.pos.parallacticAngle;
+
+    let today:Date = new Date();
+    let lastFullMoon = new Date(2016, 10, 14, 12, 0, 0, 0);
+    let diffDays = Math.round(Math.abs((today.getTime() - lastFullMoon.getTime())/(24*60*60*1000)));
+
+	  this.angleMoon = diffDays * 12.41;   
   }
 
   ngAfterViewInit() {
   	let elem = this.elementRef.nativeElement.querySelector('.moon-disque')
-  	elem.style.webkitTransform = 'rotateZ(' + this.angleMoon*360 + 'deg)';
-  	elem.style.transform = 'rotateZ(' + this.angleMoon*360 + 'deg)';
+  	elem.style.webkitTransform = 'rotateZ(' + this.angleMoon + 'deg)';
+  	elem.style.transform = 'rotateZ(' + this.angleMoon + 'deg)';
   }
 
   ngOnInit() {

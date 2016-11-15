@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "system",
+    "target": "es5",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "outFile": "../dist/toolwatch-bundle.js"
+  },
+  "files": [
+    "../src/toolwatch.ts"
+  ]
+}

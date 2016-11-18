@@ -16,7 +16,8 @@
   "main": "toolwatch",
   "files": [
     "dist",
-    "index"
+    "index.js",
+    "index.d.ts"
   ],
   "repository": {
     "type": "git",

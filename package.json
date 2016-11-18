@@ -5,8 +5,7 @@
   "scripts": {
     "build:system": "tsc -p config/tsconfig.system.json",
     "build:cjs": "ngc -p config/tsconfig.cjs.json",
-    "build:js": "npm run build:cjs && npm run build:system",
-    "build": "rm -R dist && mkdir dist && cp -R src/* dist",
+    "build": "npm run build:cjs && npm run build:system",
     "test": "karma start config/karma.conf.js",
     "test:watch": "npm run test -- --auto-watch --no-single-run",
     "demo:watch": "webpack --config config/webpack.config.js --progress --colors --watch",
@@ -14,16 +13,16 @@
     "publish-lib": "npm run test && npm run build && npm run demo:dist"
   },
   "private": true,
-  "main": "index",
+  "main": "src/index",
   "files": [
-    "dist"
+    "src"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/toolwatchapp/tw-common"
+    "url": "https://github.com/toolwatchapp/tw-core"
   },
   "bugs": {
-    "url": "https://github.com/toolwatchapp/tw-common/issues"
+    "url": "https://github.com/toolwatchapp/tw-core/issues"
   },
   "author": "Mathieu Nayrolles <mathieu.nayrolles@gmail.com>",
   "dependencies": {

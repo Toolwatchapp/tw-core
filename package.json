@@ -1,11 +1,12 @@
 {
-  "name": "toolwatch",
+  "name": "tw-core",
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
     "build:system": "tsc -p config/tsconfig.system.json",
     "build:cjs": "ngc -p config/tsconfig.cjs.json",
-    "build": "npm run build:cjs && npm run build:system",
+    "build:js": "npm run build:cjs && npm run build:system",
+    "build": "rm -R dist && mkdir dist && cp -R src/* dist",
     "test": "karma start config/karma.conf.js",
     "test:watch": "npm run test -- --auto-watch --no-single-run",
     "demo:watch": "webpack --config config/webpack.config.js --progress --colors --watch",
@@ -13,11 +14,9 @@
     "publish-lib": "npm run test && npm run build && npm run demo:dist"
   },
   "private": true,
-  "main": "index.js",
+  "main": "index",
   "files": [
-    "dist",
-    "index.js",
-    "index.d.ts"
+    "dist"
   ],
   "repository": {
     "type": "git",

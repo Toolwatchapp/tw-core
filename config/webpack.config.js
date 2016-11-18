@@ -18,7 +18,6 @@ module.exports = function (env) {
         entry: {
             app: path.join(srcPath, entryFile),
             common: [
-                'es6-shim/es6-shim',
                 'reflect-metadata/Reflect.js',
                 'zone.js/dist/zone.js'
             ]

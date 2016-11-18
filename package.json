@@ -13,9 +13,10 @@
     "publish-lib": "npm run test && npm run build && npm run demo:dist"
   },
   "private": true,
-  "main": "src/index",
+  "main": "index",
   "files": [
-    "src"
+    "src",
+    "index"
   ],
   "repository": {
     "type": "git",

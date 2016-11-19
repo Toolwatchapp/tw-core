@@ -2,10 +2,13 @@
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
-var platform_browser_1 = require('@angular/platform-browser');
 var core_1 = require('@angular/core');
-var forms_1 = require('@angular/forms');
-var http_1 = require('@angular/http');
+/**
+ * PIPES
+ */
+var arethmetic_sign_pipe_1 = require('./pipes/arethmetic-sign.pipe');
+var leading_zero_pipe_1 = require('./pipes/leading-zero.pipe');
+var k_formatter_pipe_1 = require('./pipes/k-formatter.pipe');
 var moon_phases_component_1 = require('./directives/clock/moon-phases/moon-phases.component');
 /**
  * SERVICES
@@ -44,16 +47,17 @@ var ToolwatchModule = (function () {
     ToolwatchModule.decorators = [
         { type: core_1.NgModule, args: [{
                     declarations: [
-                        moon_phases_component_1.MoonPhasesComponent
+                        moon_phases_component_1.MoonPhasesComponent,
+                        arethmetic_sign_pipe_1.ArethmeticSign,
+                        leading_zero_pipe_1.LeadingZero,
+                        k_formatter_pipe_1.KFormatter,
                     ],
-                    imports: [
-                        platform_browser_1.BrowserModule,
-                        forms_1.FormsModule,
-                        http_1.HttpModule,
-                        forms_1.ReactiveFormsModule,
-                    ],
+                    imports: [],
                     exports: [
-                        moon_phases_component_1.MoonPhasesComponent
+                        moon_phases_component_1.MoonPhasesComponent,
+                        arethmetic_sign_pipe_1.ArethmeticSign,
+                        leading_zero_pipe_1.LeadingZero,
+                        k_formatter_pipe_1.KFormatter,
                     ]
                 },] },
     ];

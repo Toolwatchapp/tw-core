@@ -60,16 +60,18 @@ export * from './directives/watch/watch.component'
 
 @NgModule({
   declarations: [
-    MoonPhasesComponent
+    MoonPhasesComponent,
+    ArethmeticSign,
+    LeadingZero,
+    KFormatter,
   ],
   imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    ReactiveFormsModule,
   ],
   exports: [
-    MoonPhasesComponent
+    MoonPhasesComponent,
+    ArethmeticSign,
+    LeadingZero,
+    KFormatter,
   ]
 })
 export class ToolwatchModule {

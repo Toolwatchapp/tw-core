@@ -1615,10 +1615,10 @@ System.register("directives/watch/watch.component", ['@angular/core', "models/wa
         }
     }
 });
-System.register("toolwatch", ['@angular/platform-browser', '@angular/core', '@angular/forms', '@angular/http', "directives/clock/moon-phases/moon-phases.component", "services/twapi.service", "services/ga.service", "pipes/arethmetic-sign.pipe", "pipes/leading-zero.pipe", "pipes/k-formatter.pipe", "models/watch.model", "models/user.model", "models/measure.model", "models/blog-post.model", "directives/clock/clock.component", "directives/login/login.component", "directives/signup/signup.component", "directives/watch/watch.component"], function(exports_18, context_18) {
+System.register("toolwatch", ['@angular/core', "pipes/arethmetic-sign.pipe", "pipes/leading-zero.pipe", "pipes/k-formatter.pipe", "directives/clock/moon-phases/moon-phases.component", "services/twapi.service", "services/ga.service", "models/watch.model", "models/user.model", "models/measure.model", "models/blog-post.model", "directives/clock/clock.component", "directives/login/login.component", "directives/signup/signup.component", "directives/watch/watch.component"], function(exports_18, context_18) {
     "use strict";
     var __moduleName = context_18 && context_18.id;
-    var platform_browser_1, core_10, forms_4, http_2, moon_phases_component_1;
+    var core_10, arethmetic_sign_pipe_1, leading_zero_pipe_1, k_formatter_pipe_1, moon_phases_component_1;
     var ToolwatchModule;
     var exportedNames_1 = {
         'ToolwatchModule': true
@@ -1632,17 +1632,20 @@ System.register("toolwatch", ['@angular/platform-browser', '@angular/core', '@an
     }
     return {
         setters:[
-            function (platform_browser_1_1) {
-                platform_browser_1 = platform_browser_1_1;
-            },
             function (core_10_1) {
                 core_10 = core_10_1;
             },
-            function (forms_4_1) {
-                forms_4 = forms_4_1;
+            function (arethmetic_sign_pipe_1_1) {
+                arethmetic_sign_pipe_1 = arethmetic_sign_pipe_1_1;
+                exportStar_1(arethmetic_sign_pipe_1_1);
             },
-            function (http_2_1) {
-                http_2 = http_2_1;
+            function (leading_zero_pipe_1_1) {
+                leading_zero_pipe_1 = leading_zero_pipe_1_1;
+                exportStar_1(leading_zero_pipe_1_1);
+            },
+            function (k_formatter_pipe_1_1) {
+                k_formatter_pipe_1 = k_formatter_pipe_1_1;
+                exportStar_1(k_formatter_pipe_1_1);
             },
             function (moon_phases_component_1_1) {
                 moon_phases_component_1 = moon_phases_component_1_1;
@@ -1653,15 +1656,6 @@ System.register("toolwatch", ['@angular/platform-browser', '@angular/core', '@an
             },
             function (ga_service_5_1) {
                 exportStar_1(ga_service_5_1);
-            },
-            function (arethmetic_sign_pipe_1_1) {
-                exportStar_1(arethmetic_sign_pipe_1_1);
-            },
-            function (leading_zero_pipe_1_1) {
-                exportStar_1(leading_zero_pipe_1_1);
-            },
-            function (k_formatter_pipe_1_1) {
-                exportStar_1(k_formatter_pipe_1_1);
             },
             function (watch_model_4_1) {
                 exportStar_1(watch_model_4_1);
@@ -1699,16 +1693,17 @@ System.register("toolwatch", ['@angular/platform-browser', '@angular/core', '@an
                 ToolwatchModule = __decorate([
                     core_10.NgModule({
                         declarations: [
-                            moon_phases_component_1.MoonPhasesComponent
+                            moon_phases_component_1.MoonPhasesComponent,
+                            arethmetic_sign_pipe_1.ArethmeticSign,
+                            leading_zero_pipe_1.LeadingZero,
+                            k_formatter_pipe_1.KFormatter,
                         ],
-                        imports: [
-                            platform_browser_1.BrowserModule,
-                            forms_4.FormsModule,
-                            http_2.HttpModule,
-                            forms_4.ReactiveFormsModule,
-                        ],
+                        imports: [],
                         exports: [
-                            moon_phases_component_1.MoonPhasesComponent
+                            moon_phases_component_1.MoonPhasesComponent,
+                            arethmetic_sign_pipe_1.ArethmeticSign,
+                            leading_zero_pipe_1.LeadingZero,
+                            k_formatter_pipe_1.KFormatter,
                         ]
                     }), 
                     __metadata('design:paramtypes', [])

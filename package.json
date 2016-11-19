@@ -13,12 +13,7 @@
     "publish-lib": "npm run test && npm run build && npm run demo:dist"
   },
   "private": true,
-  "main": "toolwatch",
-  "files": [
-    "dist",
-    "index.js",
-    "index.d.ts"
-  ],
+  "main": "index",
   "repository": {
     "type": "git",
     "url": "https://github.com/toolwatchapp/tw-core"

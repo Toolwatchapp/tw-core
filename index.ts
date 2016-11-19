@@ -57,27 +57,3 @@ export * from './directives/clock/moon-phases/moon-phases.component'
 export * from './directives/login/login.component'
 export * from './directives/signup/signup.component'
 export * from './directives/watch/watch.component'
-
-@NgModule({
-  declarations: [
-    MoonPhasesComponent,
-    ArethmeticSign,
-    LeadingZero,
-    KFormatter,
-  ],
-  imports: [
-  ],
-  exports: [
-    MoonPhasesComponent,
-    ArethmeticSign,
-    LeadingZero,
-    KFormatter,
-  ]
-})
-export class ToolwatchModule {
-  static forRoot():ModuleWithProviders {
-        return {
-            ngModule: ToolwatchModule
-        };
-    }
-}

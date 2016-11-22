@@ -35,8 +35,6 @@ export class LoginComponent implements OnInit {
     private formBuilder  : FormBuilder
   ) { 
 
-    console.log(translate, twapi, formBuilder);
-
     //Lang definition
 	  translate.setDefaultLang('en');
 	  translate.use('en');

@@ -18,7 +18,7 @@ export class MoonPhasesComponent implements OnInit {
     let lastFullMoon = new Date(2016, 10, 14, 12, 0, 0, 0);
     let diffDays = Math.round(Math.abs((today.getTime() - lastFullMoon.getTime())/(24*60*60*1000)));
 
-	  this.angleMoon = diffDays * 12.41;   
+	  this.angleMoon = diffDays * 6.101694915254;   
   }
 
   ngAfterViewInit() {

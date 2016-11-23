@@ -7,6 +7,8 @@ export class GAService {
 
   public static appName:string;
   public static appVersion:string;
+  public static userName:string;
+  public static userEmail:string;
   private static gaCreated:boolean = false;
 
 

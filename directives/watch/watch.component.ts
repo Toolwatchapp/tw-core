@@ -115,9 +115,10 @@ export class WatchComponent implements OnInit {
    * Submit a watch
    */
   onSubmit(){
-    this.submitAttempt = true;
-
+    
     if (this.watchForm.valid) {
+
+      this.submitAttempt = true;
 
       this.twapi.upsertWatch(this.watchModel).then(
         res => {
@@ -133,7 +134,6 @@ export class WatchComponent implements OnInit {
         }
       );
     }
-
   }
 
   onDelete(){

@@ -33,7 +33,7 @@ export class GAService {
         /* tslint:enable:no-unused-expression */
         /* tslint:enable:semicolon */
         /* tslint:enable:no-string-literal */
-        ga('create', 'UA-59148878-1', 'auto');
+        ga('create', 'UA-59148878-1', 'app.toolwatch.io');
         GAService.gaCreated = true;
       }
   }

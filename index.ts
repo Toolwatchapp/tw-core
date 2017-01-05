@@ -7,53 +7,55 @@ import { TranslateModule, TranslateStaticLoader, TranslateLoader } from 'ng2-tra
 /**
  * SERVICES
  */
-import {TwAPIService} from './services/twapi.service'
-import {GAService} from './services/ga.service'
+import {TwAPIService} from './src/services/twapi.service'
+import {GAService} from './src/services/ga.service'
 /**
  * PIPES
  */
-import {ArethmeticSign} from './pipes/arethmetic-sign.pipe'
-import {LeadingZero} from './pipes/leading-zero.pipe'
-import {KFormatter} from './pipes/k-formatter.pipe'
+import {ArethmeticSign} from './src/pipes/arethmetic-sign.pipe'
+import {LeadingZero} from './src/pipes/leading-zero.pipe'
+import {KFormatter} from './src/pipes/k-formatter.pipe'
 /**
  * MODEL
  */
-import {Watch, WatchAction, WatchStatus} from './models/watch.model'
-import {User, EmailPreferences} from './models/user.model'
-import {Measure, MeasureStatus} from './models/measure.model'
-import {BlogPost} from './models/blog-post.model'
+import {Watch, WatchAction, WatchStatus} from './src/models/watch.model'
+import {User, EmailPreferences} from './src/models/user.model'
+import {Measure, MeasureStatus} from './src/models/measure.model'
+import {BlogPost} from './src/models/blog-post.model'
 /**
  * DIRECTIVES
  */
-import {ClockComponent} from './directives/clock/clock.component'
-import {MoonPhasesComponent} from './directives/clock/moon-phases/moon-phases.component'
-import {LoginComponent} from './directives/login/login.component'
-import {SignupComponent} from './directives/signup/signup.component'
-import {WatchComponent} from './directives/watch/watch.component'
+import {ClockComponent} from './src/directives/clock/clock.component'
+import {MoonPhasesComponent} from './src/directives/clock/moon-phases/moon-phases.component'
+import {LoginComponent} from './src/directives/login/login.component'
+import {SignupComponent} from './src/directives/signup/signup.component'
+import {WatchComponent} from './src/directives/watch/watch.component'
 
 /**
  * SERVICES
  */
-export * from './services/twapi.service'
-export * from './services/ga.service'
+export * from './src/services/twapi.service'
+export * from './src/services/ga.service'
 /**
  * PIPES
  */
-export * from './pipes/arethmetic-sign.pipe'
-export * from './pipes/leading-zero.pipe'
-export * from './pipes/k-formatter.pipe'
+export * from './src/pipes/arethmetic-sign.pipe'
+export * from './src/pipes/leading-zero.pipe'
+export * from './src/pipes/k-formatter.pipe'
 /**
  * MODEL
  */
-export * from './models/watch.model'
-export * from './models/user.model'
-export * from './models/measure.model'
-export * from './models/blog-post.model'
+export * from './src/models/watch.model'
+export * from './src/models/user.model'
+export * from './src/models/measure.model'
+export * from './src/models/blog-post.model'
 /**
  * DIRECTIVES
  */
-export * from './directives/clock/clock.component'
-export * from './directives/clock/moon-phases/moon-phases.component'
-export * from './directives/login/login.component'
-export * from './directives/signup/signup.component'
-export * from './directives/watch/watch.component'
+export * from './src/directives/clock/clock.component'
+export * from './src/directives/clock/moon-phases/moon-phases.component'
+export * from './src/directives/login/login.component'
+export * from './src/directives/signup/signup.component'
+export * from './src/directives/watch/watch.component'
+
+export * from './src/tw-core.module'

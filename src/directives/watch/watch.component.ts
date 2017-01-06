@@ -28,6 +28,8 @@ export class WatchComponent implements OnInit {
   filteredModelList: string[] = [];
   error            : boolean = false;
   submitAttempt    : boolean = false;
+  brandSelected    : boolean = false;
+  modelSelected    : boolean = false;
 
   /**
    * Constructor with DI
@@ -41,10 +43,22 @@ export class WatchComponent implements OnInit {
     private formBuilder    : FormBuilder,
   ) {
 
-
     translate.setDefaultLang('en');
     translate.use('en');
-    this.initForm();
+    
+
+    this.watchForm = this.formBuilder.group({
+      id     : this.watchModel.id,
+      brand  : [this.watchModel.brand,  Validators.required],
+      name   : [this.watchModel.name, Validators.required],
+      caliber: this.watchModel.caliber,
+      year   : [this.watchModel.yearOfBuy, Validators.compose(
+        [Validators.minLength(4),  Validators.maxLength(4)]
+      )],
+      serial : this.watchModel.serial
+    });
+
+
     this.twapi.getBrands().then(
       res => {
         this.brands = res;
@@ -57,10 +71,12 @@ export class WatchComponent implements OnInit {
    * @param {string} brand [description]
    */
   selectBrand(brand: string){
+    this.brandSelected = true;
     this.twapi.getModels(brand.toLowerCase()).then(
       res   => this.models = res,
       error => this.models = []
     );
+
     this.filteredBrandList = [];
     this.watchModel.brand = brand;
   }
@@ -70,6 +86,7 @@ export class WatchComponent implements OnInit {
    * @param {string} model [description]
    */
   selectModel(model: string) {
+    this.modelSelected = true;
     this.filteredModelList = [];
     this.watchModel.name = model;
   }
@@ -79,10 +96,17 @@ export class WatchComponent implements OnInit {
    * @param {string} brand [description]
    */
   filterBrand(brand: string) {
-    this.filteredBrandList = this.brands.filter(
-      function(element: { name: string, icon: string, models: string }) {
-        return element.name.toLowerCase().indexOf(brand.toLowerCase()) > -1;
-    });
+
+    if(this.brandSelected == false){
+      this.filteredBrandList = this.brands.filter(
+        function(element: { name: string, icon: string, models: string }) {
+          return element.name.toLowerCase().indexOf(brand.toLowerCase()) > -1;
+      });
+    
+    }else{
+      setTimeout(()=> this.brandSelected = false, 5);
+    }
+
   }
 
   /**
@@ -90,42 +114,37 @@ export class WatchComponent implements OnInit {
    * @param {string} model [description]
    */
   filterModel(model:string){
-    this.filteredModelList = this.models.filter(function(element:string) {
-      return element.toLowerCase().indexOf(model.toLowerCase()) > -1;
-    });
+
+    if(this.modelSelected == false){
+      this.filteredModelList = this.models.filter(function(element:string) {
+        return element.toLowerCase().indexOf(model.toLowerCase()) > -1;
+      });
+    }else{
+      setTimeout(()=> this.modelSelected = false, 5);
+    }
+    
   }
 
   ngOnInit() {
-  }
-
-  initForm(){
-    this.watchForm = this.formBuilder.group({
-      id     : this.watchModel.id,
-      brand  : [this.watchModel.brand,  Validators.required],
-      name   : [this.watchModel.name, Validators.required],
-      caliber: this.watchModel.caliber,
-      year   : [this.watchModel.yearOfBuy, Validators.compose(
-        [Validators.minLength(4),  Validators.maxLength(4)]
-      )],
-      serial : this.watchModel.serial
-    });
   }
 
   /**
    * Submit a watch
    */
   onSubmit(){
-    
+
+    this.submitAttempt = true;
+
     if (this.watchForm.valid) {
-
-      this.submitAttempt = true;
-
+      this.error = false;
+    
       this.twapi.upsertWatch(this.watchModel).then(
         res => {
           GAService.event('CTA', 'WATCH_UPSERT', 'SUCCESS');
           this.user.upsertWatch(res);
           this.watchSaved.emit(this.user);
           this.submitAttempt = false;
+          this.error = false;
         },
         error => {
           GAService.event('CTA', 'WATCH_UPSERT', 'FAIL');
@@ -133,6 +152,8 @@ export class WatchComponent implements OnInit {
           this.submitAttempt = false;
         }
       );
+    }else{
+      this.error = true;
     }
   }
 

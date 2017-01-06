@@ -18,4 +18,8 @@ export class StringHelper{
         }
         return m[b.length][a.length];
     }
+
+    public static replaceAll(target:string, search:string, replacement:string):string{
+        return target.split(search).join(replacement);
+    }
 }

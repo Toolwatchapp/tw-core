@@ -469,6 +469,10 @@ export class TwAPIService {
 	 * @return {Promise}      
 	 */
 	getModels(brand:string): Promise<[string]> {
+
+		brand = StringHelper.replaceAll(brand, " ", "");
+		brand = StringHelper.replaceAll(brand, "&", "");
+		
 		return this.http.get(
 			TwAPIService.assetsUrl + '/watch-models/' + brand + ".json")
 			.map(res => res.json())

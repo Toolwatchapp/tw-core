@@ -216,6 +216,8 @@ export var TwAPIService = (function () {
      * @return {Promise}
      */
     TwAPIService.prototype.getModels = function (brand) {
+        brand = StringHelper.replaceAll(brand, " ", "");
+        brand = StringHelper.replaceAll(brand, "&", "");
         return this.http.get(TwAPIService.assetsUrl + '/watch-models/' + brand + ".json")
             .map(function (res) { return res.json(); })
             .toPromise().then(function (models) {

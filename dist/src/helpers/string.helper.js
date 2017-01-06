@@ -18,6 +18,9 @@ export var StringHelper = (function () {
         }
         return m[b.length][a.length];
     };
+    StringHelper.replaceAll = function (target, search, replacement) {
+        return target.split(search).join(replacement);
+    };
     return StringHelper;
 }());
 //# sourceMappingURL=/mnt/dev/1-NodeWorkspace/toolwatch/tw-core/src/src/helpers/string.helper.js.map

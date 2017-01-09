@@ -1,6 +1,6 @@
 {
   "name": "tw-core",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "license": "MIT",
   "main": "bundles/tw-core.umd.js",
   "module": "index.js",
@@ -11,7 +11,8 @@
     "commit": "npm run prepublish && npm test && git-cz",
     "prepublish": "ngc && npm run build",
     "build": "webpack && cp bundles/tw-core.umd.js bundles/index.js",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "install": "npm run prepublish"
   },
   "private": true,
   "repository": {

@@ -1,13 +1,17 @@
 {
   "name": "tw-core",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "MIT",
-  "main": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
+  "main": "bundles/tw-core.umd.js",
+  "module": "index.js",
+  "typings": "index.d.ts",
   "scripts": {
-    "ngc": "ngc",
-    "build": "rm -rf aot dist && npm run ngc",
-    "publishPackage": "npm run build && npm publish"
+    "test": "karma start",
+    "test-watch": "karma start --singleRun=false --autoWatch=true",
+    "commit": "npm run prepublish && npm test && git-cz",
+    "prepublish": "ngc && npm run build",
+    "build": "webpack && cp bundles/tw-core.umd.js bundles/index.js",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "private": true,
   "repository": {
@@ -20,8 +24,6 @@
   "author": "Mathieu Nayrolles <mathieu.nayrolles@gmail.com>",
   "dependencies": {
     "@angular/common": "2.2.1",
-    "@angular/compiler": "2.2.1",
-    "@angular/compiler-cli": "2.2.1",
     "@angular/core": "2.2.1",
     "@angular/forms": "2.2.1",
     "@angular/http": "2.2.1",
@@ -33,8 +35,20 @@
     "zone.js": "0.6.21"
   },
   "devDependencies": {
+    "@angular/compiler": "2.2.1",
+    "@angular/compiler-cli": "2.2.1",
     "@types/core-js": "^0.9.35",
-    "cz-conventional-changelog": "^1.2.0",
-    "typescript": "2.0.9"
+    "@types/jasmine": "^2.5.35",
+    "@types/node": "^6.0.45",
+    "awesome-typescript-loader": "3.0.0-beta.17",
+    "commitizen": "2.9.2",
+    "cz-conventional-changelog": "1.2.0",
+    "typescript": "2.0.9",
+    "webpack": "2.1.0-beta.27"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

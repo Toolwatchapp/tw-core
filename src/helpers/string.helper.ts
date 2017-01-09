@@ -1,6 +1,6 @@
 export class StringHelper{
 
-    public static levenshtein(a, b){
+    public static levenshtein(a:string, b:string){
         if(!a || !b) return (a || b).length;
         var m = [];
         for(var i = 0; i <= b.length; i++){

@@ -31,12 +31,12 @@ export class ModelFactory {
 	 * @return {Watch[]}            
 	 */
 	static buildWatches(jsonWatches: any): Watch[] {
-		return jsonWatches.map(function(jsonWatch) {
+		return jsonWatches.map(function(jsonWatch:any) {
 			return new Watch(
 				jsonWatch.watchId,
 				jsonWatch.brand,
 				jsonWatch.historySize,
-				jsonWatch.measures.map(function(jsonMeasure) {
+				jsonWatch.measures.map(function(jsonMeasure:any) {
 					return new Measure(
 						jsonMeasure.id,
 						jsonMeasure.measureUserTime,
@@ -62,7 +62,7 @@ export class ModelFactory {
 	 * @return {BlogPost[]}           [description]
 	 */
 	static buildPosts(jsonPosts: any): BlogPost[]{
-		return jsonPosts.posts.map(function(jsonPost) {
+		return jsonPosts.posts.map(function(jsonPost:any) {
 
 			return new BlogPost(
 				jsonPost.id, 

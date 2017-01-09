@@ -36,8 +36,8 @@ export class LoginComponent implements OnInit {
   ) { 
 
     //Lang definition
-	  translate.setDefaultLang('en');
-	  translate.use('en');
+	  this.translate.setDefaultLang('en');
+	  this.translate.use('en');
 
     this.loginForm = this.formBuilder.group({
       email   : ["", Validators.compose([Validators.required, GlobalValidator.mailFormat])],

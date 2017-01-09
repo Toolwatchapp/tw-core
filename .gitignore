@@ -1,33 +1,41 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
-# compiled output
-/tmp
-/aot
-
-# dependencies
-/node_modules
-/bower_components
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-*.launch
-.settings/
-
-# misc
-/.sass-cache
-/connect.lock
-/coverage/*
-/libpeerconnection.log
+#################
+## Misc
+#################
+**/.DS_Store
+nbproject
+manifest.mf
+build.xml
+node_modules/*
 npm-debug.log
-testem.log
-/typings
+*.js
+*.map
+*.d.ts
+!make.js
+!examples/**/*.js
+coverage
+*.metadata.json
+bundles
 
-# e2e
-/e2e/*.js
-/e2e/*.map
+#################
+## JetBrains
+#################
+.idea
+.project
+.settings
 
-#System Files
-.DS_Store
+############
+## Windows
+############
+
+# Windows image file caches
 Thumbs.db
+
+# Folder config file
+Desktop.ini
+
+############
+## Mac
+############
+
+# Mac crap
+.DS_Store

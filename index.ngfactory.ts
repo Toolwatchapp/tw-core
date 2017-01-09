@@ -6,7 +6,7 @@
  /* tslint:disable */
 
 import * as import0 from '@angular/core/src/linker/ng_module_factory';
-import * as import1 from './tw-core.module';
+import * as import1 from './index';
 import * as import2 from '@angular/common/src/common_module';
 import * as import3 from '@angular/core/src/application_module';
 import * as import4 from '@angular/platform-browser/src/browser';
@@ -28,8 +28,8 @@ import * as import19 from '@angular/http/src/backends/browser_xhr';
 import * as import20 from '@angular/http/src/base_response_options';
 import * as import21 from '@angular/http/src/backends/xhr_backend';
 import * as import22 from '@angular/http/src/base_request_options';
-import * as import23 from './services/twapi.service';
-import * as import24 from './services/ga.service';
+import * as import23 from './src/services/twapi.service';
+import * as import24 from './src/services/ga.service';
 import * as import25 from '@angular/core/src/di/injector';
 import * as import26 from '@angular/core/src/application_tokens';
 import * as import27 from '@angular/platform-browser/src/dom/events/dom_events';

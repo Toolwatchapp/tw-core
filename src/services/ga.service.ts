@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-// import { Analytics } from './analytics';
-declare let ga;
+declare let ga:any;
 
 @Injectable()
 export class GAService {

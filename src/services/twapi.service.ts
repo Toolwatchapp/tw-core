@@ -165,7 +165,7 @@ export class TwAPIService {
 	// Regression RC5. Doesn't accept get without body
 	private static optionsGet: RequestOptions = new RequestOptions({ headers: TwAPIService.headers, body:"" });
 	
-	private baseUrl:string = "/api/";
+	public static baseUrl:string = "https://toolwatch.io/api/";
 	public static assetsUrl = "app/assets"
 	private static apikey:string;
 
@@ -191,7 +191,7 @@ export class TwAPIService {
 
 		let creds = { email: email, password: password };
 		return this.http.put(
-			this.baseUrl + "users", 
+			TwAPIService.baseUrl + "users", 
 			JSON.stringify(creds), 
 			TwAPIService.options
 		)
@@ -224,7 +224,7 @@ export class TwAPIService {
         
 
         return this.http.get(
-            this.baseUrl + "users", 
+            TwAPIService.baseUrl + "users", 
             TwAPIService.options
         )
         .map((res) => { return ModelFactory.buildUser(res.json()); })
@@ -253,7 +253,7 @@ export class TwAPIService {
 	signup(email: string, password: string, name?: string, lastname?: string, country?: string): Promise<User> {
 
 		return this.http.post(
-			this.baseUrl + "users",
+			TwAPIService.baseUrl + "users",
 			JSON.stringify({
 				email: email, 
 				password: password,
@@ -279,7 +279,7 @@ export class TwAPIService {
 	deleteAccount():Promise<boolean>{
 
 		return this.http.delete(
-			this.baseUrl + "users",
+			TwAPIService.baseUrl + "users",
 			TwAPIService.options
 		).toPromise().then(
 			response => {
@@ -291,7 +291,7 @@ export class TwAPIService {
 
 	getWatches(): Promise<Watch[]>{
 		return this.http.get(
-			this.baseUrl + "watches",
+			TwAPIService.baseUrl + "watches",
 			TwAPIService.optionsGet)
 		.map((res) => { return ModelFactory.buildWatches(res.json()); })
 		.toPromise().then(
@@ -327,7 +327,7 @@ export class TwAPIService {
 		deleteOptions.body = JSON.stringify({ watchId: watch.id });
 
 		return this.http.delete(
-			this.baseUrl + "watches",
+			TwAPIService.baseUrl + "watches",
 			deleteOptions
 		).toPromise().then(
 			response => {
@@ -371,7 +371,7 @@ export class TwAPIService {
 		deleteOptions.body = JSON.stringify({measureId:measure.id});
 
 		return this.http.delete(
-			this.baseUrl + "measures",
+			TwAPIService.baseUrl + "measures",
 			deleteOptions
 		).toPromise().then(
 			response => {
@@ -568,7 +568,7 @@ export class TwAPIService {
 		: Promise<number> {
 
 		let beforeTime: number = window.performance.now();
-		return this.http.get(this.baseUrl + "time", TwAPIService.optionsGet)
+		return this.http.get(TwAPIService.baseUrl + "time", TwAPIService.optionsGet)
 			.toPromise()
 			.then(
 				response => {
@@ -593,7 +593,7 @@ export class TwAPIService {
 	 */
 	private updateMeasure(watch: Watch, measure: Measure): Promise<Watch> {
 		return this.http.put(
-			this.baseUrl + "measures",
+			TwAPIService.baseUrl + "measures",
 			JSON.stringify({
 				measureId: measure.id,
 				referenceTime: measure.accuracyReferenceTime,
@@ -620,7 +620,7 @@ export class TwAPIService {
 	 */
 	private insertMeasure(watch: Watch, measure: Measure): Promise<Watch> {
 		return this.http.post(
-			this.baseUrl + "measures",
+			TwAPIService.baseUrl + "measures",
 			JSON.stringify({
 				watchId: watch.id,
 				referenceTime: measure.measureReferenceTime,
@@ -645,7 +645,7 @@ export class TwAPIService {
 	 */
 	private insertWatch(watch: Watch):Promise<Watch>{
 		return this.http.post(
-			this.baseUrl + "watches",
+			TwAPIService.baseUrl + "watches",
 			JSON.stringify({
 				brand: watch.brand,
 				name:watch.name,
@@ -670,7 +670,7 @@ export class TwAPIService {
 	 */
 	private updateWatch(watch: Watch): Promise<Watch> {
 		return this.http.put(
-			this.baseUrl + "watches",
+			TwAPIService.baseUrl + "watches",
 			JSON.stringify({
 				id: watch.id,
 				brand: watch.brand,

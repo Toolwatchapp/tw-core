@@ -1,6 +1,6 @@
 {
   "name": "tw-core",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "license": "MIT",
   "main": "bundles/tw-core.umd.js",
   "module": "index.js",
@@ -11,10 +11,8 @@
     "commit": "npm run prepublish && npm test && git-cz",
     "prepublish": "ngc && npm run build",
     "build": "webpack && cp bundles/tw-core.umd.js bundles/index.js",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "install": "npm run prepublish"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
-  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/toolwatchapp/tw-core"
@@ -45,7 +43,8 @@
     "commitizen": "2.9.2",
     "cz-conventional-changelog": "1.2.0",
     "typescript": "2.0.9",
-    "webpack": "2.1.0-beta.27"
+    "webpack": "2.1.0-beta.27",
+    "semantic-release": "6.3.2"
   },
   "config": {
     "commitizen": {

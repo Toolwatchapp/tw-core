@@ -124,6 +124,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  onPasswordResetSubmit(email:string){
+    this.twapi.resetPassword(email);
+  }
+
   ngOnInit() {
 
   }

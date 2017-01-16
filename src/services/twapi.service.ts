@@ -304,9 +304,12 @@ export class TwAPIService {
 	 * Ask a reset password link
 	 * @return {Promise<boolean>}
 	 */
-	resetPassword():Promise<boolean>{
+	resetPassword(email:string):Promise<boolean>{
 		return this.http.post(
 			TwAPIService.baseUrl + "users/reset",
+			JSON.stringify({
+				email: email
+			}),
 			TwAPIService.options
 		).toPromise().then(
 			response => {

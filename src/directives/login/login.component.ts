@@ -52,11 +52,9 @@ export class LoginComponent implements OnInit {
    */
   onFbSubmit(fbUser:{
     email: string, 
-    id: string,
+    token: string,
     lastname: string, 
-    firstname: string, 
-    timezone: string, 
-    country: string}
+    firstname: string}
   ){
 
     this.errors = [];
@@ -64,45 +62,29 @@ export class LoginComponent implements OnInit {
     this.loginAttempt.emit(true);
 
     //Tries to login an user using his fb email
-    this.twapi.login(fbUser.email, fbUser.id).then(
+    this.twapi.signupFacebook(fbUser.email, fbUser.token, fbUser.lastname, fbUser.firstname).then(
         //success, away we go
         res => { 
           this.userLogged.emit(res);
           GAService.event('CTA', 'FB_LOGIN', 'SUCCESS');
         }, 
-        //error, maybe it's the first time the user
-        //connects with fb. Tries to signup
         err => {
 
-          this.twapi.signup(
-             fbUser.email,
-             fbUser.id,
-             fbUser.firstname,
-             fbUser.lastname,
-             fbUser.country).then(
-             //Success signup, away we go
-              res => { 
-                GAService.event('CTA', 'FB_SIGNUP', 'SUCCESS');
-                this.userLogged.emit(res) 
-              },
-              //Error, most likely the user tries to signin
-              //using facebook while he has a regular 
-              //account with the same email.
-              error => {
-                this.loginAttempt.emit(false);
-                GAService.event('CTA', 'FB_SIGNUP', 'FAIL');
-                switch (err.status) {
-                  case 401:
-                    this.errors.push('credentials');
-                    break;
-                  default:
-                    this.errors.push('error');
-                    break;
-                }
-              }
-           );
+          //Error, most likely the user tries to signin
+          //using facebook while he has a regular 
+          //account with the same email.
+          this.loginAttempt.emit(false);
+          GAService.event('CTA', 'FB_SIGNUP', 'FAIL');
+          switch (err.status) {
+            case 401:
+              this.errors.push('credentials');
+              break;
+            default:
+              this.errors.push('error');
+              break;
+          }
         }
-      );
+    );
 
     this.loginAttempt.emit(false);
   }

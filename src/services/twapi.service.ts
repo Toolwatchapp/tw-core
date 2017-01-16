@@ -273,6 +273,50 @@ export class TwAPIService {
 	}
 
 	/**
+	 * Registers a new facebook user
+	 * @param  {string}        email   
+	 * @param  {string}        token
+	 * @param  {string}        name    
+	 * @param  {string}        lastname
+	 * @return {Promise<User>}     
+	 */
+	signupFacebook(email: string, token: string, name?: string, lastname?: string): Promise<User>{
+		return this.http.post(
+			TwAPIService.baseUrl + "users/facebook",
+			JSON.stringify({
+				email: email, 
+				token: token,
+				name: name,
+				lastname: lastname
+			}),
+			TwAPIService.options
+		)
+		.map((res) => { return ModelFactory.buildUser(res.json()); })
+		.toPromise().then(
+			res => {
+                GAService.event('API', 'SIGNUP');
+                return res;
+            }
+		);
+	}
+
+	/**
+	 * Ask a reset password link
+	 * @return {Promise<boolean>}
+	 */
+	resetPassword():Promise<boolean>{
+		return this.http.post(
+			TwAPIService.baseUrl + "users/reset",
+			TwAPIService.options
+		).toPromise().then(
+			response => {
+                GAService.event('API', 'RESET_PASSWORD');
+                return true;
+            }
+		).catch(this.handleError);
+	}
+
+	/**
 	 * Deletes the account currently logged in.
 	 * @return {Promise<boolean>}
 	 */

@@ -32,8 +32,8 @@ export class SignupComponent implements OnInit {
    * @param {TwAPIService}     private twapi     [description]
    * @param {FormBuilder}      private builder   [description]
    */
-  constructor(private translate: TranslateService, 
-    private twapi: TwAPIService, private formBuilder: FormBuilder) { 
+  constructor(private translate: any, 
+    private twapi: TwAPIService, private formBuilder: any) { 
 
     translate.setDefaultLang('en');
     translate.use('en');

@@ -30,9 +30,9 @@ export class LoginComponent implements OnInit {
    * @param {FormBuilder}      private builder   [description]
    */
   constructor(
-    protected translate: TranslateService, 
+    protected translate: any, 
     protected twapi  : TwAPIService, 
-    private formBuilder  : FormBuilder
+    private formBuilder  : any
   ) { 
 
     //Lang definition

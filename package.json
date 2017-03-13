@@ -1,6 +1,6 @@
 {
   "name": "tw-core",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "license": "MIT",
   "main": "bundles/tw-core.umd.js",
   "module": "index.js",
@@ -38,15 +38,15 @@
   "devDependencies": {
     "@angular/compiler": "2.4.8",
     "@angular/compiler-cli": "2.4.8",
-    "@types/core-js": "^0.9.35",
-    "@types/jasmine": "^2.5.35",
-    "@types/node": "^6.0.45",
+    "@types/core-js": "0.9.35",
+    "@types/jasmine": "2.5.35",
+    "@types/node": "6.0.45",
     "awesome-typescript-loader": "3.0.0-beta.17",
     "commitizen": "2.9.2",
     "cz-conventional-changelog": "1.2.0",
+    "semantic-release": "6.3.2",
     "typescript": "2.0.9",
-    "webpack": "2.1.0-beta.27",
-    "semantic-release": "6.3.2"
+    "webpack": "^2.2.1"
   },
   "config": {
     "commitizen": {

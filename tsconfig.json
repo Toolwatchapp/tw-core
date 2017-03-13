@@ -9,9 +9,11 @@
     "noImplicitAny": false,
     "sourceMap": true,
     "target": "es5",
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+         // typeRoots option has been previously configured
+         "typeRoots": [
+            // add path to @types
+            "node_modules/@types"
+         ]
   },
   "files" : [
     "index.ts",

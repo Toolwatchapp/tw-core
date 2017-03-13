@@ -144,7 +144,7 @@ module.exports = function(yargs) {
 			"cache": {
 				type: "boolean",
 				describe: "Enable in memory caching",
-				default: true,
+				default: null,
 				group: ADVANCED_GROUP,
 				defaultDescription: "It's enabled by default when watching"
 			},
@@ -167,7 +167,7 @@ module.exports = function(yargs) {
 			},
 			"watch-poll": {
 				type: "boolean",
-				describe: "The polling intervall for watching (also enable polling)",
+				describe: "The polling interval for watching (also enable polling)",
 				group: ADVANCED_GROUP
 			},
 			"hot": {

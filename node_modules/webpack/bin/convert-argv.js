@@ -1,9 +1,7 @@
 var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
-var resolve = require("enhanced-resolve");
 var interpret = require("interpret");
-var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
 module.exports = function(yargs, argv, convertOptions) {
 
@@ -25,7 +23,7 @@ module.exports = function(yargs, argv, convertOptions) {
 	var configFileLoaded = false;
 	var configFiles = [];
 	var extensions = Object.keys(interpret.extensions).sort(function(a, b) {
-		return a === '.js' ? -1 : b === '.js' ? 1 : a.length - b.length;
+		return a === ".js" ? -1 : b === ".js" ? 1 : a.length - b.length;
 	});
 	var defaultConfigFiles = ["webpack.config", "webpackfile"].map(function(filename) {
 		return extensions.map(function(ext) {
@@ -48,7 +46,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				}
 			}
 			return path.extname(configPath);
-		}
+		};
 
 		var mapConfigArg = function mapConfigArg(configArg) {
 			var resolvedPath = path.resolve(configArg);
@@ -57,7 +55,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				path: resolvedPath,
 				ext: extension
 			};
-		}
+		};
 
 		var configArgList = Array.isArray(argv.config) ? argv.config : [argv.config];
 		configFiles = configArgList.map(mapConfigArg);
@@ -92,7 +90,7 @@ module.exports = function(yargs, argv, convertOptions) {
 					}
 				}
 			}
-		}
+		};
 
 		var requireConfig = function requireConfig(configPath) {
 			var options = require(configPath);
@@ -104,7 +102,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				options = options(argv.env, argv);
 			}
 			return options;
-		}
+		};
 
 		configFiles.forEach(function(file) {
 			registerCompiler(interpret.extensions[file.ext]);
@@ -188,7 +186,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				if(finalize) {
 					finalize();
 				}
-			} else if(typeof argv[name] !== "undefined") {
+			} else if(typeof argv[name] !== "undefined" && argv[name] !== null) {
 				if(init) {
 					init();
 				}
@@ -219,28 +217,17 @@ module.exports = function(yargs, argv, convertOptions) {
 		}
 
 		function mapArgToBoolean(name, optionName) {
-			ifBooleanArg(name, function() {
-				options[optionName || name] = true;
-			});
-		}
-
-		function mapArgToBooleanInverse(name, optionName) {
 			ifArg(name, function(bool) {
-				if(!bool) {
+				if(bool === true)
+					options[optionName || name] = true;
+				else if(bool === false)
 					options[optionName || name] = false;
-				}
-			});
-		}
-
-		function mapArgToPath(name, optionName) {
-			ifArg(name, function(str) {
-				options[optionName || name] = path.resolve(str);
 			});
 		}
 
 		function loadPlugin(name) {
 			var loadUtils = require("loader-utils");
-			var args = null;
+			var args;
 			try {
 				var p = name && name.indexOf("?");
 				if(p > -1) {
@@ -254,6 +241,7 @@ module.exports = function(yargs, argv, convertOptions) {
 
 			var path;
 			try {
+				var resolve = require("enhanced-resolve");
 				path = resolve.sync(process.cwd(), name);
 			} catch(e) {
 				console.log("Cannot resolve plugin " + name + ".");
@@ -296,6 +284,7 @@ module.exports = function(yargs, argv, convertOptions) {
 			ifArgPair(arg, function(name, binding) {
 				if(name === null) {
 					name = binding;
+					binding += "-loader";
 				}
 				options.module[collection].push({
 					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
@@ -387,7 +376,7 @@ module.exports = function(yargs, argv, convertOptions) {
 			options.target = value;
 		});
 
-		mapArgToBooleanInverse("cache");
+		mapArgToBoolean("cache");
 
 		ifBooleanArg("hot", function() {
 			ensureArray(options, "plugins");
@@ -477,12 +466,6 @@ module.exports = function(yargs, argv, convertOptions) {
 			options.plugins.push(new ProvidePlugin(name, value));
 		});
 
-		ifBooleanArg("labeled-modules", function() {
-			ensureArray(options, "plugins");
-			var LabeledModulesPlugin = require("../lib/dependencies/LabeledModulesPlugin");
-			options.plugins.push(new LabeledModulesPlugin());
-		});
-
 		ifArg("plugin", function(value) {
 			ensureArray(options, "plugins");
 			options.plugins.push(loadPlugin(value));
@@ -528,7 +511,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				} else {
 					options.entry[name] = entry;
 				}
-			}
+			};
 			argv._.forEach(function(content) {
 				var i = content.indexOf("=");
 				var j = content.indexOf("?");

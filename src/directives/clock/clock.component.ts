@@ -16,9 +16,9 @@ export class ClockComponent implements OnInit {
 
 	this.nextLeap = this.date.getFullYear();
 
-	while(!this.isLeapYear(this.nextLeap)){
-		this.nextLeap++;
-	}
+		while(!this.isLeapYear(this.nextLeap)){
+			this.nextLeap++;
+		}
   }
 
   isLeapYear(year:number){

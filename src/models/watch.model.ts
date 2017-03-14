@@ -25,7 +25,9 @@ export class Watch{
 			return a.id - b.id;
 		});
 		this.name = name;
-		this.yearOfBuy = yearOfBuy;
+		if(yearOfBuy != 0){
+			this.yearOfBuy = yearOfBuy;
+		}
 		this.serial = serial;
 		this.caliber = caliber;
 		this.initials = (this.brand != null && this.brand.length > 0) ? this.brand.charAt(0) : "";

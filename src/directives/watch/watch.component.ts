@@ -24,12 +24,15 @@ export class WatchComponent implements OnInit {
   watchForm        : FormGroup;
   brands           : { name: string, icon: string, models: string }[] = [];
   models           : string[] = [];
+  calibers         : string[] = [];
   filteredBrandList: { name: string, icon: string, models: string }[] = [];
   filteredModelList: string[] = [];
+  filteredCaliberList : string[] = [];
   error            : boolean = false;
   submitAttempt    : boolean = false;
   brandSelected    : boolean = false;
   modelSelected    : boolean = false;
+  caliberSelected  : boolean = false;
 
   /**
    * Constructor with DI
@@ -76,6 +79,11 @@ export class WatchComponent implements OnInit {
       res   => this.models = res,
       error => this.models = []
     );
+    
+    this.twapi.getCalibers(brand.toLowerCase()).then(
+      res   => this.calibers = res,
+      error => this.calibers = []
+    );
 
     this.filteredBrandList = [];
     this.watchModel.brand = brand;
@@ -89,6 +97,16 @@ export class WatchComponent implements OnInit {
     this.modelSelected = true;
     this.filteredModelList = [];
     this.watchModel.name = model;
+  }
+
+  /**
+   * Select a caliber
+   * @param {string} caliber [description]
+   */
+  selectCaliber(caliber: string) {
+    this.caliberSelected = true;
+    this.filteredCaliberList = [];
+    this.watchModel.caliber = caliber;
   }
 
   /**
@@ -123,6 +141,21 @@ export class WatchComponent implements OnInit {
       setTimeout(()=> this.modelSelected = false, 5);
     }
     
+  }
+
+  /**
+   * Filters out calibers according to the current input
+   * @param caliber 
+   */
+  filterCaliber(caliber:string){
+    
+    if(this.caliberSelected == false){
+      this.filteredCaliberList = this.calibers.filter(function(element:string) {
+        return element.toLowerCase().indexOf(caliber.toLowerCase()) > -1;
+      });
+    }else{
+      setTimeout(()=> this.caliberSelected = false, 5);
+    }
   }
 
   ngOnInit() {

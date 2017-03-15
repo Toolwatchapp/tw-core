@@ -532,6 +532,27 @@ export class TwAPIService {
 	}
 
 	/**
+	 * Returns model of a given brand
+	 * @param  {string}  brand
+	 * @return {Promise}      
+	 */
+	getCalibers(brand:string): Promise<[string]> {
+
+		brand = StringHelper.replaceAll(brand, " ", "");
+		brand = StringHelper.replaceAll(brand, "&", "");
+		
+		return this.http.get(
+			TwAPIService.assetsUrl + '/watch-calibers/' + brand + ".json")
+			.map(res => res.json())
+			.toPromise().then(
+			calibers => {
+                GAService.event('API', 'CALIBERS', 'GET');
+                return calibers
+            }
+		);
+	}
+
+	/**
 	 * Gets the previously computed offset
 	 * @return {number} [description]
 	 */

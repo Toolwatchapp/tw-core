@@ -716,17 +716,26 @@ export class TwAPIService {
 			TwAPIService.baseUrl + "watches",
 			JSON.stringify({
 				brand: watch.brand,
-				name:watch.name,
-				yearOfBuy:watch.yearOfBuy,
+				name: watch.name,
+				yearOfBuy: watch.yearOfBuy,
 				serial: watch.serial,
-				caliber:watch.caliber
+				caliber: watch.caliber
 			}),
 			TwAPIService.options
-		).toPromise().then(
+		)
+		.map((res) => { 
+			return ModelFactory.buildWatch(
+				res.json().id,
+				watch.brand,
+				watch.name,
+				watch.yearOfBuy,
+				watch.serial,
+				watch.caliber
+			); 
+		})
+		.toPromise().then(
 			response => {
-				watch.id = response.json().id;
-                GAService.event('API', 'WATCH', 'PUT');
-				return watch;
+				return response;
 			}
 		);
 	}

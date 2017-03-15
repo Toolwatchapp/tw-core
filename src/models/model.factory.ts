@@ -73,4 +73,17 @@ export class ModelFactory {
 			);
 		});
 	}
+
+	static buildWatch(
+
+		id: number,
+		brand: string,
+		name: string,
+		yearOfBuy: number,
+		serial: string,
+		caliber: string
+
+	): Watch{
+		return new Watch(id, brand, 0, [], name, yearOfBuy, serial, caliber);
+	}
 }

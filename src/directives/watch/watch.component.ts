@@ -73,20 +73,20 @@ export class WatchComponent implements OnInit {
    * [selectBrand description]
    * @param {string} brand [description]
    */
-  selectBrand(brand: string){
+  selectBrand(brand: { name: string, icon: string, models:string}){
     this.brandSelected = true;
-    this.twapi.getModels(brand.toLowerCase()).then(
+    this.twapi.getModels(brand.models.toLowerCase()).then(
       res   => this.models = res,
       error => this.models = []
     );
     
-    this.twapi.getCalibers(brand.toLowerCase()).then(
+    this.twapi.getCalibers(brand.models.toLowerCase()).then(
       res   => this.calibers = res,
       error => this.calibers = []
     );
 
     this.filteredBrandList = [];
-    this.watchModel.brand = brand;
+    this.watchModel.brand = brand.name;
   }
 
   /**

@@ -11,9 +11,6 @@ log.txt
 .vscode/
 npm-debug.log*
 
-*.js
-*.js.map
-*.metadata.*		
 .idea/
 .sass-cache/
 .tmp/

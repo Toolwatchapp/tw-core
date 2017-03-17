@@ -3,7 +3,7 @@
   "version": "2.1.2",
   "license": "MIT",
   "main": "bundles/tw-core.umd.js",
-  "module": "index.js",
+  "module": "bundles/index.js",
   "typings": "index.d.ts",
   "scripts": {
     "test": "karma start",

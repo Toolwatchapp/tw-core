@@ -80,6 +80,10 @@ export var TwAPIService = (function () {
             .map(function (res) { return ModelFactory.buildUser(res.json()); })
             .toPromise().then(function (res) {
             GAService.event('API', 'SIGNUP');
+            TwAPIService.apikey = res.key;
+            TwAPIService.headers.delete('X-API-KEY');
+            TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
+            TwAPIService.user = res;
             return res;
         });
     };

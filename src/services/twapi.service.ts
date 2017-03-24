@@ -267,6 +267,10 @@ export class TwAPIService {
 		.toPromise().then(
 			res => {
                 GAService.event('API', 'SIGNUP');
+                TwAPIService.apikey = res.key;
+				TwAPIService.headers.delete('X-API-KEY');
+				TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
+				TwAPIService.user = res;
                 return res;
             }
 		);

@@ -1,6 +1,6 @@
 {
   "name": "tw-core",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "license": "MIT",
   "main": "bundles/tw-core.umd.js",
   "module": "bundles/index.js",

@@ -502,6 +502,10 @@ var TwAPIService = (function () {
             .map(function (res) { return __WEBPACK_IMPORTED_MODULE_3__models_model_factory__["a" /* ModelFactory */].buildUser(res.json()); })
             .toPromise().then(function (res) {
             __WEBPACK_IMPORTED_MODULE_4__ga_service__["a" /* GAService */].event('API', 'SIGNUP');
+            TwAPIService.apikey = res.key;
+            TwAPIService.headers.delete('X-API-KEY');
+            TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
+            TwAPIService.user = res;
             return res;
         });
     };

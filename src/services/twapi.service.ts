@@ -166,7 +166,7 @@ export class TwAPIService {
 	private static optionsGet: RequestOptions = new RequestOptions({ headers: TwAPIService.headers, body:"" });
 	
 	public static baseUrl:string = "https://toolwatch.io/api/";
-	public static assetsUrl = "app/assets"
+	public static assetsUrl = "assets"
 	private static apikey:string;
 
 	/**
@@ -267,6 +267,10 @@ export class TwAPIService {
 		.toPromise().then(
 			res => {
                 GAService.event('API', 'SIGNUP');
+                TwAPIService.apikey = res.key;
+				TwAPIService.headers.delete('X-API-KEY');
+				TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
+				TwAPIService.user = res;
                 return res;
             }
 		);
@@ -295,6 +299,10 @@ export class TwAPIService {
 		.toPromise().then(
 			res => {
                 GAService.event('API', 'SIGNUP');
+                TwAPIService.apikey = res.key;
+				TwAPIService.headers.delete('X-API-KEY');
+				TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
+				TwAPIService.user = res;
                 return res;
             }
 		);
@@ -500,7 +508,7 @@ export class TwAPIService {
 	 */
 	getBrands(): Promise<[{ name: string, icon: string, models:string}]> {
 		return this.http.get(
-			TwAPIService.assetsUrl + '/watch-brand.json')
+			TwAPIService.assetsUrl + '/watches/watch-brand.json')
 		.map(res => res.json())
 		.toPromise().then(
 			brands => {
@@ -521,7 +529,7 @@ export class TwAPIService {
 		brand = StringHelper.replaceAll(brand, "&", "");
 		
 		return this.http.get(
-			TwAPIService.assetsUrl + '/watch-models/' + brand + ".json")
+			TwAPIService.assetsUrl + '/watches/watch-models/' + brand + ".json")
 			.map(res => res.json())
 			.toPromise().then(
 			models => {
@@ -542,7 +550,7 @@ export class TwAPIService {
 		brand = StringHelper.replaceAll(brand, "&", "");
 		
 		return this.http.get(
-			TwAPIService.assetsUrl + '/watch-calibers/' + brand + ".json")
+			TwAPIService.assetsUrl + '/watches/watch-calibers/' + brand + ".json")
 			.map(res => res.json())
 			.toPromise().then(
 			calibers => {

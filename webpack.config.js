@@ -13,7 +13,7 @@ const DefinePlugin = require('webpack/lib/DefinePlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 
 module.exports = {
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
 
     resolve: {
         extensions: ['.ts', '.js']
@@ -26,7 +26,8 @@ module.exports = {
         publicPath: '/',
         filename: 'tw-core.umd.js',
         libraryTarget: 'umd',
-        library: 'tw-core'
+        library: 'tw-core',
+        sourceMapFilename: 'index.js.map'
     },
 
     // require those dependencies but don't bundle them

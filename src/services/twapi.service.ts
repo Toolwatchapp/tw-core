@@ -572,7 +572,9 @@ export class TwAPIService {
 		let now = require("performance-now");
 
 		//If we aren't already sync'ed
-		if(TwAPIService.time === undefined){
+		//or sync is older than 2 minutes
+		if(TwAPIService.time === undefined || 
+			now() - TwAPIService.time.syncAnchor > 2*60*1000){
 			//Stores each Promise in array
 			let promises:Promise<number>[] = [];
 			for (var i = 0; i < precison; ++i) {

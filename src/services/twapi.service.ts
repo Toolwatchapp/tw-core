@@ -566,11 +566,10 @@ export class TwAPIService {
 	 * @param  {number = 0} precison How many calls we want to aveage
 	 * @return {Promise<Date>} 
 	 */
-	accurateTime(statusCallback?:()=>void, 
-		precison:number = 10): Promise<Date>{
+	accurateTime(statusCallback?:()=>void, precison:number = 10): Promise<Date>{
 
         GAService.event('API', 'TIME', 'GET');
-
+		let now = require("performance-now");
 
 		//If we aren't already sync'ed
 		if(TwAPIService.time === undefined){
@@ -592,19 +591,20 @@ export class TwAPIService {
 			return Promise.all(promises).then((results:any[]) => {
 				results.sort(function(a: any, b: any) { return a - b; });
 
-				let half: number = Math.floor(results.length / 2);
-				let medianOffset;
+				//Remove the outliers. 10% best & 10% worst
+				results = results.slice(
+					Math.round(results.length*0.1), 
+					results.length - 1 - Math.round(results.length*0.1)
+				);
 
-				if (results.length % 2) {
-					medianOffset = results[half];
-				} else {
-					medianOffset = (results[half - 1] + results[half]) / 2.0;
-				}
+				//Compute average
+				let sum = results = results.reduce((previous, current) => current += previous);
+				let averageOffset = sum / results.length;
 
 				TwAPIService.time = {
-					syncDate: new Date(Date.now() - medianOffset),
-					syncAnchor: window.performance.now(),
-					offset:medianOffset
+					syncDate: new Date(Date.now() - averageOffset),
+					syncAnchor: now(),
+					offset:averageOffset
 				};
 
 				return TwAPIService.time.syncDate;
@@ -614,14 +614,13 @@ export class TwAPIService {
 
 			TwAPIService.time.syncDate = new Date(
 				TwAPIService.time.syncDate.getTime() +
-				window.performance.now() - TwAPIService.time.syncAnchor
+				now() - TwAPIService.time.syncAnchor
 			);
 			
-			TwAPIService.time.syncAnchor = window.performance.now();
+			TwAPIService.time.syncAnchor = now();
 
 			return new Promise<Date>(
 				(resolve, reject) => { 
-					console.log(TwAPIService.time);
 					resolve(TwAPIService.time.syncDate); 
 				}
 			);

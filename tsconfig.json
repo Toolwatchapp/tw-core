@@ -1,22 +1,21 @@
 {
-"compilerOptions": {
-    "declaration": false,
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "module": "es2015",
+    "target": "es5",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "module": "es2015",
+    "declaration": true,
     "moduleResolution": "node",
-    "noEmitOnError": true,
-    "noImplicitAny": false,
-    "sourceMap": true,
-    "target": "es5",
-         // typeRoots option has been previously configured
-         "typeRoots": [
-            // add path to @types
-            "node_modules/@types"
-         ]
+    "noUnusedLocals": true,
+    "types": [
+      "hammerjs",
+      "jasmine",
+      "node"
+    ],
+    "lib": ["es2015", "dom"]
   },
   "files" : [
-    "index.ts",
     "tw-core.ts",
     "./src/services/twapi.service.ts",
     "./src/services/ga.service.ts",

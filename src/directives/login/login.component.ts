@@ -1,8 +1,8 @@
 import { Component, Output, OnInit, EventEmitter } from '@angular/core';
-import {TranslateService} from 'ng2-translate/ng2-translate';
-import {TwAPIService} from './../../services/twapi.service'
+import { TranslateService } from '@ngx-translate/core';
+import { TwAPIService } from './../../services/twapi.service';
 import { GlobalValidator } from './../global-validator';
-import { GAService } from './../../services/ga.service';
+import { AnalyticsService } from './../../services/analytics.service';
 
 import {   
   Validators,  
@@ -14,14 +14,14 @@ import {
  * Login component. Provides a login form with controlled and
  * emits a User ($event userLogged) on successful login.
  */
+@Component({})
 export class LoginComponent implements OnInit {
 
-  loginForm              : FormGroup;
-  errors                 = [];
-  submitAttempt:false;
-  userLogged   = new EventEmitter();
-  loginAttempt = new EventEmitter();
-
+  loginForm: FormGroup;
+  errors: string[] = [];
+  submitAttempt: false;
+  @Output() userLogged = new EventEmitter();
+  @Output() loginAttempt = new EventEmitter();
 
   /**
    * Constructor w/ service injection
@@ -30,19 +30,19 @@ export class LoginComponent implements OnInit {
    * @param {FormBuilder}      private builder   [description]
    */
   constructor(
-    protected translate: any, 
-    protected twapi  : TwAPIService, 
-    private formBuilder  : any
+    protected translate: TranslateService, 
+    protected twapi: TwAPIService, 
+    private formBuilder: FormBuilder
   ) { 
 
     //Lang definition
-	  this.translate.setDefaultLang('en');
-	  this.translate.use('en');
+      this.translate.setDefaultLang('en');
+      this.translate.use('en');
 
-    this.loginForm = this.formBuilder.group({
-      email   : ["", Validators.compose([Validators.required, GlobalValidator.mailFormat])],
-      password: ["", Validators.compose([Validators.required, Validators.minLength(5)])]
-    });
+      this.loginForm = this.formBuilder.group({
+        email   : ["", Validators.compose([Validators.required, GlobalValidator.mailFormat])],
+        password: ["", Validators.compose([Validators.required, Validators.minLength(5)])]
+      });
 
   }
 
@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
     token: string,
     lastname: string, 
     firstname: string}
-  ){
+  ) {
 
     this.errors = [];
 
@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
         //success, away we go
         res => { 
           this.userLogged.emit(res);
-          GAService.event('CTA', 'FB_LOGIN', 'SUCCESS');
+          AnalyticsService.event('CTA', 'FB_LOGIN', 'SUCCESS');
         }, 
         err => {
 
@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit {
           //using facebook while he has a regular 
           //account with the same email.
           this.loginAttempt.emit(false);
-          GAService.event('CTA', 'FB_SIGNUP', 'FAIL');
+          AnalyticsService.event('CTA', 'FB_SIGNUP', 'FAIL');
           switch (err.status) {
             case 401:
               this.errors.push('credentials');
@@ -93,22 +93,22 @@ export class LoginComponent implements OnInit {
    * Form submit
    * @param {string}} user [description]
    */
-  onSubmit(user:{email:string, password:string}){
+  onSubmit(user:{email:string, password:string}) {
 
     this.errors = [];
     
     //Form constraints are ok
-    if(this.loginForm.valid){
+    if(this.loginForm.valid) {
 
       this.loginAttempt.emit(true);
 
       this.twapi.login(user.email, user.password).then(
         res => { 
           this.userLogged.emit(res);
-          GAService.event('CTA', 'LOGIN', 'SUCCESS');
+          AnalyticsService.event('CTA', 'LOGIN', 'SUCCESS');
         }, 
         err => {
-          GAService.event('CTA', 'LOGIN', 'FAIL');
+          AnalyticsService.event('CTA', 'LOGIN', 'FAIL');
           switch (err.status) {
             case 401:
               this.errors.push('credentials');
@@ -124,7 +124,11 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onPasswordResetSubmit(email:string){
+  /**
+   * send a password reset request
+   * @param email 
+   */
+  onPasswordResetSubmit(email:string) {
     this.twapi.resetPassword(email);
   }
 

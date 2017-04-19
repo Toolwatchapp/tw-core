@@ -1,5 +1,5 @@
 
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { ArethmeticSign } from './src/pipes/arethmetic-sign.pipe';
@@ -7,15 +7,13 @@ import { LeadingZero } from './src/pipes/leading-zero.pipe';
 import { KFormatter } from './src/pipes/k-formatter.pipe';
 import { MoonPhasesComponent } from './src/directives/clock/moon-phases/moon-phases.component';
 import { TwAPIService } from './src/services/twapi.service';
-import { GAService } from './src/services/ga.service';
-import { TranslateModule, TranslateLoader } from 'ng2-translate/ng2-translate';
-
+import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule }   from '@angular/forms';
 
 /**
  * SERVICES
  */
 export * from './src/services/twapi.service'
-export * from './src/services/ga.service'
 /**
  * PIPES
  */
@@ -49,20 +47,18 @@ export * from './src/directives/watch/watch.component'
   ],
   providers: [
     TwAPIService,
-    GAService
   ],
   exports: [
     ArethmeticSign,
     LeadingZero,
     KFormatter,
-    MoonPhasesComponent
+    MoonPhasesComponent,
+    TranslateModule
   ],
   imports: [
     BrowserModule,
-    HttpModule
-  ],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
+    HttpModule,
+    FormsModule 
   ]
 })
 export class TwCoreModule {

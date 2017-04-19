@@ -6,9 +6,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ArethmeticSign implements PipeTransform {
 
   transform(value: number): string {
-    if(value >= 0){
+    if(value >= 0) {
         return "+" + value;
-    }else{
+    } else {
         return value.toString();
     }
   }

@@ -1,8 +1,8 @@
 import { Component, Output, OnInit, EventEmitter } from '@angular/core';
-import {TranslateService} from 'ng2-translate/ng2-translate';
-import {TwAPIService} from './../../services/twapi.service'
+import { TranslateService } from '@ngx-translate/core';
+import { TwAPIService } from './../../services/twapi.service';
 import { GlobalValidator } from './../global-validator';
-import { GAService } from './../../services/ga.service';
+import { AnalyticsService } from './../../services/analytics.service';
 
 import {   
   Validators,
@@ -10,18 +10,18 @@ import {
   FormGroup
 } from '@angular/forms';
 
-
 /**
  * Signup form. Emits a userLogged event on new user signup
  */
+@Component({})
 export class SignupComponent implements OnInit {
 
-  signupForm   : FormGroup;
-  submitAttempt:boolean = false;
-  errors       = [];
-  countries    :[string];
-  filteredList = [];
-  query        : string = "";
+  signupForm: FormGroup;
+  submitAttempt: boolean  = false;
+  errors: string[] = [];
+  countries: string[] = [];
+  filteredList: string[] = [];
+  query: string   = "";
 
   @Output() userLogged = new EventEmitter();
   @Output() signupAttempt = new EventEmitter();
@@ -32,8 +32,11 @@ export class SignupComponent implements OnInit {
    * @param {TwAPIService}     private twapi     [description]
    * @param {FormBuilder}      private builder   [description]
    */
-  constructor(private translate: any, 
-    private twapi: TwAPIService, private formBuilder: any) { 
+  constructor(
+    protected translate: TranslateService, 
+    private   twapi: TwAPIService, 
+    private   formBuilder: FormBuilder  
+  ) { 
 
     translate.setDefaultLang('en');
     translate.use('en');
@@ -76,7 +79,7 @@ export class SignupComponent implements OnInit {
    * from the list
    * @param {string} item [description]
    */
-  select(item:string){
+  select(item:string) {
     this.query = item;
     this.filteredList = [];
   }
@@ -99,8 +102,8 @@ export class SignupComponent implements OnInit {
 
 
     if(this.signupForm.valid && 
-      user.password == user.passwordRepeat &&
-      user.email == user.emailRepeat){
+      user.password === user.passwordRepeat &&
+      user.email === user.emailRepeat) {
 
       this.signupAttempt.emit(true);
 
@@ -110,11 +113,11 @@ export class SignupComponent implements OnInit {
        user.lastName,
        this.query).then(
         res => { 
-          GAService.event('CTA', 'SIGNUP', 'SUCCESS');
-          this.userLogged.emit(res) 
+          AnalyticsService.event('CTA', 'SIGNUP', 'SUCCESS');
+          this.userLogged.emit(res); 
         },
         error => {
-          GAService.event('CTA', 'SIGNUP', 'FAIL');
+          AnalyticsService.event('CTA', 'SIGNUP', 'FAIL');
           switch (error.status) {
             case TwAPIService.HTTP_UNAUTHORIZED:
               this.errors.push('email-taken');
@@ -124,16 +127,16 @@ export class SignupComponent implements OnInit {
               break;
           }
         }
-       )
+       );
 
       this.signupAttempt.emit(false);
-    } else{
+    } else {
 
-      if(user.password != user.passwordRepeat){
+      if(user.password !== user.passwordRepeat) {
         this.errors.push('password-match');
       }
 
-      if(user.email != user.emailRepeat){
+      if(user.email !== user.emailRepeat) {
         this.errors.push('email-match');
       }
     }

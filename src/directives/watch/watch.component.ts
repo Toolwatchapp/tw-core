@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -18,7 +18,7 @@ import {
 @Component({
   template: ''
 })
-export class WatchComponent implements OnInit {
+export class WatchComponent {
 
   user: User; 
   watchModel: Watch = new Watch(null, "");
@@ -39,9 +39,9 @@ export class WatchComponent implements OnInit {
   
   /**
    * Constructor with DI
-   * @param {TranslateService} private translate [description]
-   * @param {TwAPIService}     private twapi     [description]
-   * @param {FormBuilder}      private builder   [description]
+   * @param {TranslateService} private translate
+   * @param {TwAPIService}     private twapi    
+   * @param {FormBuilder}      private builder  
    */
   constructor(
     protected translate: TranslateService,
@@ -77,13 +77,11 @@ export class WatchComponent implements OnInit {
   selectBrand(brand: { name: string, icon: string, models:string}) {
     this.brandSelected = true;
     this.twapi.getModels(brand.models.toLowerCase()).then(
-      res   => this.models = res,
-      error => this.models = []
+      res   => this.models = res
     );
     
     this.twapi.getCalibers(brand.models.toLowerCase()).then(
-      res   => this.calibers = res,
-      error => this.calibers = []
+      res   => this.calibers = res
     );
 
     this.filteredBrandList = [];
@@ -157,9 +155,6 @@ export class WatchComponent implements OnInit {
     } else {
       setTimeout(()=> this.caliberSelected = false, 5);
     }
-  }
-
-  ngOnInit() {
   }
 
   /**

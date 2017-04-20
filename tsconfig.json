@@ -16,9 +16,9 @@
     "lib": ["es2015", "dom"]
   },
   "files" : [
-    "tw-core.ts",
+    "index.ts",
     "./src/services/twapi.service.ts",
-    "./src/services/ga.service.ts",
+    "./src/services/analytics.service.ts",
     "./src/pipes/arethmetic-sign.pipe.ts",
     "./src/pipes/leading-zero.pipe.ts",
     "./src/pipes/k-formatter.pipe.ts",

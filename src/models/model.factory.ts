@@ -1,7 +1,7 @@
-import { User, }  from './user.model';
-import { Watch }  from './watch.model';
-import { BlogPost }  from './blog-post.model';
-import { Measure }  from './measure.model';
+import { User, } from './user.model';
+import { Watch } from './watch.model';
+import { BlogPost } from './blog-post.model';
+import { Measure } from './measure.model';
 
 export class ModelFactory {
 
@@ -25,35 +25,49 @@ export class ModelFactory {
         );
     }
 
+    static buildWatchFromJSON(jsonWatch: any): Watch {
+        return new Watch(
+            jsonWatch.watchId,
+            jsonWatch.brand,
+            jsonWatch.historySize,
+            jsonWatch.measures.map(ModelFactory.buildMeasureFromJSON),
+            jsonWatch.name,
+            jsonWatch.yearOfBuy,
+            jsonWatch.serial,
+            jsonWatch.caliber
+        );
+    }
+
+    static buildMeasureFromJSON(jsonMeasure: any): Measure {
+        return new Measure(
+            jsonMeasure.id,
+            jsonMeasure.measureUserTime,
+            jsonMeasure.measureReferenceTime,
+            jsonMeasure.statusId,
+            jsonMeasure.accuracyUserTime,
+            jsonMeasure.accuracyReferenceTime,
+            jsonMeasure.accuracy,
+            jsonMeasure.accuracyAge,
+            jsonMeasure.percentile);
+    }
+
+    static buildBlogPostFromJSON(jsonPost: any): BlogPost {
+        return new BlogPost(
+            jsonPost.id,
+            jsonPost.title,
+            new Date(jsonPost.date),
+            jsonPost.excerpt,
+            jsonPost.url
+        );
+    }
+
     /**
      * Builds a watch from json response
      * @param  {any}     jsonWatches
      * @return {Watch[]}            
      */
     static buildWatches(jsonWatches: any): Watch[] {
-        return jsonWatches.map((jsonWatch:any) => {
-            return new Watch(
-                jsonWatch.watchId,
-                jsonWatch.brand,
-                jsonWatch.historySize,
-                jsonWatch.measures.map((jsonMeasure:any) => {
-                    return new Measure(
-                        jsonMeasure.id,
-                        jsonMeasure.measureUserTime,
-                        jsonMeasure.measureReferenceTime,
-                        jsonMeasure.statusId,
-                        jsonMeasure.accuracyUserTime,
-                        jsonMeasure.accuracyReferenceTime,
-                        jsonMeasure.accuracy,
-                        jsonMeasure.accuracyAge,
-                        jsonMeasure.percentile);
-                }),
-                jsonWatch.name,
-                jsonWatch.yearOfBuy,
-                jsonWatch.serial,
-                jsonWatch.caliber
-            );
-        });
+        return jsonWatches.map(ModelFactory.buildWatchFromJSON);
     }
 
     /**
@@ -62,16 +76,7 @@ export class ModelFactory {
      * @return {BlogPost[]}           [description]
      */
     static buildPosts(jsonPosts: any): BlogPost[] {
-        return jsonPosts.posts.map((jsonPost:any) => {
-
-            return new BlogPost(
-                jsonPost.id, 
-                jsonPost.title, 
-                new Date(jsonPost.date), 
-                jsonPost.excerpt,
-                jsonPost.url
-            );
-        });
+        return jsonPosts.posts.map(ModelFactory.buildBlogPostFromJSON);
     }
 
     static buildWatch(

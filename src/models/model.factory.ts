@@ -25,6 +25,10 @@ export class ModelFactory {
         );
     }
 
+    /**
+     * Build One Watch from JSON
+     * @param jsonWatch 
+     */
     static buildWatchFromJSON(jsonWatch: any): Watch {
         return new Watch(
             jsonWatch.watchId,
@@ -38,6 +42,10 @@ export class ModelFactory {
         );
     }
 
+    /**
+     * Build one measure from  JSON
+     * @param jsonMeasure 
+     */
     static buildMeasureFromJSON(jsonMeasure: any): Measure {
         return new Measure(
             jsonMeasure.id,
@@ -51,6 +59,10 @@ export class ModelFactory {
             jsonMeasure.percentile);
     }
 
+    /**
+     * Build a blog post from JSON
+     * @param jsonPost 
+     */
     static buildBlogPostFromJSON(jsonPost: any): BlogPost {
         return new BlogPost(
             jsonPost.id,
@@ -79,16 +91,4 @@ export class ModelFactory {
         return jsonPosts.posts.map(ModelFactory.buildBlogPostFromJSON);
     }
 
-    static buildWatch(
-
-        id: number,
-        brand: string,
-        name: string,
-        yearOfBuy: number,
-        serial: string,
-        caliber: string
-
-    ): Watch {
-        return new Watch(id, brand, 0, [], name, yearOfBuy, serial, caliber);
-    }
 }

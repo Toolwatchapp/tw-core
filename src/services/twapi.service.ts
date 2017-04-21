@@ -737,14 +737,9 @@ export class TwAPIService {
             TwAPIService.options
         )
         .map((res) => { 
-            return ModelFactory.buildWatch(
-                res.json().id,
-                watch.brand,
-                watch.name,
-                watch.yearOfBuy,
-                watch.serial,
-                watch.caliber
-            ); 
+
+            return new Watch(
+                    res.json().id, watch.brand, 0, [], watch.name, watch.yearOfBuy, watch.serial, watch.caliber); 
         })
         .toPromise().then(
             response => {

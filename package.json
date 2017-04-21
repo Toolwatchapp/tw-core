@@ -12,7 +12,8 @@
     "commit": "npm run prepublish && npm test && git-cz",
     "prepublish": "ngc && npm run build",
     "build": "webpack",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "coverage": "codecov -f coverage/*.json"
   },
   "repository": {
     "type": "git",

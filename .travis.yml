@@ -21,7 +21,7 @@ before_script:
   - npm prune
 
 after_success:
-   - npm run codecov -f coverage/*.json
+   - npm run coverage
 
 before_script:
   - export DISPLAY=:99.0

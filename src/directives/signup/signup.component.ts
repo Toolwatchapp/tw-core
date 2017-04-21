@@ -1,4 +1,4 @@
-import { Component, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TwAPIService } from './../../services/twapi.service';
 import { GlobalValidator } from './../global-validator';
@@ -13,8 +13,10 @@ import {
 /**
  * Signup form. Emits a userLogged event on new user signup
  */
-@Component({})
-export class SignupComponent implements OnInit {
+@Component({
+  template: ''
+})
+export class SignupComponent {
 
   signupForm: FormGroup;
   submitAttempt: boolean  = false;
@@ -86,7 +88,7 @@ export class SignupComponent implements OnInit {
 
   /**
    * submit the form
-   * @param {string    }} user [description]
+   * @param {string} user [description]
    */
   onSubmit(user:{
       email: string, 
@@ -141,8 +143,4 @@ export class SignupComponent implements OnInit {
       }
     }
   }
-
-  ngOnInit() {
-  }
-
 }

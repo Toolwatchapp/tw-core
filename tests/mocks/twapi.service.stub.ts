@@ -9,7 +9,7 @@ export class TwAPIServiceStub {
             { name: "Cartier", icon: "cartier.ico", models: "cartier.models" },
             { name: "Rolex", icon: "Rolex.ico", models: "Rolex.models" },
             { name: "JLC", icon: "JLC.ico", models: "JLC.models" }
-        ]
+        ];
 
         return new Promise(
             (resolve, reject) => {
@@ -23,7 +23,7 @@ export class TwAPIServiceStub {
             "A",
             "B",
             "C"
-        ]
+        ];
 
         return new Promise(
             (resolve, reject) => {
@@ -37,7 +37,7 @@ export class TwAPIServiceStub {
             "1",
             "2",
             "3"
-        ]
+        ];
 
         return new Promise(
             (resolve, reject) => {
@@ -52,9 +52,9 @@ export class TwAPIServiceStub {
             (resolve, reject) => {
 
                 if (watch === null) {
-                    reject()
+                    reject();
                 } else {
-                    if(watch.id === null || watch.id === undefined){
+                    if(watch.id === null || watch.id === undefined) {
                         watch.id = 1;
                     }
                     resolve(watch);
@@ -63,13 +63,13 @@ export class TwAPIServiceStub {
         );
     }
 
-    deleteWatch(user:User, watch:Watch){
+    deleteWatch(user:User, watch:Watch) {
 
         return new Promise(
             (resolve, reject) => {
 
                 if (user === null) {
-                    reject()
+                    reject();
                 } else {
                    
                     resolve(user);

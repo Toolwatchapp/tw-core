@@ -1,4 +1,4 @@
-import { Component, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TwAPIService } from './../../services/twapi.service';
 import { GlobalValidator } from './../global-validator';
@@ -14,8 +14,10 @@ import {
  * Login component. Provides a login form with controlled and
  * emits a User ($event userLogged) on successful login.
  */
-@Component({})
-export class LoginComponent implements OnInit {
+@Component({
+  template: ""
+})
+export class LoginComponent {
 
   loginForm: FormGroup;
   errors: string[] = [];
@@ -130,10 +132,6 @@ export class LoginComponent implements OnInit {
    */
   onPasswordResetSubmit(email:string) {
     this.twapi.resetPassword(email);
-  }
-
-  ngOnInit() {
-
   }
 
 }

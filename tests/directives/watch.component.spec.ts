@@ -1,16 +1,14 @@
 import { ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
-// import { By }              from '@angular/platform-browser';
-// import { DebugElement }    from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
-import { WatchComponent } from './../../../src/directives/watch/watch.component';
-import { TwAPIService } from './../../../src/services/twapi.service';
+import { WatchComponent } from './../../src/directives/watch/watch.component';
+import { TwAPIService } from './../../src/services/twapi.service';
 import { FormBuilder } from '@angular/forms';
 
-import { TranslateServiceStub } from './../../mocks/translate.service.stub';
-import { TwAPIServiceStub } from './../../mocks/twapi.service.stub';
+import { TranslateServiceStub } from './../mocks/translate.service.stub';
+import { TwAPIServiceStub } from './../mocks/twapi.service.stub';
 
-import { User } from './../../../src/models/user.model';
+import { User } from './../../src/models/user.model';
 
 
 
@@ -53,26 +51,26 @@ describe('WatchComponent (inline template)', () => {
       [{ name: "Cartier", icon: "cartier.ico", models: "cartier.models" }]
     );
 
-    comp.selectBrand({ name: "Cartier", icon: "cartier.ico", models: "cartier.models" })
+    comp.selectBrand({ name: "Cartier", icon: "cartier.ico", models: "cartier.models" });
 
     expect(comp.brandSelected).toEqual(true);
     expect(comp.filteredBrandList).toEqual([]);
     expect(comp.watchModel.brand).toEqual("Cartier");
 
     comp.models = ["A", "B", "C"];
-    comp.filterModel("A")
+    comp.filterModel("A");
     expect(comp.filteredModelList).toEqual(["A"]);
-    comp.selectModel("A")
+    comp.selectModel("A");
 
     expect(comp.modelSelected).toEqual(true);
     expect(comp.filteredModelList).toEqual([]);
     expect(comp.watchModel.name).toEqual("A");
 
-    comp.calibers = ["1", "2", "3"]
+    comp.calibers = ["1", "2", "3"];
 
-    comp.filterCaliber("1")
+    comp.filterCaliber("1");
     expect(comp.filteredCaliberList).toEqual(["1"]);
-    comp.selectCaliber("1")
+    comp.selectCaliber("1");
 
     expect(comp.caliberSelected).toEqual(true);
     expect(comp.filteredCaliberList).toEqual([]);

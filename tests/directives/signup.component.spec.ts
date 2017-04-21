@@ -72,8 +72,6 @@ describe('SignupComponent (inline template)', () => {
 
     it('should\'nt submit: form invalid', () => {
 
-
-
         comp.onSubmit(user);
         expect(comp.submitAttempt).toBeTruthy();
         expect(comp.signupForm.valid).toBeFalsy();
@@ -113,20 +111,6 @@ describe('SignupComponent (inline template)', () => {
         comp.onSubmit(user);
         expect(comp.submitAttempt).toBeTruthy();
         expect(comp.signupForm.valid).toBeFalsy();
-    });
-
-    it('should\'nt submit: password mismatch', () => {
-
-        user.password = "aaaaa";
-        user.passwordRepeat = "bbbbb";
-
-        comp.onSubmit(user);
-        expect(comp.submitAttempt).toBeTruthy();
-        expect(comp.signupForm.valid).toBeFalsy();
-        expect(comp.errors).toEqual(["password-match"]);
-
-        user.password = null;
-        user.passwordRepeat = null;
     });
 
     it('should\'nt submit: password mismatch', () => {

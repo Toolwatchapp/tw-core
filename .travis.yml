@@ -20,8 +20,8 @@ before_install:
 before_script:
   - npm prune
 
-# after_success:
-#   - npm run semantic-release
+after_success:
+   - npm run codecov -f coverage/*.json
 
 before_script:
   - export DISPLAY=:99.0

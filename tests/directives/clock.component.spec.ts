@@ -62,7 +62,6 @@ describe('ClockComponent (inline template)', () => {
         expect(seconds.nativeElement.style.cssText.toString().indexOf("rotateZ(72.006deg)")).toBeGreaterThan(-1);
 
 
-
     }));
 
 

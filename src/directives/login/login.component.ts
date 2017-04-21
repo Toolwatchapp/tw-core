@@ -75,16 +75,16 @@ export class LoginComponent {
           //Error, most likely the user tries to signin
           //using facebook while he has a regular 
           //account with the same email.
-          this.loginAttempt.emit(false);
           AnalyticsService.event('CTA', 'FB_SIGNUP', 'FAIL');
           switch (err.status) {
-            case 401:
+            case TwAPIService.HTTP_UNAUTHORIZED:
               this.errors.push('credentials');
               break;
             default:
               this.errors.push('error');
               break;
           }
+          this.loginAttempt.emit(false);
         }
     );
 

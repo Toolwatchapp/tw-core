@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/Toolwatchapp/tw-core.svg?branch=master)](https://travis-ci.org/Toolwatchapp/tw-core)
-
 [![codecov](https://codecov.io/gh/Toolwatchapp/tw-core/branch/master/graph/badge.svg)](https://codecov.io/gh/Toolwatchapp/tw-core)
-
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)  
 
 

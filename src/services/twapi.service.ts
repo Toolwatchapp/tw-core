@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Headers }  from '@angular/http';
+import { Http, RequestOptions, Headers } from '@angular/http';
 
 
-import { User }  from './../models/user.model';
-import { Watch, WatchAction }  from './../models/watch.model';
-import { Measure }  from './../models/measure.model';
-import { ModelFactory }  from './../models/model.factory';
+import { User } from './../models/user.model';
+import { Watch, WatchAction } from './../models/watch.model';
+import { Measure } from './../models/measure.model';
+import { ModelFactory } from './../models/model.factory';
 import { BlogPost } from './../models/blog-post.model';
 import { AnalyticsService } from './analytics.service';
 import { StringHelper } from './../helpers/string.helper';
@@ -151,22 +151,23 @@ export class TwAPIService {
     public static HTTP_NOT_EXTENDED = 510;                                                // RFC2774
     public static HTTP_NETWORK_AUTHENTICATION_REQUIRED = 511;
 
-    public static user:User = null;
-    private static time:{
-        syncDate:Date,
-        syncAnchor:number,
-        offset:number
-    } = null;
+    public static user: User = null;
+    private static time: {
+        syncDate: Date,
+        syncAnchor: number,
+        offset: number
+    } = undefined;
+    private static now = require("performance-now");
 
     //Defines headers and request options
     private static headers: Headers = new Headers({ 'Content-Type': 'application/json' });
     private static options: RequestOptions = new RequestOptions({ headers: TwAPIService.headers });
     // Regression RC5. Doesn't accept get without body
-    private static optionsGet: RequestOptions = new RequestOptions({ headers: TwAPIService.headers, body:"" });
-    
-    public static baseUrl:string = "https://toolwatch.io/api/";
+    private static optionsGet: RequestOptions = new RequestOptions({ headers: TwAPIService.headers, body: "" });
+
+    public static baseUrl: string = "https://toolwatch.io/api/";
     public static assetsUrl = "assets";
-    private static apikey:string = null;
+    private static apikey: string = null;
 
     /**
      * Inject http service
@@ -190,12 +191,12 @@ export class TwAPIService {
 
         let creds = { email: email, password: password };
         return this.http.put(
-            TwAPIService.baseUrl + "users", 
-            JSON.stringify(creds), 
+            TwAPIService.baseUrl + "users",
+            JSON.stringify(creds),
             TwAPIService.options
         )
-        .map((res) => { return ModelFactory.buildUser(res.json()); })
-        .toPromise().then(
+            .map((res) => { return ModelFactory.buildUser(res.json()); })
+            .toPromise().then(
             res => {
                 AnalyticsService.event('API', 'LOGIN');
                 TwAPIService.apikey = res.key;
@@ -205,8 +206,8 @@ export class TwAPIService {
                 return res;
             },
             err => this.handleError(err)
-        );
-    }  
+            );
+    }
 
 
     /**
@@ -214,20 +215,20 @@ export class TwAPIService {
      * @param  {string}        key [description]
      * @return {Promise<User>}     [description]
      */
-    getUser(key:string):Promise<User> {
+    getUser(key: string): Promise<User> {
 
-        
+
         TwAPIService.apikey = key;
         TwAPIService.headers.delete('X-API-KEY');
         TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
-        
+
 
         return this.http.get(
-            TwAPIService.baseUrl + "users", 
+            TwAPIService.baseUrl + "users",
             TwAPIService.options
         )
-        .map((res) => { return ModelFactory.buildUser(res.json()); })
-        .toPromise().then(
+            .map((res) => { return ModelFactory.buildUser(res.json()); })
+            .toPromise().then(
             res => {
 
                 AnalyticsService.event('API', 'AUTOLOGIN');
@@ -236,7 +237,7 @@ export class TwAPIService {
                 return res;
             },
             err => this.handleError(err)
-        );
+            );
 
     }
 
@@ -254,16 +255,16 @@ export class TwAPIService {
         return this.http.post(
             TwAPIService.baseUrl + "users",
             JSON.stringify({
-                email: email, 
+                email: email,
                 password: password,
                 name: name,
                 lastname: lastname,
-                country:country
+                country: country
             }),
             TwAPIService.options
         )
-        .map((res) => { return ModelFactory.buildUser(res.json()); })
-        .toPromise().then(
+            .map((res) => { return ModelFactory.buildUser(res.json()); })
+            .toPromise().then(
             res => {
                 AnalyticsService.event('API', 'SIGNUP');
                 TwAPIService.apikey = res.key;
@@ -272,7 +273,7 @@ export class TwAPIService {
                 TwAPIService.user = res;
                 return res;
             }
-        );
+            );
     }
 
     /**
@@ -287,15 +288,15 @@ export class TwAPIService {
         return this.http.post(
             TwAPIService.baseUrl + "users/facebook",
             JSON.stringify({
-                email: email, 
+                email: email,
                 token: token,
                 name: name,
                 lastname: lastname
             }),
             TwAPIService.options
         )
-        .map((res) => { return ModelFactory.buildUser(res.json()); })
-        .toPromise().then(
+            .map((res) => { return ModelFactory.buildUser(res.json()); })
+            .toPromise().then(
             res => {
                 AnalyticsService.event('API', 'SIGNUP');
                 TwAPIService.apikey = res.key;
@@ -304,14 +305,14 @@ export class TwAPIService {
                 TwAPIService.user = res;
                 return res;
             }
-        );
+            );
     }
 
     /**
      * Ask a reset password link
      * @return {Promise<boolean>}
      */
-    resetPassword(email:string):Promise<boolean> {
+    resetPassword(email: string): Promise<boolean> {
         return this.http.post(
             TwAPIService.baseUrl + "users/reset",
             JSON.stringify({
@@ -323,14 +324,14 @@ export class TwAPIService {
                 AnalyticsService.event('API', 'RESET_PASSWORD');
                 return true;
             }
-        ).catch(this.handleError);
+            ).catch(this.handleError);
     }
 
     /**
      * Deletes the account currently logged in.
      * @return {Promise<boolean>}
      */
-    deleteAccount():Promise<boolean> {
+    deleteAccount(): Promise<boolean> {
 
         return this.http.delete(
             TwAPIService.baseUrl + "users",
@@ -340,7 +341,7 @@ export class TwAPIService {
                 AnalyticsService.event('API', 'DELETE_ACCOUNT');
                 return true;
             }
-        ).catch(this.handleError);
+            ).catch(this.handleError);
     }
 
     /**
@@ -351,13 +352,13 @@ export class TwAPIService {
         return this.http.get(
             TwAPIService.baseUrl + "watches",
             TwAPIService.optionsGet)
-        .map((res) => { return ModelFactory.buildWatches(res.json()); })
-        .toPromise().then(
+            .map((res) => { return ModelFactory.buildWatches(res.json()); })
+            .toPromise().then(
             res => {
                 AnalyticsService.event('API', 'WATCHES', 'GET');
                 return res;
             }
-        );
+            );
     }
 
     /**
@@ -367,7 +368,7 @@ export class TwAPIService {
      */
     upsertWatch(watch: Watch): Promise<Watch> {
 
-        if(watch.id == null) {
+        if (watch.id == null) {
             return this.insertWatch(watch);
         } else {
             return this.updateWatch(watch);
@@ -380,7 +381,7 @@ export class TwAPIService {
      * @param  {Watch}         watch 
      * @return {Promise<User>}       
      */
-    deleteWatch(user:User, watch:Watch):Promise<User> {
+    deleteWatch(user: User, watch: Watch): Promise<User> {
         let deleteOptions = new RequestOptions({ headers: TwAPIService.headers });
         deleteOptions.body = JSON.stringify({ watchId: watch.id });
 
@@ -391,7 +392,7 @@ export class TwAPIService {
             response => {
 
                 user.watches = user.watches.filter(
-                    function(filter: Watch) {
+                    function (filter: Watch) {
                         return filter.id !== watch.id;
                     }
                 );
@@ -400,7 +401,7 @@ export class TwAPIService {
 
                 return user;
             }
-        );
+            );
     }
 
     /**
@@ -410,7 +411,7 @@ export class TwAPIService {
      * @return {Promise<Watch>}        
      */
     upsertMeasure(watch: Watch, measure: Measure): Promise<Watch> {
-        if(measure.id == null) {
+        if (measure.id == null) {
             return this.insertMeasure(watch, measure);
         } else {
             return this.updateMeasure(watch, measure);
@@ -426,7 +427,7 @@ export class TwAPIService {
     deleteMeasure(watch: Watch, measure: Measure): Promise<Watch> {
 
         let deleteOptions = new RequestOptions({ headers: TwAPIService.headers });
-        deleteOptions.body = JSON.stringify({measureId:measure.id});
+        deleteOptions.body = JSON.stringify({ measureId: measure.id });
 
         return this.http.delete(
             TwAPIService.baseUrl + "measures",
@@ -435,7 +436,7 @@ export class TwAPIService {
             response => {
 
                 watch.measures = watch.measures.filter(
-                    function(filter: Measure) {
+                    function (filter: Measure) {
                         return filter.id !== measure.id;
                     }
                 );
@@ -447,20 +448,20 @@ export class TwAPIService {
 
                 return watch;
             }
-        ).catch(this.handleError);
+            ).catch(this.handleError);
     }
 
     getBlogPosts(): Promise<BlogPost[]> {
         return this.http.get(
             "https://blog.toolwatch.io/?json=1"
         )
-        .map((res) => { return ModelFactory.buildPosts(res.json()); })
-        .toPromise().then(
+            .map((res) => { return ModelFactory.buildPosts(res.json()); })
+            .toPromise().then(
             res => {
                 AnalyticsService.event('API', 'BLOG', 'GET');
                 return res;
             }
-        );
+            );
     }
 
     /**
@@ -468,27 +469,27 @@ export class TwAPIService {
      * @param  {string}  brand [description]
      * @return {Promise}       [{brand:string, confidence:number}]
      */
-    getLikelyBrands(watch:Watch): Promise<{watch:Watch, proposals:[{brand:string, logo:string, confidence:number}]}> {
+    getLikelyBrands(watch: Watch): Promise<{ watch: Watch, proposals: [{ brand: string, logo: string, confidence: number }] }> {
 
         return this.http.get(
             TwAPIService.assetsUrl + '/watch-brand.json')
-        .map(res => res.json())
-        .toPromise().then(
+            .map(res => res.json())
+            .toPromise().then(
             brands => {
 
 
 
-                var likelyBrands = {watch: watch, proposals:[] as {brand:string, logo:string, confidence:number}[]};
+                var likelyBrands = { watch: watch, proposals: [] as { brand: string, logo: string, confidence: number }[] };
 
                 for (var i = brands.length - 1; i >= 0; i--) {
 
 
                     let levenshteinDistance = StringHelper.levenshtein(brands[i].name, watch.brand);
-                    let confidence = levenshteinDistance / Math.max(watch.brand.length, brands[i].name.length) *100;
-                    
+                    let confidence = levenshteinDistance / Math.max(watch.brand.length, brands[i].name.length) * 100;
+
                     likelyBrands.proposals.push(
                         {
-                            brand:brands[i].name,
+                            brand: brands[i].name,
                             logo: brands[i].icon,
                             confidence: 100 - confidence
                         }
@@ -496,14 +497,14 @@ export class TwAPIService {
                 }
 
                 likelyBrands.proposals = likelyBrands.proposals.sort(function (
-                    a:{brand:string, confidence:number}, 
-                    b:{brand:string, confidence:number}){
+                    a: { brand: string, confidence: number },
+                    b: { brand: string, confidence: number }) {
                     return b.confidence - a.confidence;
                 });
 
                 return likelyBrands;
             }
-        );
+            );
 
     }
 
@@ -511,16 +512,16 @@ export class TwAPIService {
      * Return known brands
      * @return {Promise} 
      */
-    getBrands(): Promise<[{ name: string, icon: string, models:string}]> {
+    getBrands(): Promise<[{ name: string, icon: string, models: string }]> {
         return this.http.get(
             TwAPIService.assetsUrl + '/watches/watch-brand.json')
-        .map(res => res.json())
-        .toPromise().then(
+            .map(res => res.json())
+            .toPromise().then(
             brands => {
                 AnalyticsService.event('API', 'BRANDS', 'GET');
                 return brands;
             }
-        );
+            );
     }
 
     /**
@@ -528,11 +529,11 @@ export class TwAPIService {
      * @param  {string}  brand
      * @return {Promise}      
      */
-    getModels(brand:string): Promise<[string]> {
+    getModels(brand: string): Promise<[string]> {
 
         brand = StringHelper.replaceAll(brand, " ", "");
         brand = StringHelper.replaceAll(brand, "&", "");
-        
+
         return this.http.get(
             TwAPIService.assetsUrl + '/watches/watch-models/' + brand + ".json")
             .map(res => res.json())
@@ -541,7 +542,7 @@ export class TwAPIService {
                 AnalyticsService.event('API', 'MODELS', 'GET');
                 return models;
             }
-        );
+            );
     }
 
     /**
@@ -549,11 +550,11 @@ export class TwAPIService {
      * @param  {string}  brand
      * @return {Promise}      
      */
-    getCalibers(brand:string): Promise<[string]> {
+    getCalibers(brand: string): Promise<[string]> {
 
         brand = StringHelper.replaceAll(brand, " ", "");
         brand = StringHelper.replaceAll(brand, "&", "");
-        
+
         return this.http.get(
             TwAPIService.assetsUrl + '/watches/watch-calibers/' + brand + ".json")
             .map(res => res.json())
@@ -562,36 +563,34 @@ export class TwAPIService {
                 AnalyticsService.event('API', 'CALIBERS', 'GET');
                 return calibers;
             }
-        );
+            );
     }
 
     /**
      * Gets the previously computed offset
      * @return {number} [description]
      */
-    getOffsetTime():number {
+    getOffsetTime(): number {
         return TwAPIService.time.offset;
     }
 
     /**
      * Retrieve atomic clock time adjusted for network latency
-     * @param  {()=>void} statusCallback Called at each partial complete
      * @param  {number = 0} precison How many calls we want to aveage
      * @return {Promise<Date>} 
      */
-    accurateTime(statusCallback?:()=>void, precison:number = 10): Promise<Date> {
+    accurateTime(precison: number = 10): Promise<Date> {
 
         AnalyticsService.event('API', 'TIME', 'GET');
-        let now = require("performance-now");
 
         //If we aren't already sync'ed
         //or sync is older than 2 minutes
-        if(TwAPIService.time === undefined || 
-            now() - TwAPIService.time.syncAnchor > 2*60*1000) {
+        if (TwAPIService.time === undefined ||
+            TwAPIService.now() - TwAPIService.time.syncAnchor > 2 * 60 * 1000) {
             //Stores each Promise in array
-            let promises:Promise<number>[] = [];
+            let promises: Promise<number>[] = [];
             for (var i = 0; i < precison; ++i) {
-                promises.push(this.fetchTime(statusCallback));
+                promises.push(this.fetchOffsetTime());
             }
 
             /**
@@ -603,67 +602,74 @@ export class TwAPIService {
              * The offset received in each promise also accounts for
              * the network roundtrip time.
              */
-            return Promise.all(promises).then((results:any[]) => {
-                results.sort(function(a: any, b: any) { return a - b; });
+            return Promise.all(promises).then((results: number[]) => {
 
-                //Remove the outliers. 10% best & 10% worst
-                results = results.slice(
-                    Math.round(results.length*0.1), 
-                    results.length - 1 - Math.round(results.length*0.1)
-                );
-
-                //Compute average
-                let sum = results = results.reduce((previous, current) => current += previous);
-                let averageOffset = sum / results.length;
-
-                TwAPIService.time = {
-                    syncDate: new Date(Date.now() - averageOffset),
-                    syncAnchor: now(),
-                    offset:averageOffset
-                };
-
-                return TwAPIService.time.syncDate;
+                return this.computeAverageOffset(results);
             });
-        //Only compute the difference from last time;
+            //Only compute the difference from last time;
         } else {
 
             TwAPIService.time.syncDate = new Date(
                 TwAPIService.time.syncDate.getTime() +
-                now() - TwAPIService.time.syncAnchor
+                TwAPIService.now() - TwAPIService.time.syncAnchor
             );
-            
-            TwAPIService.time.syncAnchor = now();
+
+            TwAPIService.time.syncAnchor = TwAPIService.now();
 
             return new Promise<Date>(
-                (resolve, reject) => { 
-                    resolve(TwAPIService.time.syncDate); 
+                (resolve, reject) => {
+                    resolve(TwAPIService.time.syncDate);
                 }
             );
         }
     }
 
+    /**
+     * Compute average offsets and create TwAPIService.time
+     * @param results 
+     */
+    private computeAverageOffset(results: number[]): Date {
+
+        results = results.sort(function (a: number, b: number) { return a - b; });
+
+        //Remove the outliers. 10% best & 10% worst
+        if (results.length >= 10) {
+            results = results.slice(
+                Math.round(results.length * 0.1),
+                results.length - 1 - Math.round(results.length * 0.1)
+            );
+        }
+
+        let sum = results.reduce((a: number, b: number) => a + b, 0);
+
+        let averageOffset = sum / results.length;
+
+        TwAPIService.time = {
+            syncDate: new Date(Date.now() - averageOffset),
+            syncAnchor: TwAPIService.now(),
+            offset: averageOffset
+        };
+
+        return TwAPIService.time.syncDate;
+    }
+
     /** 
      * Fetch offset between atomic clock and js time
-     * @param {() => void} statusCallback
      */
-    public fetchTime(statusCallback?: () => void): Promise<number> {
+    private fetchOffsetTime(): Promise<number> {
 
-        let beforeTime: number = window.performance.now();
+        let beforeTime: number = TwAPIService.now();
         return this.http.get(TwAPIService.baseUrl + "time", TwAPIService.optionsGet)
             .toPromise()
             .then(
-                response => {
-                    if (statusCallback !== undefined) {
-                        statusCallback();
-                    }
+            response => {
 
-                    let now: number = window.performance.now();
-                    let timeDiff = (now - beforeTime) / 2;
-                    let serverTime = response.json().time - timeDiff;
-                    return Date.now() - serverTime;
-                }, 
-                reject => console.error(reject)
-        ).catch(this.handleError);
+                let timeDiff = (TwAPIService.now() - beforeTime) / 2;
+                let serverTime = response.json().time - timeDiff;
+                return Date.now() - serverTime;
+            },
+            reject => this.handleError(reject)
+            ).catch(this.handleError);
     }
 
     /**
@@ -690,7 +696,7 @@ export class TwAPIService {
                 watch.next = WatchAction.Measure;
                 return watch;
             }
-        ).catch(this.handleError);
+            ).catch(this.handleError);
     }
 
     /**
@@ -716,7 +722,7 @@ export class TwAPIService {
                 watch.historySize++;
                 return watch;
             }
-        ).catch(this.handleError);
+            ).catch(this.handleError);
     }
 
     /**
@@ -724,7 +730,7 @@ export class TwAPIService {
      * @param  {Watch}          watch
      * @return {Promise<Watch>}      
      */
-    private insertWatch(watch: Watch):Promise<Watch> {
+    private insertWatch(watch: Watch): Promise<Watch> {
         return this.http.post(
             TwAPIService.baseUrl + "watches",
             JSON.stringify({
@@ -736,16 +742,16 @@ export class TwAPIService {
             }),
             TwAPIService.options
         )
-        .map((res) => { 
+            .map((res) => {
 
-            return new Watch(
-                    res.json().id, watch.brand, 0, [], watch.name, watch.yearOfBuy, watch.serial, watch.caliber); 
-        })
-        .toPromise().then(
+                return new Watch(
+                    res.json().id, watch.brand, 0, [], watch.name, watch.yearOfBuy, watch.serial, watch.caliber);
+            })
+            .toPromise().then(
             response => {
                 return response;
             }
-        );
+            );
     }
 
     /**
@@ -770,7 +776,7 @@ export class TwAPIService {
                 AnalyticsService.event('API', 'WATCH', 'UPDATE');
                 return watch;
             }
-        );
+            );
     }
 
 
@@ -779,7 +785,6 @@ export class TwAPIService {
      * @param {any} error [description]
      */
     private handleError(error: any) {
-        console.error('An error occurred', error || "plop");
         return Promise.reject(error.message || error);
     }
 

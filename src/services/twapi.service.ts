@@ -195,8 +195,8 @@ export class TwAPIService {
             JSON.stringify(creds),
             TwAPIService.options
         )
-        .map((res) => { return ModelFactory.buildUser(res.json()); })
-        .toPromise().then(
+            .map((res) => { return ModelFactory.buildUser(res.json()); })
+            .toPromise().then(
             res => {
                 AnalyticsService.event('API', 'LOGIN');
                 TwAPIService.apikey = res.key;
@@ -206,7 +206,7 @@ export class TwAPIService {
                 return res;
             },
             err => this.handleError(err)
-        );
+            );
     }
 
 
@@ -323,8 +323,9 @@ export class TwAPIService {
             response => {
                 AnalyticsService.event('API', 'RESET_PASSWORD');
                 return true;
-            }
-            ).catch(this.handleError);
+            },
+            err => this.handleError(err)
+            );
     }
 
     /**

@@ -211,6 +211,74 @@ describe('TwAPI Service', () => {
         expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
         expect(lastConnection.request.headers.get("X-API-KEY")).toEqual("qwerty");
         expect((TwAPIService as any).apikey).toEqual("qwerty");
+
+    }));
+
+    it('should signup an user', fakeAsync(() => {
+        var user: User;
+
+        twAPIService.signup("m@m.com", "qwerty", "M", "N", "C").then(
+            response => { user = response; },
+        );
+        lastConnection.mockRespond(new Response(new ResponseOptions({
+            body: jsonUser,
+        })));
+        tick();
+
+        expect(user.email).toEqual("m@m.com");
+        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
+        expect((TwAPIService as any).apikey).toEqual("qwerty");
+    }));
+
+    it('should signup a fb user', fakeAsync(() => {
+        var user: User;
+
+        twAPIService.signupFacebook("m@m.com", "qwerty", "M", "N").then(
+            response => { user = response; },
+        );
+        lastConnection.mockRespond(new Response(new ResponseOptions({
+            body: jsonUser,
+        })));
+        tick();
+
+        expect(user.email).toEqual("m@m.com");
+        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users/facebook", "should be consumed");
+        expect((TwAPIService as any).apikey).toEqual("qwerty");
+    }));
+
+    it('should reset a password', fakeAsync(() => {
+
+        var result: boolean;
+
+        twAPIService.resetPassword("m@m.com").then(
+            response => { result = response; },
+        );
+        lastConnection.mockRespond(new Response(new ResponseOptions({
+            body: jsonUser,
+        })));
+        tick();
+
+        expect(result).toBeTruthy();
+        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users/reset", "should be consumed");
+        expect(lastConnection.request.json().email).toEqual("m@m.com");
+    }));
+
+    it('should\nt reset a password (bad requests)', fakeAsync(() => {
+        var result: boolean;
+        var error: string;
+
+        twAPIService.resetPassword("m@m.com").then(
+            response => { result = response; },
+             reject => { error = reject; }
+        );
+        lastConnection.mockError(new Error("An error"));
+        tick();
+
+        expect(result).toBeUndefined();
+        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users/reset", "should be consumed");
+        expect(lastConnection.request.json().email).toEqual("m@m.com");
+        expect(error).toEqual("An error", "should have changed");
+        
     }));
 
 });

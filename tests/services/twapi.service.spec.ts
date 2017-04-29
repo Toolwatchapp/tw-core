@@ -81,4 +81,21 @@ describe('TwAPI Service', () => {
 
     }));
 
+    it('should compute a median offset', fakeAsync(() => {
+
+        let numbers = [ 11,30,23,52,47,56 ];
+
+        let result = (twAPIService as any).computeAverageOffset(numbers);
+        let expectedDate = new Date(Date.now() - 38.5);
+
+        expect((TwAPIService as any).time.offset).toEqual(38.5);
+        expect((TwAPIService as any).time.syncAnchor).toBeDefined();
+
+        expect(result.getDay()).toEqual(expectedDate.getDay());
+        expect(result.getHours()).toEqual(expectedDate.getHours());
+        expect(result.getMinutes()).toEqual(expectedDate.getMinutes());
+        expect(result.getSeconds()).toEqual(expectedDate.getSeconds());
+
+    }));
+
 });

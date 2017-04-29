@@ -12,6 +12,36 @@ describe('TwAPI Service', () => {
     let backend: MockBackend;
     let lastConnection: MockConnection;
 
+    let jsonUser = `{
+            "userId": "1",
+            "email": "m@m.com",
+            "firstname": "M",
+            "name": "N",
+            "country": "C",
+            "registerDate": "Monday 2 2016",
+            "key": "qwerty",
+            "watches": [{
+                "watchId":"1",
+                "brand":"a",
+                "historySize":"1",
+                "measures": [{
+                    "id": "1",
+                    "measureUserTime": "1",
+                    "measureReferenceTime": "1",
+                    "statusId": "2",
+                    "accuracyUserTime": "1",
+                    "accuracyReferenceTime": "1",
+                    "accuracy": "1",
+                    "accuracyAge": "1",
+                    "percentile": "1"
+                }],
+                "name":"a",
+                "yearOfBuy":"2016",
+                "serial":"a",
+                "caliber":"a"
+            }]
+        }`;
+
     beforeEach(() => {
         this.injector = ReflectiveInjector.resolveAndCreate([
             { provide: ConnectionBackend, useClass: MockBackend },
@@ -112,36 +142,6 @@ describe('TwAPI Service', () => {
 
     it('should log an user', fakeAsync(() => {
 
-        let jsonUser = `{
-            "userId": "1",
-            "email": "m@m.com",
-            "firstname": "M",
-            "name": "N",
-            "country": "C",
-            "registerDate": "Monday 2 2016",
-            "key": "qwerty",
-            "watches": [{
-                "watchId":"1",
-                "brand":"a",
-                "historySize":"1",
-                "measures": [{
-                    "id": "1",
-                    "measureUserTime": "1",
-                    "measureReferenceTime": "1",
-                    "statusId": "2",
-                    "accuracyUserTime": "1",
-                    "accuracyReferenceTime": "1",
-                    "accuracy": "1",
-                    "accuracyAge": "1",
-                    "percentile": "1"
-                }],
-                "name":"a",
-                "yearOfBuy":"2016",
-                "serial":"a",
-                "caliber":"a"
-            }]
-        }`;
-
         var user: User;
 
         twAPIService.login("m@m.com", "qwerty").then(
@@ -174,7 +174,43 @@ describe('TwAPI Service', () => {
         tick();
         expect(user).toBeUndefined();
         expect(error).toEqual("An error", "should have changed");
+        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
     }));
 
+    it('should get an user', fakeAsync(() => {
+
+        var user: User;
+
+        twAPIService.getUser("qwerty").then(
+            response => { user = response; },
+        );
+        lastConnection.mockRespond(new Response(new ResponseOptions({
+            body: jsonUser,
+        })));
+        tick();
+
+        expect(user.email).toEqual("m@m.com");
+        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
+        expect(lastConnection.request.headers.get("X-API-KEY")).toEqual("qwerty");
+        expect((TwAPIService as any).apikey).toEqual("qwerty");
+
+    }));
+
+    it('shouldn\'t get an user (bad key)', fakeAsync(() => {
+        var user: User;
+        let error = "";
+
+        twAPIService.getUser("qwerty").then(
+            response => { user = response; },
+            reject => { error = reject; }
+        );
+        lastConnection.mockError(new Error("An error"));
+        tick();
+        expect(user).toBeUndefined();
+        expect(error).toEqual("An error", "should have changed");
+        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
+        expect(lastConnection.request.headers.get("X-API-KEY")).toEqual("qwerty");
+        expect((TwAPIService as any).apikey).toEqual("qwerty");
+    }));
 
 });

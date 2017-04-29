@@ -632,22 +632,14 @@ export class TwAPIService {
 
         results = results.sort(function (a: number, b: number) { return a - b; });
 
-        //Remove the outliers. 10% best & 10% worst
-        if (results.length >= 10) {
-            results = results.slice(
-                Math.round(results.length * 0.1),
-                results.length - 1 - Math.round(results.length * 0.1)
-            );
-        }
-
-        let sum = results.reduce((a: number, b: number) => a + b, 0);
-
-        let averageOffset = sum / results.length;
+        let lowMiddle = Math.floor((results.length - 1) / 2);
+        let highMiddle = Math.ceil((results.length - 1) / 2);
+        let median = (results[lowMiddle] + results[highMiddle]) / 2;
 
         TwAPIService.time = {
-            syncDate: new Date(Date.now() - averageOffset),
+            syncDate: new Date(Date.now() - median),
             syncAnchor: TwAPIService.now(),
-            offset: averageOffset
+            offset: median
         };
 
         return TwAPIService.time.syncDate;

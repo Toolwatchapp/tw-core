@@ -4,6 +4,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { BaseRequestOptions, ConnectionBackend, Http, RequestOptions } from '@angular/http';
 import { Response, ResponseOptions } from '@angular/http';
 import { MockBackend, MockConnection } from '@angular/http/testing';
+import { User } from './../../src/models/user.model';
 
 describe('TwAPI Service', () => {
 
@@ -21,6 +22,7 @@ describe('TwAPI Service', () => {
         twAPIService = this.injector.get(TwAPIService);
         backend = this.injector.get(ConnectionBackend) as MockBackend;
         backend.connections.subscribe((connection: MockConnection) => lastConnection = connection);
+        TwAPIService.resetTime();
     });
 
     it('fetchOffsetTime should fetch the offset between the server and js', fakeAsync(() => {
@@ -83,7 +85,9 @@ describe('TwAPI Service', () => {
 
     it('should compute a median offset', fakeAsync(() => {
 
-        let numbers = [ 11,30,23,52,47,56 ];
+        TwAPIService.resetTime();
+
+        let numbers = [11, 30, 23, 52, 47, 56];
 
         let result = (twAPIService as any).computeAverageOffset(numbers);
         let expectedDate = new Date(Date.now() - 38.5);
@@ -97,5 +101,80 @@ describe('TwAPI Service', () => {
         expect(result.getSeconds()).toEqual(expectedDate.getSeconds());
 
     }));
+
+    it('should returns the offset', fakeAsync(() => {
+        TwAPIService.resetTime();
+        let numbers = [11, 30, 23, 52, 47, 56];
+        (twAPIService as any).computeAverageOffset(numbers);
+
+        expect(twAPIService.getOffsetTime()).toEqual(38.5);
+    }));
+
+    it('should log an user', fakeAsync(() => {
+
+        let jsonUser = `{
+            "userId": "1",
+            "email": "m@m.com",
+            "firstname": "M",
+            "name": "N",
+            "country": "C",
+            "registerDate": "Monday 2 2016",
+            "key": "qwerty",
+            "watches": [{
+                "watchId":"1",
+                "brand":"a",
+                "historySize":"1",
+                "measures": [{
+                    "id": "1",
+                    "measureUserTime": "1",
+                    "measureReferenceTime": "1",
+                    "statusId": "2",
+                    "accuracyUserTime": "1",
+                    "accuracyReferenceTime": "1",
+                    "accuracy": "1",
+                    "accuracyAge": "1",
+                    "percentile": "1"
+                }],
+                "name":"a",
+                "yearOfBuy":"2016",
+                "serial":"a",
+                "caliber":"a"
+            }]
+        }`;
+
+        var user: User;
+
+        twAPIService.login("m@m.com", "qwerty").then(
+            response => { user = response; }
+        );
+
+        lastConnection.mockRespond(new Response(new ResponseOptions({
+            body: jsonUser,
+        })));
+        tick();
+
+        expect(user.email).toEqual("m@m.com");
+        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
+        expect(lastConnection.request.json().email).toEqual("m@m.com");
+        expect(lastConnection.request.json().password).toEqual("qwerty");
+        expect((TwAPIService as any).apikey).toEqual("qwerty");
+    }));
+
+
+    it('shouldn\'t log an user (bad cred)', fakeAsync(() => {
+
+        var user: User;
+        let error = "";
+
+        twAPIService.login("m@m.com", "qwerty").then(
+            response => { user = response; },
+            reject => { error = reject; }
+        );
+        lastConnection.mockError(new Error("An error"));
+        tick();
+        expect(user).toBeUndefined();
+        expect(error).toEqual("An error", "should have changed");
+    }));
+
 
 });

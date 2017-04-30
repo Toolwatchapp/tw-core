@@ -341,8 +341,9 @@ export class TwAPIService {
             response => {
                 AnalyticsService.event('API', 'DELETE_ACCOUNT');
                 return true;
-            }
-            ).catch(this.handleError);
+            },
+            err => this.handleError(err)
+            );
     }
 
     /**
@@ -358,7 +359,8 @@ export class TwAPIService {
             res => {
                 AnalyticsService.event('API', 'WATCHES', 'GET');
                 return res;
-            }
+            },
+            err =>  this.handleError(err) 
             );
     }
 
@@ -449,7 +451,7 @@ export class TwAPIService {
 
                 return watch;
             }
-            ).catch(this.handleError);
+            );
     }
 
     getBlogPosts(): Promise<BlogPost[]> {
@@ -473,12 +475,10 @@ export class TwAPIService {
     getLikelyBrands(watch: Watch): Promise<{ watch: Watch, proposals: [{ brand: string, logo: string, confidence: number }] }> {
 
         return this.http.get(
-            TwAPIService.assetsUrl + '/watch-brand.json')
+            TwAPIService.assetsUrl + '/watches/watch-brand.json')
             .map(res => res.json())
             .toPromise().then(
             brands => {
-
-
 
                 var likelyBrands = { watch: watch, proposals: [] as { brand: string, logo: string, confidence: number }[] };
 
@@ -689,7 +689,7 @@ export class TwAPIService {
                 watch.next = WatchAction.Measure;
                 return watch;
             }
-            ).catch(this.handleError);
+            );
     }
 
     /**
@@ -715,7 +715,7 @@ export class TwAPIService {
                 watch.historySize++;
                 return watch;
             }
-            ).catch(this.handleError);
+            );
     }
 
     /**

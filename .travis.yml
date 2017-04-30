@@ -1,6 +1,6 @@
 dist: trusty
 
-sudo: required
+sudo: false
 
 language: node_js
 
@@ -24,7 +24,7 @@ branches:
 
 before_install:
   - export CHROME_BIN=chromium-browser
-  - sudo apt-get install php7.0 php7.0-fpm php7.0-mysql php7.0-curl php7.0-json php7.0-cgi -y
+#  - sudo apt-get install php7.0 php7.0-fpm php7.0-mysql php7.0-curl php7.0-json php7.0-cgi -y
 
 before_script:
   - npm prune

@@ -20,6 +20,10 @@ before_install:
 before_script:
   - npm prune
 
+script: 
+  - npm run test
+  - sh coverage-checker.sh
+
 after_success:
    - npm run coverage
 

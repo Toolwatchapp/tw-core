@@ -10,6 +10,12 @@ notifications:
 node_js:
   - '7'
 
+php:
+  - '7.0'
+
+services:
+  - mysql
+
 branches:
   except:
     - "/^v\\d+\\.\\d+\\.\\d+$/"
@@ -31,6 +37,6 @@ before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 
-notifications:
-  slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
-  email: false
+# notifications:
+#   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
+#   email: false

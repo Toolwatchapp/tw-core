@@ -35,8 +35,10 @@ before_script:
   - sudo a2enmod rewrite actions fastcgi alias
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-  # configure apache virtual hosts
+  # install toolwatch backend
   - git clone --depth=50 --branch=master https://github.com/Toolwatchapp/tw-backend.git tw-backend
+  - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
+  # configure apache virtual hosts
   - sudo cp -f tests/e2e/travis-ci-apache /etc/apache2/sites-available/default
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
   - sudo service apache2 restart
@@ -49,6 +51,7 @@ script:
   - npm run test
   - sh coverage-checker.sh
   - php -r 'echo "Php works\n";'
+  - curl http://localhost:8080
 
 after_success:
    - npm run coverage

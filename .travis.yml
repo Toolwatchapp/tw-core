@@ -35,6 +35,8 @@ before_script:
   - echo "$(curl -fsSL https://gist.github.com/roderik/16d751c979fdeb5a14e3/raw/gistfile1.txt)" | sudo tee /etc/apache2/conf.d/phpconfig > /dev/null
   - echo "$(curl -fsSL https://gist.github.com/roderik/2eb301570ed4a1f4c33d/raw/gistfile1.txt)" | sed -e "s,PATH,`pwd`/web,g" | sudo tee /etc/apache2/sites-available/default > /dev/null
   - sudo service apache2 restart
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
 
 
 script: 
@@ -44,11 +46,7 @@ script:
 
 after_success:
    - npm run coverage
-
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-
+   
 # notifications:
 #   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
 #   email: false

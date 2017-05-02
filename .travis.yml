@@ -36,12 +36,13 @@ before_script:
   - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
   # configure apache virtual hosts
   - cat tests/e2e/travis-ci-apache
-  - rm /etc/apache2/sites-enable/*
-  - sudo cp -f tests/e2e/travis-ci-apache /etc/apache2/sites-enable/default
-  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enable/default
+  - ls /etc/apache2/sites-enabled/
+  - rm /etc/apache2/sites-enabled/*
+  - sudo cp -f tests/e2e/travis-ci-apache /etc/apache2/sites-enabled/default
+  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/default
   - cat /etc/apache2/sites-available/default
   - ls tw-backend/
-  - ls /etc/apache2/sites-enable/default
+  - ls /etc/apache2/sites-enabled/
   - pwd
   - sudo service apache2 restart
   # node configuration

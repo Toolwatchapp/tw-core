@@ -38,7 +38,7 @@ before_script:
   - cat tests/e2e/travis-ci-apache
   - sudo cp -f tests/e2e/travis-ci-apache /etc/apache2/sites-available/default
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
-  - /etc/apache2/sites-available/default
+  - cat /etc/apache2/sites-available/default
   - ls tw-backend/
   - sudo service apache2 restart
   # node configuration

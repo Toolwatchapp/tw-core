@@ -10,6 +10,7 @@
 
         ServerAdmin webmaster@localhost
         DocumentRoot %TRAVIS_BUILD_DIR%/tw-backend/
+        DirectoryIndex index.php
 
         # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
         # error, crit, alert, emerg.

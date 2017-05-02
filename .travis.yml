@@ -29,12 +29,8 @@ before_install:
 before_script:
   # install Apache
   - sudo apt-get update
-  - sudo apt-get install apache2 libapache2-mod-fastcgi
-  # enable php-fpm
-  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  - sudo a2enmod rewrite actions fastcgi alias
-  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+  - sudo apt-get install apache2
+  - sudo a2enmod rewrite alias
   # install toolwatch backend
   - git clone --depth=50 --branch=master https://github.com/Toolwatchapp/tw-backend.git tw-backend
   - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
@@ -51,7 +47,7 @@ script:
   - npm run test
   - sh coverage-checker.sh
   - php -r 'echo "Php works\n";'
-  - curl http://localhost:8080
+  - curl http://localhost
 
 after_success:
    - npm run coverage

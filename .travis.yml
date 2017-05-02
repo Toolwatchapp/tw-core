@@ -40,6 +40,7 @@ before_script:
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
   - cat /etc/apache2/sites-available/default
   - ls tw-backend/
+  - pwd
   - sudo service apache2 restart
   # node configuration
   - npm prune

@@ -40,7 +40,7 @@ before_script:
   - sudo rm /etc/apache2/sites-enabled/000-default.conf
   - sudo cp tests/e2e/travis-ci-apache /etc/apache2/sites-enabled/000-default.conf
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default.conf
-  - cat /etc/apache2/sites-available/000-default.conf
+  - cat /etc/apache2/sites-enabled/000-default.conf
   - ls tw-backend/
   - ls /etc/apache2/sites-enabled/
   - pwd
@@ -54,7 +54,7 @@ script:
   - npm run test
   - sh coverage-checker.sh
   - php -r 'echo "Php works\n";'
-  - curl http://localhost
+  - curl http://localhost/
 
 after_success:
    - npm run coverage

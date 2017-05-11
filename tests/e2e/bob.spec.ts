@@ -21,21 +21,13 @@ describe('bob', () => {
 
     beforeEach(async(() => {
 
-        let APIUrl = "http://192.168.0.112:8282/api/";
-
-        if (process.env.TRAVIS) {
-            APIUrl = "http://localhost:8282/api/";
-        }
-
-        console.error(process.env.TRAVIS, APIUrl, process.env);
-
         TestBed.configureTestingModule({
             declarations: [SignupComponent],
             providers: [
                 { provide: TranslateService, useValue: translateServiceStub },
                 {
                     provide: ConfigurationService, useValue:
-                        configurationProvider(APIUrl, "assets")
+                    configurationProvider("http://twapi.com:8282/api/", "assets")
                 },
                 TwAPIService,
                 AnalyticsService

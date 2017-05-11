@@ -47,9 +47,14 @@ describe('bob', () => {
         });;
     }));
 
-    it('should work', async(() => {
+    it('should work', async () => {
 
-        expect(true).toEqual(true);
-    }));
+        fixture.whenStable().then(() => { // wait for async getQuote
+            fixture.detectChanges();        // update view with quote
+            expect(true).toEqual(true);
+        });
+
+        
+    });
 
 });

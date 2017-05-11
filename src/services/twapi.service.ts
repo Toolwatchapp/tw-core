@@ -652,17 +652,21 @@ export class TwAPIService {
      */
     private fetchOffsetTime(): Promise<number> {
 
+        console.log(TwAPIService.now());
+        console.log(this.config.getAPIUrl());
+        console.log(this.config.getAPIUrl() + "time");
+
         let beforeTime: number = TwAPIService.now();
         return this.http.get(this.config.getAPIUrl() + "time", TwAPIService.optionsGet)
             .toPromise()
             .then(
             response => {
-
+                console.error("response", response);
                 let timeDiff = (TwAPIService.now() - beforeTime) / 2;
                 let serverTime = response.json().time - timeDiff;
                 return Date.now() - serverTime;
             },
-            reject => this.handleError(reject)
+            reject => {console.error("reject", reject); this.handleError(reject)}
             ).catch(this.handleError);
     }
 

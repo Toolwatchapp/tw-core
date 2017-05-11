@@ -170,7 +170,6 @@ export class Watch {
     upsertMeasure(measure:Measure) {
 
         for (var i = 0; i < this.measures.length; i++) {
-            console.log("i", i);
             if(this.measures[i].id === measure.id) {
                 this.measures[i] = measure;
                 return;

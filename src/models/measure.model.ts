@@ -118,7 +118,6 @@ export class Measure {
      * @param percentile 
      */
     addAccuracy(accuracy: number, accuracyAge: number, percentile: number) {
-        console.log("addAccuracy", accuracy, accuracyAge, percentile);
         this.accuracy = accuracy;
         this.accuracyAge = accuracyAge;
         this.percentile = Math.round(percentile * 10) / 10;

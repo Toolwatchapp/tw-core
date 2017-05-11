@@ -24,7 +24,7 @@ describe('bob', () => {
         let APIUrl = "http://192.168.0.112:8282/api/";
 
         if (process.env.TRAVIS) {
-            APIUrl = "http://localhot:8282/api/";
+            APIUrl = "http://localhost:8282/api/";
         }
 
         TestBed.configureTestingModule({

@@ -7,6 +7,7 @@ import { LeadingZero } from './src/pipes/leading-zero.pipe';
 import { KFormatter } from './src/pipes/k-formatter.pipe';
 import { MoonPhasesComponent } from './src/directives/clock/moon-phases/moon-phases.component';
 import { TwAPIService } from './src/services/twapi.service';
+import { ConfigurationService } from './src/services/configuration.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule }   from '@angular/forms';
 
@@ -47,6 +48,7 @@ export * from './src/directives/watch/watch.component'
   ],
   providers: [
     TwAPIService,
+    ConfigurationService
   ],
   exports: [
     ArethmeticSign,

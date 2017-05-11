@@ -9,6 +9,8 @@ import { ModelFactory } from './../models/model.factory';
 import { BlogPost } from './../models/blog-post.model';
 import { AnalyticsService } from './analytics.service';
 import { StringHelper } from './../helpers/string.helper';
+import { ConfigurationService } from './configuration.service';
+
 import 'rxjs/Rx';
 
 @Injectable()
@@ -164,16 +166,15 @@ export class TwAPIService {
     private static options: RequestOptions = new RequestOptions({ headers: TwAPIService.headers });
     // Regression RC5. Doesn't accept get without body
     private static optionsGet: RequestOptions = new RequestOptions({ headers: TwAPIService.headers, body: "" });
-
-    public static baseUrl: string = "https://toolwatch.io/api/";
-    public static assetsUrl = "assets";
     private static apikey: string = null;
 
     /**
      * Inject http service
      * @param {Http} private http 
      */
-    constructor(public http: Http) {
+    constructor(
+        public http: Http, 
+        public config: ConfigurationService) {
         this.accurateTime();
     }
 
@@ -191,7 +192,7 @@ export class TwAPIService {
 
         let creds = { email: email, password: password };
         return this.http.put(
-            TwAPIService.baseUrl + "users",
+            this.config.getAPIUrl() + "users",
             JSON.stringify(creds),
             TwAPIService.options
         )
@@ -224,7 +225,7 @@ export class TwAPIService {
 
 
         return this.http.get(
-            TwAPIService.baseUrl + "users",
+            this.config.getAPIUrl() + "users",
             TwAPIService.options
         )
             .map((res) => { return ModelFactory.buildUser(res.json()); })
@@ -253,7 +254,7 @@ export class TwAPIService {
     signup(email: string, password: string, name?: string, lastname?: string, country?: string): Promise<User> {
 
         return this.http.post(
-            TwAPIService.baseUrl + "users",
+            this.config.getAPIUrl() + "users",
             JSON.stringify({
                 email: email,
                 password: password,
@@ -286,7 +287,7 @@ export class TwAPIService {
      */
     signupFacebook(email: string, token: string, name?: string, lastname?: string): Promise<User> {
         return this.http.post(
-            TwAPIService.baseUrl + "users/facebook",
+            this.config.getAPIUrl() + "users/facebook",
             JSON.stringify({
                 email: email,
                 token: token,
@@ -314,7 +315,7 @@ export class TwAPIService {
      */
     resetPassword(email: string): Promise<boolean> {
         return this.http.post(
-            TwAPIService.baseUrl + "users/reset",
+            this.config.getAPIUrl() + "users/reset",
             JSON.stringify({
                 email: email
             }),
@@ -335,7 +336,7 @@ export class TwAPIService {
     deleteAccount(): Promise<boolean> {
 
         return this.http.delete(
-            TwAPIService.baseUrl + "users",
+            this.config.getAPIUrl() + "users",
             TwAPIService.options
         ).toPromise().then(
             response => {
@@ -352,7 +353,7 @@ export class TwAPIService {
      */
     getWatches(): Promise<Watch[]> {
         return this.http.get(
-            TwAPIService.baseUrl + "watches",
+            this.config.getAPIUrl() + "watches",
             TwAPIService.optionsGet)
             .map((res) => { return ModelFactory.buildWatches(res.json()); })
             .toPromise().then(
@@ -389,7 +390,7 @@ export class TwAPIService {
         deleteOptions.body = JSON.stringify({ watchId: watch.id });
 
         return this.http.delete(
-            TwAPIService.baseUrl + "watches",
+            this.config.getAPIUrl() + "watches",
             deleteOptions
         ).toPromise().then(
             response => {
@@ -433,7 +434,7 @@ export class TwAPIService {
         deleteOptions.body = JSON.stringify({ measureId: measure.id });
 
         return this.http.delete(
-            TwAPIService.baseUrl + "measures",
+            this.config.getAPIUrl() + "measures",
             deleteOptions
         ).toPromise().then(
             response => {
@@ -475,7 +476,7 @@ export class TwAPIService {
     getLikelyBrands(watch: Watch): Promise<{ watch: Watch, proposals: [{ brand: string, logo: string, confidence: number }] }> {
 
         return this.http.get(
-            TwAPIService.assetsUrl + '/watches/watch-brand.json')
+            this.config.getAssetsUrl() + '/watches/watch-brand.json')
             .map(res => res.json())
             .toPromise().then(
             brands => {
@@ -515,7 +516,7 @@ export class TwAPIService {
      */
     getBrands(): Promise<[{ name: string, icon: string, models: string }]> {
         return this.http.get(
-            TwAPIService.assetsUrl + '/watches/watch-brand.json')
+            this.config.getAssetsUrl() + '/watches/watch-brand.json')
             .map(res => res.json())
             .toPromise().then(
             brands => {
@@ -536,7 +537,7 @@ export class TwAPIService {
         brand = StringHelper.replaceAll(brand, "&", "");
 
         return this.http.get(
-            TwAPIService.assetsUrl + '/watches/watch-models/' + brand + ".json")
+            this.config.getAssetsUrl() + '/watches/watch-models/' + brand + ".json")
             .map(res => res.json())
             .toPromise().then(
             models => {
@@ -557,7 +558,7 @@ export class TwAPIService {
         brand = StringHelper.replaceAll(brand, "&", "");
 
         return this.http.get(
-            TwAPIService.assetsUrl + '/watches/watch-calibers/' + brand + ".json")
+            this.config.getAssetsUrl() + '/watches/watch-calibers/' + brand + ".json")
             .map(res => res.json())
             .toPromise().then(
             calibers => {
@@ -652,7 +653,7 @@ export class TwAPIService {
     private fetchOffsetTime(): Promise<number> {
 
         let beforeTime: number = TwAPIService.now();
-        return this.http.get(TwAPIService.baseUrl + "time", TwAPIService.optionsGet)
+        return this.http.get(this.config.getAPIUrl() + "time", TwAPIService.optionsGet)
             .toPromise()
             .then(
             response => {
@@ -673,7 +674,7 @@ export class TwAPIService {
      */
     private updateMeasure(watch: Watch, measure: Measure): Promise<Watch> {
         return this.http.put(
-            TwAPIService.baseUrl + "measures",
+            this.config.getAPIUrl() + "measures",
             JSON.stringify({
                 measureId: measure.id,
                 referenceTime: measure.accuracyReferenceTime,
@@ -700,7 +701,7 @@ export class TwAPIService {
      */
     private insertMeasure(watch: Watch, measure: Measure): Promise<Watch> {
         return this.http.post(
-            TwAPIService.baseUrl + "measures",
+            this.config.getAPIUrl() + "measures",
             JSON.stringify({
                 watchId: watch.id,
                 referenceTime: measure.measureReferenceTime,
@@ -725,7 +726,7 @@ export class TwAPIService {
      */
     private insertWatch(watch: Watch): Promise<Watch> {
         return this.http.post(
-            TwAPIService.baseUrl + "watches",
+            this.config.getAPIUrl() + "watches",
             JSON.stringify({
                 brand: watch.brand,
                 name: watch.name,
@@ -754,7 +755,7 @@ export class TwAPIService {
      */
     private updateWatch(watch: Watch): Promise<Watch> {
         return this.http.put(
-            TwAPIService.baseUrl + "watches",
+            this.config.getAPIUrl() + "watches",
             JSON.stringify({
                 id: watch.id,
                 brand: watch.brand,
@@ -771,7 +772,6 @@ export class TwAPIService {
             }
             );
     }
-
 
     /**
      * Log error to console

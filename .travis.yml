@@ -12,36 +12,20 @@ notifications:
 node_js:
   - '7'
 
-php:
-  - '7.0'
-
-services:
-  - mysql
-
 branches:
   except:
     - "/^v\\d+\\.\\d+\\.\\d+$/"
 
 before_install:
   - export CHROME_BIN=chromium-browser
-#  - sudo apt-get install php7.0 php7.0-fpm php7.0-mysql php7.0-curl php7.0-json php7.0-cgi -y
 
 before_script:
-  # install Apache
-  - sudo apt-get update
-  - sudo apt-get install apache2 libapache2-mod-fastcgi
-  # enable php-fpm
-  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  - sudo a2enmod rewrite actions fastcgi alias
-  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-  # install toolwatch backend
-  - git clone --depth=50 --branch=master https://github.com/Toolwatchapp/tw-backend.git tw-backend
-  - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
-  # configure apache virtual hosts
-  - sudo cp -f tests/e2e/travis-ci-apache /etc/apache2/sites-available/default
-  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
-  - sudo service apache2 restart
+  # install backend
+  - cd tests/e2e
+  - docker build -t mathieunls/tw-test .
+  - docker run -dit -p 8282:80 -p 3307:3306 mathieunls/tw-test
+  - docker exec -it tw-test /bin/bash ./start.sh
+  - cd ../..
   # node configuration
   - npm prune
   - export DISPLAY=:99.0
@@ -51,7 +35,7 @@ script:
   - npm run test
   - sh coverage-checker.sh
   - php -r 'echo "Php works\n";'
-  - curl http://localhost:8080
+  - curl http://localhost:8282
 
 after_success:
    - npm run coverage

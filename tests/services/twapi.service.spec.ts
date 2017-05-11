@@ -10,7 +10,7 @@ import { Measure } from './../../src/models/measure.model';
 import { BlogPost } from './../../src/models/blog-post.model';
 import { ModelFactory } from './../../src/models/model.factory';
 import { AnalyticsService } from './../../src/services/analytics.service';
-
+import { configurationProvider, ConfigurationService } from './../../src/services/configuration.service';
 
 describe('TwAPI Service', () => {
 
@@ -52,6 +52,7 @@ describe('TwAPI Service', () => {
         this.injector = ReflectiveInjector.resolveAndCreate([
             { provide: ConnectionBackend, useClass: MockBackend },
             { provide: RequestOptions, useClass: BaseRequestOptions },
+            { provide: ConfigurationService, useValue: configurationProvider() },
             Http,
             TwAPIService,
             AnalyticsService
@@ -161,7 +162,7 @@ describe('TwAPI Service', () => {
         tick();
 
         expect(user.email).toEqual("m@m.com");
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users", "should be consumed");
         expect(lastConnection.request.json().email).toEqual("m@m.com");
         expect(lastConnection.request.json().password).toEqual("qwerty");
         expect((TwAPIService as any).apikey).toEqual("qwerty");
@@ -181,7 +182,7 @@ describe('TwAPI Service', () => {
         tick();
         expect(user).toBeUndefined();
         expect(error).toEqual("An error", "should have changed");
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users", "should be consumed");
     }));
 
     it('should get an user', fakeAsync(() => {
@@ -197,7 +198,7 @@ describe('TwAPI Service', () => {
         tick();
 
         expect(user.email).toEqual("m@m.com");
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users", "should be consumed");
         expect(lastConnection.request.headers.get("X-API-KEY")).toEqual("qwerty");
         expect((TwAPIService as any).apikey).toEqual("qwerty");
 
@@ -215,7 +216,7 @@ describe('TwAPI Service', () => {
         tick();
         expect(user).toBeUndefined();
         expect(error).toEqual("An error", "should have changed");
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users", "should be consumed");
         expect(lastConnection.request.headers.get("X-API-KEY")).toEqual("qwerty");
         expect((TwAPIService as any).apikey).toEqual("qwerty");
 
@@ -233,7 +234,7 @@ describe('TwAPI Service', () => {
         tick();
 
         expect(user.email).toEqual("m@m.com");
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users", "should be consumed");
         expect((TwAPIService as any).apikey).toEqual("qwerty");
     }));
 
@@ -249,7 +250,7 @@ describe('TwAPI Service', () => {
         tick();
 
         expect(user.email).toEqual("m@m.com");
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users/facebook", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users/facebook", "should be consumed");
         expect((TwAPIService as any).apikey).toEqual("qwerty");
     }));
 
@@ -266,7 +267,7 @@ describe('TwAPI Service', () => {
         tick();
 
         expect(result).toBeTruthy();
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users/reset", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users/reset", "should be consumed");
         expect(lastConnection.request.json().email).toEqual("m@m.com");
     }));
 
@@ -282,7 +283,7 @@ describe('TwAPI Service', () => {
         tick();
 
         expect(result).toBeUndefined();
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users/reset", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users/reset", "should be consumed");
         expect(lastConnection.request.json().email).toEqual("m@m.com");
         expect(error).toEqual("An error", "should have changed");
 
@@ -302,7 +303,7 @@ describe('TwAPI Service', () => {
         tick();
 
         expect(result).toBeTruthy();
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users", "should be consumed");
     }));
 
     it('should\nt delete an account (bad requests)', fakeAsync(() => {
@@ -317,7 +318,7 @@ describe('TwAPI Service', () => {
         tick();
 
         expect(result).toBeUndefined();
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "users", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users", "should be consumed");
         expect(error).toEqual("An error", "should have changed");
 
     }));
@@ -338,7 +339,7 @@ describe('TwAPI Service', () => {
         expect(result.length).toEqual(1);
         expect(result[0].name).toEqual("a");
         expect(result[0].measures.length).toEqual(1);
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "watches", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "watches", "should be consumed");
     }));
 
     it('shouldn\'t get watches (bad key)', fakeAsync(() => {
@@ -356,7 +357,7 @@ describe('TwAPI Service', () => {
 
         expect(result).toBeUndefined();
         expect(error).toEqual("An error", "should have changed");
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "watches", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "watches", "should be consumed");
     }));
 
     it('should update a watch', fakeAsync(() => {
@@ -381,7 +382,7 @@ describe('TwAPI Service', () => {
         expect(result.serial).toEqual(watch.serial);
         expect(result.caliber).toEqual(watch.caliber);
 
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "watches", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "watches", "should be consumed");
     }));
 
     it('should insert a watch', fakeAsync(() => {
@@ -406,7 +407,7 @@ describe('TwAPI Service', () => {
         expect(result.serial).toEqual(watch.serial);
         expect(result.caliber).toEqual(watch.caliber);
 
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "watches", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "watches", "should be consumed");
     }));
 
     it('should delete a watch', fakeAsync(() => {
@@ -426,7 +427,7 @@ describe('TwAPI Service', () => {
         expect(result.id).toEqual(watch.id);
         expect(result.watches.length).toEqual(0);
 
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "watches", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "watches", "should be consumed");
     }));
 
     it('should update a measure', fakeAsync(() => {
@@ -444,7 +445,7 @@ describe('TwAPI Service', () => {
         })));
         tick();
 
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "measures", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "measures", "should be consumed");
         expect(lastConnection.request.json().measureId).toEqual(1);
         expect(lastConnection.request.json().referenceTime).toEqual(1);
         expect(lastConnection.request.json().userTime).toEqual(1);
@@ -473,7 +474,7 @@ describe('TwAPI Service', () => {
         })));
         tick();
 
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "measures", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "measures", "should be consumed");
         expect(lastConnection.request.json().watchId).toEqual("1");
         expect(lastConnection.request.json().referenceTime).toEqual(1);
         expect(lastConnection.request.json().userTime).toEqual(1);
@@ -497,7 +498,7 @@ describe('TwAPI Service', () => {
         })));
         tick();
 
-        expect(lastConnection.request.url).toEqual(TwAPIService.baseUrl + "measures", "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "measures", "should be consumed");
         expect(result.measures.length).toEqual(0);
         expect(result.historySize).toEqual(0);
 
@@ -571,7 +572,7 @@ describe('TwAPI Service', () => {
         })));
         tick();
 
-        expect(lastConnection.request.url).toEqual(TwAPIService.assetsUrl + '/watches/watch-brand.json', "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAssetsUrl() + '/watches/watch-brand.json', "should be consumed");
 
         expect(results.proposals.length).toEqual(5);
         expect(results.proposals[0].confidence).toEqual(85.71428571428572);
@@ -602,7 +603,7 @@ describe('TwAPI Service', () => {
         })));
         tick();
 
-        expect(lastConnection.request.url).toEqual(TwAPIService.assetsUrl + '/watches/watch-brand.json', "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAssetsUrl() + '/watches/watch-brand.json', "should be consumed");
         expect(results.length).toEqual(5);
         expect(results[0].name).toEqual("A. Lange & Sohne");
         expect(results[0].icon).toEqual("logo_alangesohne.jpg");
@@ -629,7 +630,7 @@ describe('TwAPI Service', () => {
         })));
         tick();
 
-        expect(lastConnection.request.url).toEqual(TwAPIService.assetsUrl + '/watches/watch-models/cartier.json', "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAssetsUrl() + '/watches/watch-models/cartier.json', "should be consumed");
         expect(results.length).toEqual(4);
         expect(results[0]).toEqual("Cle de Cartier");
 
@@ -655,7 +656,7 @@ describe('TwAPI Service', () => {
             `
         })));
         tick();
-        expect(lastConnection.request.url).toEqual(TwAPIService.assetsUrl + '/watches/watch-calibers/cartier.json', "should be consumed");
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAssetsUrl() + '/watches/watch-calibers/cartier.json', "should be consumed");
         expect(results.length).toEqual(6);
         expect(results[0]).toEqual("049");
 

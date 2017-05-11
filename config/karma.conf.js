@@ -85,11 +85,11 @@ module.exports = function(config) {
         singleRun: true
     };
 
-    if (process.env.TRAVIS){
+    // if (process.env.TRAVIS){
         configuration.browsers = [
             'ChromeTravisCi'
         ];
-    }
+    // }
 
     config.set(configuration);
 };

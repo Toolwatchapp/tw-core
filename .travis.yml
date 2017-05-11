@@ -34,6 +34,7 @@ before_script:
 script: 
   - npm run test
   - sh coverage-checker.sh
+  - curl http://localhost:8282/api/time
 
 after_success:
    - npm run coverage

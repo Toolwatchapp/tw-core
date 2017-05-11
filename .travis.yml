@@ -46,6 +46,6 @@ script:
 after_success:
    - npm run coverage
    
-# notifications:
-#   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
-#   email: false
+notifications:
+  slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
+  email: false

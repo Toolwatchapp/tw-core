@@ -2,9 +2,14 @@ import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { EventEmitter } from '@angular/core';
 import { HttpModule } from '@angular/http';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
+import { TwAPIService } from './../../src/services/twapi.service';
+import { ConfigurationService, configurationProvider } from './../../src/services/configuration.service';
+import { SignupComponent } from './../../src/directives/signup/signup.component';
+
+
 import {
     Validators,
     FormBuilder
@@ -12,67 +17,32 @@ import {
 import { Injectable } from '@angular/core';
 
 
-@Injectable()
-export class CfgService {
-
-    constructor(private baseUrl: string, private assetsUrl: string) { }
-
-    public getAPIUrl(): string {
-        return this.baseUrl;
-    }
-
-    public getAssetsUrl(): string {
-        return this.assetsUrl;
-    }
-}
-
-@Injectable()
-export class APIService {
-    constructor(
-        public http: Http,
-        public config: CfgService) {
-    }
-}
-
-export function configurationProvider(
-    baseUrl: string = "https://xxx.xxx/api/",
-    assetsUrl: string = "assets"): CfgService {
-
-    return new CfgService(baseUrl, assetsUrl);
-}
-
-@Component({
-    template: ''
-})
-export class MyComponent {
-
-    constructor(
-        protected translate: TranslateService,
-        private api: APIService,
-        private formBuilder: FormBuilder
-    ) {
-
-    }
-}
-
 
 describe('bob', () => {
-    let comp: MyComponent;
-    let fixture: ComponentFixture<MyComponent>;
+
+    let countryEmitter = new EventEmitter();
+    let translateServiceStub = {
+        setDefaultLang(lang: string) { },
+        use(lang: string) { },
+        get(key: string) { return countryEmitter; }
+    };
+    let comp: SignupComponent;
+    let fixture: ComponentFixture<SignupComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [MyComponent],
+            declarations: [SignupComponent],
             providers: [
-                { provide: CfgService, useValue: configurationProvider("http://192.168.0.112:8282/api/") },
-                APIService
+                { provide: TranslateService, useValue: translateServiceStub },
+                { provide: ConfigurationService, useValue: configurationProvider("http://192.168.0.112:8282/api/") },
+                TwAPIService
             ],
             imports: [
-                FormsModule,
+                ReactiveFormsModule,
                 HttpModule
             ]
         }).compileComponents().then(() => {
-            fixture = TestBed.createComponent(MyComponent);
+            fixture = TestBed.createComponent(SignupComponent);
             comp = fixture.componentInstance;
         });;
     }));

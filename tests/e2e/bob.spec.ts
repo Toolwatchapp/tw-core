@@ -30,6 +30,7 @@ describe('bob', () => {
     let fixture: ComponentFixture<SignupComponent>;
 
     beforeEach(async(() => {
+        console.error("here");
         TestBed.configureTestingModule({
             declarations: [SignupComponent],
             providers: [
@@ -42,12 +43,16 @@ describe('bob', () => {
                 HttpModule
             ]
         }).compileComponents().then(() => {
+            console.error("and here");
+            
             fixture = TestBed.createComponent(SignupComponent);
             comp = fixture.componentInstance;
         });;
+        console.error("there");
+        
     }));
 
-    it('should work', async () => {
+    it('should work', () => {
 
         fixture.whenStable().then(() => { // wait for async getQuote
             fixture.detectChanges();        // update view with quote

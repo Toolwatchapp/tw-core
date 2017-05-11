@@ -175,6 +175,7 @@ export class TwAPIService {
     constructor(
         public http: Http, 
         public config: ConfigurationService) {
+             console.error("and there");
         this.accurateTime();
     }
 

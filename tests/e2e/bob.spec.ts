@@ -20,12 +20,21 @@ describe('bob', () => {
     let fixture: ComponentFixture<SignupComponent>;
 
     beforeEach(async(() => {
+
+        let APIUrl = "http://192.168.0.112:8282/api/";
+
+        if (process.env.TRAVIS) {
+            APIUrl = "http://localhot:8282/api/";
+        }
+
         TestBed.configureTestingModule({
             declarations: [SignupComponent],
             providers: [
                 { provide: TranslateService, useValue: translateServiceStub },
-                { provide: ConfigurationService, useValue: 
-                    configurationProvider("http://192.168.0.112:8282/api/", "assets") },
+                {
+                    provide: ConfigurationService, useValue:
+                        configurationProvider(APIUrl, "assets")
+                },
                 TwAPIService,
                 AnalyticsService
             ],
@@ -34,21 +43,22 @@ describe('bob', () => {
                 HttpModule
             ]
         }).compileComponents().then(() => {
-            
+
             fixture = TestBed.createComponent(SignupComponent);
             comp = fixture.componentInstance;
         });;
-        
+
     }));
 
     it('should work', () => {
 
-        fixture.whenStable().then(() => { // wait for async getQuote
-            fixture.detectChanges();        // update view with quote
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
             expect(true).toEqual(true);
         });
 
-        
+
     }, 25000);
 
 });

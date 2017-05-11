@@ -22,6 +22,10 @@ branches:
 before_install:
   - export CHROME_BIN=chromium-browser
 
+addons:
+  hosts:
+    - twapi.com
+
 before_script:
   # install backend
   - cd tests/e2e
@@ -29,8 +33,6 @@ before_script:
   - docker run -dit -p 8282:80 -p 3307:3306 --name tw-test mathieunls/tw-test
   - docker exec -it tw-test /bin/bash ./start.sh
   - cd ../..
-  # network configuration
-  - sudo echo "127.0.0.1 twapi.com" >> /etc/hosts
   # node configuration
   - npm prune
   - export DISPLAY=:99.0

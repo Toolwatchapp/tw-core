@@ -78,25 +78,6 @@ describe('TwAPI Service', () => {
         expect(lastConnection.request.url).toEqual("https://toolwatch.io/api/time");
     }));
 
-    it('fetchOffsetTime should fail', fakeAsync(() => {
-
-        let result = 0;
-        let error = "";
-
-        (twAPIService as any).fetchOffsetTime().then(
-            (response: number) => { result = response; },
-            (reject: string) => { error = reject; }
-        );
-        lastConnection.mockError(new Error("An error"));
-
-        tick();
-
-        expect(result).toEqual(0, "shouldn t have changed");
-        expect(error).toEqual("An error", "should have changed");
-        expect(lastConnection.request.url).toEqual("https://toolwatch.io/api/time", "should be consumed");
-    }));
-
-
     it('should compute accurate time', fakeAsync(() => {
 
         TwAPIService.resetTime();

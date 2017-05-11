@@ -7,7 +7,8 @@ import { Injectable } from '@angular/core';
  */
 export class AnalyticsService {
 
-    public static event(domain:string, path:string, method:string = ""):void {
+
+    public event(domain:string, path:string, method:string = ""):void {
 
     }
 

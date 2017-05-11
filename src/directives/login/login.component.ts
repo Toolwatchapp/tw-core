@@ -34,7 +34,8 @@ export class LoginComponent {
   constructor(
     protected translate: TranslateService, 
     protected twapi: TwAPIService, 
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private analytics: AnalyticsService
   ) { 
 
     //Lang definition
@@ -68,14 +69,14 @@ export class LoginComponent {
         //success, away we go
         res => { 
           this.userLogged.emit(res);
-          AnalyticsService.event('CTA', 'FB_LOGIN', 'SUCCESS');
+          this.analytics.event('CTA', 'FB_LOGIN', 'SUCCESS');
         }, 
         err => {
 
           //Error, most likely the user tries to signin
           //using facebook while he has a regular 
           //account with the same email.
-          AnalyticsService.event('CTA', 'FB_SIGNUP', 'FAIL');
+          this.analytics.event('CTA', 'FB_SIGNUP', 'FAIL');
           switch (err.status) {
             case TwAPIService.HTTP_UNAUTHORIZED:
               this.errors.push('credentials');
@@ -107,10 +108,10 @@ export class LoginComponent {
       this.twapi.login(user.email, user.password).then(
         res => { 
           this.userLogged.emit(res);
-          AnalyticsService.event('CTA', 'LOGIN', 'SUCCESS');
+          this.analytics.event('CTA', 'LOGIN', 'SUCCESS');
         }, 
         err => {
-          AnalyticsService.event('CTA', 'LOGIN', 'FAIL');
+          this.analytics.event('CTA', 'LOGIN', 'FAIL');
           switch (err.status) {
             case 401:
               this.errors.push('credentials');

@@ -173,9 +173,9 @@ export class TwAPIService {
      * @param {Http} private http 
      */
     constructor(
-        public http: Http, 
+        private http: Http,
+        private analytics: AnalyticsService,
         public config: ConfigurationService) {
-             console.error("and there");
         this.accurateTime();
     }
 
@@ -200,7 +200,7 @@ export class TwAPIService {
             .map((res) => { return ModelFactory.buildUser(res.json()); })
             .toPromise().then(
             res => {
-                AnalyticsService.event('API', 'LOGIN');
+                this.analytics.event('API', 'LOGIN');
                 TwAPIService.apikey = res.key;
                 TwAPIService.headers.delete('X-API-KEY');
                 TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
@@ -233,7 +233,7 @@ export class TwAPIService {
             .toPromise().then(
             res => {
 
-                AnalyticsService.event('API', 'AUTOLOGIN');
+                this.analytics.event('API', 'AUTOLOGIN');
                 TwAPIService.user = res;
                 res.key = key;
                 return res;
@@ -268,7 +268,7 @@ export class TwAPIService {
             .map((res) => { return ModelFactory.buildUser(res.json()); })
             .toPromise().then(
             res => {
-                AnalyticsService.event('API', 'SIGNUP');
+                this.analytics.event('API', 'SIGNUP');
                 TwAPIService.apikey = res.key;
                 TwAPIService.headers.delete('X-API-KEY');
                 TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
@@ -300,7 +300,7 @@ export class TwAPIService {
             .map((res) => { return ModelFactory.buildUser(res.json()); })
             .toPromise().then(
             res => {
-                AnalyticsService.event('API', 'SIGNUP');
+                this.analytics.event('API', 'SIGNUP');
                 TwAPIService.apikey = res.key;
                 TwAPIService.headers.delete('X-API-KEY');
                 TwAPIService.headers.append('X-API-KEY', TwAPIService.apikey);
@@ -323,7 +323,7 @@ export class TwAPIService {
             TwAPIService.options
         ).toPromise().then(
             response => {
-                AnalyticsService.event('API', 'RESET_PASSWORD');
+                this.analytics.event('API', 'RESET_PASSWORD');
                 return true;
             },
             err => this.handleError(err)
@@ -341,7 +341,7 @@ export class TwAPIService {
             TwAPIService.options
         ).toPromise().then(
             response => {
-                AnalyticsService.event('API', 'DELETE_ACCOUNT');
+                this.analytics.event('API', 'DELETE_ACCOUNT');
                 return true;
             },
             err => this.handleError(err)
@@ -359,10 +359,10 @@ export class TwAPIService {
             .map((res) => { return ModelFactory.buildWatches(res.json()); })
             .toPromise().then(
             res => {
-                AnalyticsService.event('API', 'WATCHES', 'GET');
+                this.analytics.event('API', 'WATCHES', 'GET');
                 return res;
             },
-            err =>  this.handleError(err) 
+            err => this.handleError(err)
             );
     }
 
@@ -402,7 +402,7 @@ export class TwAPIService {
                     }
                 );
 
-                AnalyticsService.event('API', 'WATCHES', 'DELETE');
+                this.analytics.event('API', 'WATCHES', 'DELETE');
 
                 return user;
             }
@@ -449,7 +449,7 @@ export class TwAPIService {
                 watch.computeNext();
                 watch.historySize--;
 
-                AnalyticsService.event('API', 'MEASURE', 'DELETE');
+                this.analytics.event('API', 'MEASURE', 'DELETE');
 
                 return watch;
             }
@@ -463,7 +463,7 @@ export class TwAPIService {
             .map((res) => { return ModelFactory.buildPosts(res.json()); })
             .toPromise().then(
             res => {
-                AnalyticsService.event('API', 'BLOG', 'GET');
+                this.analytics.event('API', 'BLOG', 'GET');
                 return res;
             }
             );
@@ -521,7 +521,7 @@ export class TwAPIService {
             .map(res => res.json())
             .toPromise().then(
             brands => {
-                AnalyticsService.event('API', 'BRANDS', 'GET');
+                this.analytics.event('API', 'BRANDS', 'GET');
                 return brands;
             }
             );
@@ -542,7 +542,7 @@ export class TwAPIService {
             .map(res => res.json())
             .toPromise().then(
             models => {
-                AnalyticsService.event('API', 'MODELS', 'GET');
+                this.analytics.event('API', 'MODELS', 'GET');
                 return models;
             }
             );
@@ -563,7 +563,7 @@ export class TwAPIService {
             .map(res => res.json())
             .toPromise().then(
             calibers => {
-                AnalyticsService.event('API', 'CALIBERS', 'GET');
+                this.analytics.event('API', 'CALIBERS', 'GET');
                 return calibers;
             }
             );
@@ -584,7 +584,7 @@ export class TwAPIService {
      */
     accurateTime(precison: number = 10): Promise<Date> {
 
-        AnalyticsService.event('API', 'TIME', 'GET');
+        this.analytics.event('API', 'TIME', 'GET');
 
         //If we aren't already sync'ed
         //or sync is older than 2 minutes
@@ -653,21 +653,15 @@ export class TwAPIService {
      */
     private fetchOffsetTime(): Promise<number> {
 
-        console.log(TwAPIService.now());
-        console.log(this.config.getAPIUrl());
-        console.log(this.config.getAPIUrl() + "time");
-
         let beforeTime: number = TwAPIService.now();
         return this.http.get(this.config.getAPIUrl() + "time", TwAPIService.optionsGet)
             .toPromise()
             .then(
             response => {
-                console.error("response", response);
                 let timeDiff = (TwAPIService.now() - beforeTime) / 2;
                 let serverTime = response.json().time - timeDiff;
                 return Date.now() - serverTime;
-            },
-            reject => {console.error("reject", reject); this.handleError(reject)}
+            }
             ).catch(this.handleError);
     }
 
@@ -688,7 +682,7 @@ export class TwAPIService {
             TwAPIService.options
         ).toPromise().then(
             response => {
-                AnalyticsService.event('API', 'MEASURE', 'SECOND');
+                this.analytics.event('API', 'MEASURE', 'SECOND');
                 let json = response.json().result;
                 measure.addAccuracy(json.accuracy, json.accuracyAge, json.percentile);
                 watch.upsertMeasure(measure);
@@ -715,7 +709,7 @@ export class TwAPIService {
             TwAPIService.options
         ).toPromise().then(
             response => {
-                AnalyticsService.event('API', 'MEASURE', 'FIRST');
+                this.analytics.event('API', 'MEASURE', 'FIRST');
                 measure.id = response.json().measureId;
                 watch.measures.push(measure);
                 watch.historySize++;
@@ -772,7 +766,7 @@ export class TwAPIService {
             TwAPIService.options
         ).toPromise().then(
             response => {
-                AnalyticsService.event('API', 'WATCH', 'UPDATE');
+                this.analytics.event('API', 'WATCH', 'UPDATE');
                 return watch;
             }
             );
@@ -783,7 +777,7 @@ export class TwAPIService {
      * @param {any} error [description]
      */
     private handleError(error: any) {
-        return Promise.reject(error.message || error);
+        return Promise.reject(error.message);
     }
 
 }

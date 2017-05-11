@@ -54,7 +54,8 @@ module.exports = function(config) {
         autoWatch: false,
 
         browsers: [
-            'PhantomJS'
+            // 'PhantomJS'
+            'ChromeTravisCi'
         ],
 
         customLaunchers: {
@@ -78,6 +79,7 @@ module.exports = function(config) {
                     '--disable-gpu',
                     // Without a remote debugging port, Google Chrome exits immediately.
                     ' --remote-debugging-port=9222',
+                    ' --disable-web-security'
                 ]
             }
         },
@@ -85,11 +87,11 @@ module.exports = function(config) {
         singleRun: true
     };
 
-    // if (process.env.TRAVIS){
+    if (process.env.TRAVIS){
         configuration.browsers = [
             'ChromeTravisCi'
         ];
-    // }
+    }
 
     config.set(configuration);
 };

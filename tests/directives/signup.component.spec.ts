@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { SignupComponent } from './../../src/directives/signup/signup.component';
 import { TwAPIService } from './../../src/services/twapi.service';
 import { FormBuilder } from '@angular/forms';
-
+import { AnalyticsService } from './../../src/services/analytics.service';
 import { TwAPIServiceStub } from './../mocks/twapi.service.stub';
 
 import { User } from './../../src/models/user.model';
@@ -37,7 +37,7 @@ describe('SignupComponent (inline template)', () => {
             declarations: [SignupComponent], // declare the test component
             imports: [FormsModule],
             providers: [
-
+                AnalyticsService,
                 FormBuilder,
                 { provide: TranslateService, useValue: translateServiceStub },
                 { provide: TwAPIService, useValue: new TwAPIServiceStub() },

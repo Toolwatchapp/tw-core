@@ -34,8 +34,6 @@ before_script:
 script: 
   - npm run test
   - sh coverage-checker.sh
-  - php -r 'echo "Php works\n";'
-  - curl http://localhost:8282
 
 after_success:
    - npm run coverage

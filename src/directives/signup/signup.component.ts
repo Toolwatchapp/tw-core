@@ -37,7 +37,8 @@ export class SignupComponent {
   constructor(
     protected translate: TranslateService, 
     private   twapi: TwAPIService, 
-    private   formBuilder: FormBuilder  
+    private   formBuilder: FormBuilder,
+    private   analytics: AnalyticsService
   ) { 
 
     translate.setDefaultLang('en');
@@ -115,11 +116,11 @@ export class SignupComponent {
        user.lastName,
        this.query).then(
         res => { 
-          AnalyticsService.event('CTA', 'SIGNUP', 'SUCCESS');
+          this.analytics.event('CTA', 'SIGNUP', 'SUCCESS');
           this.userLogged.emit(res); 
         },
         error => {
-          AnalyticsService.event('CTA', 'SIGNUP', 'FAIL');
+          this.analytics.event('CTA', 'SIGNUP', 'FAIL');
           switch (error.status) {
             case TwAPIService.HTTP_UNAUTHORIZED:
               this.errors.push('email-taken');

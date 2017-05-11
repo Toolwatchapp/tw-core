@@ -23,7 +23,7 @@ before_script:
   # install backend
   - cd tests/e2e
   - docker build -t mathieunls/tw-test .
-  - docker run -dit -p --name tw-test 8282:80 -p 3307:3306 mathieunls/tw-test
+  - docker run -dit -p 8282:80 -p 3307:3306 --name tw-test mathieunls/tw-test
   - docker exec -it tw-test /bin/bash ./start.sh
   - cd ../..
   # node configuration

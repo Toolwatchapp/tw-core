@@ -27,7 +27,7 @@ describe('bob', () => {
             APIUrl = "http://localhost:8282/api/";
         }
 
-        console.error(process.env.TRAVIS, APIUrl);
+        console.error(process.env.TRAVIS, APIUrl, process.env);
 
         TestBed.configureTestingModule({
             declarations: [SignupComponent],

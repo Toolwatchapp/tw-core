@@ -12,6 +12,9 @@ notifications:
 node_js:
   - '7'
 
+env:
+    - TRAVIS=true
+
 branches:
   except:
     - "/^v\\d+\\.\\d+\\.\\d+$/"

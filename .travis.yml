@@ -30,7 +30,7 @@ before_script:
   - docker exec -it tw-test /bin/bash ./start.sh
   - cd ../..
   # network configuration
-  - echo "127.0.0.1 twapi.com" >> /etc/hosts
+  - sudo echo "127.0.0.1 twapi.com" >> /etc/hosts
   # node configuration
   - npm prune
   - export DISPLAY=:99.0

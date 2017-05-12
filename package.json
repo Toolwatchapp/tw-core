@@ -31,17 +31,17 @@
     "@ngx-translate/core": ">=6.0.1"
   },
   "devDependencies": {
-    "@angular/animations": "4.0.0",
-    "@angular/common": "4.0.0",
-    "@angular/compiler": "4.0.0",
-    "@angular/compiler-cli": "4.0.0",
-    "@angular/core": "4.0.0",
-    "@angular/forms": "4.0.0",
-    "@angular/http": "4.0.0",
-    "@angular/platform-browser": "4.0.0",
-    "@angular/platform-browser-dynamic": "4.0.0",
-    "@angular/platform-server": "4.0.0",
-    "@angular/router": "4.0.0",
+    "@angular/animations": "4.1.0",
+    "@angular/common": "4.1.0",
+    "@angular/compiler": "4.1.0",
+    "@angular/compiler-cli": "4.1.0",
+    "@angular/core": "4.1.0",
+    "@angular/forms": "4.1.0",
+    "@angular/http": "4.1.0",
+    "@angular/platform-browser": "4.1.0",
+    "@angular/platform-browser-dynamic": "4.1.0",
+    "@angular/platform-server": "4.1.0",
+    "@angular/router": "4.1.0",
     "@types/hammerjs": "2.0.34",
     "@types/jasmine": "2.5.46",
     "@types/node": "7.0.10",
@@ -67,7 +67,7 @@
     "performance-now": "^2.1.0",
     "reflect-metadata": "0.1.10",
     "rimraf": "2.6.1",
-    "rxjs": "5.2.0",
+    "rxjs": "5.1.1",
     "semantic-release": "6.3.5",
     "source-map-loader": "0.2.0",
     "ts-helpers": "1.1.2",
@@ -75,7 +75,7 @@
     "tslint-loader": "3.4.3",
     "typescript": "2.2.1",
     "webpack": "2.3.1",
-    "zone.js": "0.8.5"
+    "zone.js": "0.8.10"
   },
   "config": {
     "commitizen": {

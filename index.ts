@@ -10,12 +10,17 @@ import { TwAPIService } from './src/services/twapi.service';
 import { ConfigurationService } from './src/services/configuration.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule }   from '@angular/forms';
+import { WatchComponent } from './src/directives/watch/watch.component';
+import { SignupComponent } from './src/directives/signup/signup.component';
+import { LoginComponent } from './src/directives/login/login.component';
+import { ClockComponent } from './src/directives/clock/clock.component';
 
 /**
  * SERVICES
  */
 export * from './src/services/twapi.service'
 export * from './src/services/analytics.service'
+export * from './src/services/configuration.service'
 /**
  * PIPES
  */
@@ -45,7 +50,11 @@ export * from './src/directives/watch/watch.component'
     ArethmeticSign,
     LeadingZero,
     KFormatter,
-    MoonPhasesComponent
+    MoonPhasesComponent,
+    WatchComponent,
+    SignupComponent,
+    LoginComponent,
+    ClockComponent
   ],
   providers: [
     TwAPIService,

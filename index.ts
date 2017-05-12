@@ -15,6 +15,7 @@ import { FormsModule }   from '@angular/forms';
  * SERVICES
  */
 export * from './src/services/twapi.service'
+export * from './src/services/analytics.service'
 /**
  * PIPES
  */

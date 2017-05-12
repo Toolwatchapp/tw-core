@@ -12,4 +12,8 @@ export class AnalyticsService {
 
     }
 
+    public screenview(screen:string):void {
+
+    }
+
 }

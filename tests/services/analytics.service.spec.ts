@@ -17,4 +17,10 @@ describe('String helper', () => {
         expect(analytics.event("a", "b", "c")).toBeUndefined();
     });
 
+
+    it("should do nothing", () => {
+
+        expect(analytics.screenview("a")).toBeUndefined();
+    });
+
 });

@@ -34,8 +34,8 @@ export class LoginComponent {
   constructor(
     protected translate: TranslateService, 
     protected twapi: TwAPIService, 
-    private formBuilder: FormBuilder,
-    private analytics: AnalyticsService
+    protected analytics: AnalyticsService,
+    private   formBuilder: FormBuilder
   ) { 
 
     //Lang definition

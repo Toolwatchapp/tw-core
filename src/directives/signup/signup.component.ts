@@ -35,10 +35,10 @@ export class SignupComponent {
    * @param {FormBuilder}      private builder   [description]
    */
   constructor(
-    protected translate: TranslateService, 
-    private   twapi: TwAPIService, 
-    private   formBuilder: FormBuilder,
-    private   analytics: AnalyticsService
+    protected   translate: TranslateService, 
+    private     twapi: TwAPIService, 
+    private     formBuilder: FormBuilder,
+    protected   analytics: AnalyticsService
   ) { 
 
     translate.setDefaultLang('en');

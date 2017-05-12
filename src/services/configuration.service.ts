@@ -7,7 +7,8 @@ import { Injectable } from '@angular/core';
  */
 export class ConfigurationService {
 
-    constructor(private baseUrl: string,private assetsUrl: string) {}
+    private baseUrl: string;
+    private assetsUrl: string;
 
     public getAPIUrl(): string {
         return this.baseUrl;
@@ -24,5 +25,8 @@ export function configurationProvider(
     baseUrl: string = "https://toolwatch.io/api/",
     assetsUrl: string = "assets"): ConfigurationService {
 
-    return new ConfigurationService(baseUrl, assetsUrl);
+    let cs = new ConfigurationService();
+    (cs as any).baseUrl = baseUrl;
+    (cs as any).assetsUrl = assetsUrl;
+    return cs;
 }

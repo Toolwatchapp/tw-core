@@ -7,6 +7,7 @@ import { TwAPIService } from './../../src/services/twapi.service';
 import { ConfigurationService, configurationProvider } from './../../src/services/configuration.service';
 import { SignupComponent } from './../../src/directives/signup/signup.component';
 import { AnalyticsService } from './../../src/services/analytics.service';
+import { TwCoreModule } from './../../index';
 
 describe('bob', () => {
 
@@ -22,7 +23,7 @@ describe('bob', () => {
     beforeEach(async(() => {
 
         TestBed.configureTestingModule({
-            declarations: [SignupComponent],
+            declarations: [],
             providers: [
                 { provide: TranslateService, useValue: translateServiceStub },
                 {
@@ -34,7 +35,8 @@ describe('bob', () => {
             ],
             imports: [
                 ReactiveFormsModule,
-                HttpModule
+                HttpModule,
+                TwCoreModule
             ]
         }).compileComponents().then(() => {
 

@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { NgModule } from '@angular/core';
 
 @Pipe({
   name: 'arethmeticSign'
@@ -13,3 +14,9 @@ export class ArethmeticSign implements PipeTransform {
     }
   }
 }
+
+@NgModule({
+  declarations: [ArethmeticSign],
+  exports: [ArethmeticSign]
+})
+export class ArethmeticSignPipeModule { }

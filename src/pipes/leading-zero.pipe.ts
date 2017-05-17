@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { NgModule } from '@angular/core';
 
 @Pipe({
   name: 'leadingZero'
@@ -13,3 +14,9 @@ export class LeadingZero implements PipeTransform {
     }
   }
 }
+
+@NgModule({
+  declarations: [LeadingZero],
+  exports: [LeadingZero]
+})
+export class LeadingZeroPipeModule { }

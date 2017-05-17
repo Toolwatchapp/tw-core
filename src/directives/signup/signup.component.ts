@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, NgModule } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TwAPIService } from './../../services/twapi.service';
 import { GlobalValidator } from './../global-validator';
@@ -9,6 +9,9 @@ import {
   FormBuilder,  
   FormGroup
 } from '@angular/forms';
+
+import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
 
 /**
  * Signup form. Emits a userLogged event on new user signup
@@ -145,3 +148,13 @@ export class SignupComponent {
     }
   }
 }
+
+@NgModule({
+  declarations: [SignupComponent],
+  imports: [FormsModule, TranslateModule],
+  exports: [SignupComponent],
+  providers: [
+    TwAPIService
+  ],
+})
+export class SignupComponentModule { }

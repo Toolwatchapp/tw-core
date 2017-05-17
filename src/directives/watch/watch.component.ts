@@ -1,10 +1,14 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
+import { NgModule } from '@angular/core';
 
 import { Watch } from './../../models/watch.model';
 import { User } from './../../models/user.model';
+
 import { TwAPIService } from './../../services/twapi.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule }   from '@angular/forms';
 
 import {   
   FormBuilder,  
@@ -201,3 +205,13 @@ export class WatchComponent {
     );
   }
 }
+
+@NgModule({
+  declarations: [WatchComponent],
+  imports: [FormsModule, TranslateModule],
+  exports: [WatchComponent],
+   providers: [
+    TwAPIService
+  ],
+})
+export class WatchComponentModule { }

@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { NgModule } from '@angular/core';
 
 @Pipe({
   name: 'kFormatter'
@@ -21,3 +22,9 @@ export class KFormatter implements PipeTransform {
     }
   }
 }
+
+@NgModule({
+  declarations: [KFormatter],
+  exports: [KFormatter]
+})
+export class KFormatterPipeModule { }

@@ -1,4 +1,6 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { MoonPhasesComponentModule } from './moon-phases/moon-phases.component'
 
 @Component({
     template: `
@@ -90,3 +92,11 @@ export class ClockComponent {
         }
     }
 }
+
+
+@NgModule({
+  declarations: [ClockComponent],
+  imports: [BrowserModule, MoonPhasesComponentModule],
+  exports: [ClockComponent]
+})
+export class ClockComponentModule { }

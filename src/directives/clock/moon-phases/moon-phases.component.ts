@@ -1,4 +1,5 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'moon-phases',
@@ -35,3 +36,11 @@ export class MoonPhasesComponent {
   }
 
 }
+
+
+@NgModule({
+  declarations: [MoonPhasesComponent],
+  imports: [BrowserModule],
+  exports: [MoonPhasesComponent],
+})
+export class MoonPhasesComponentModule { }

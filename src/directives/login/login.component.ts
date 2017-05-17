@@ -1,5 +1,5 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, Output, EventEmitter, NgModule } from '@angular/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TwAPIService } from './../../services/twapi.service';
 import { GlobalValidator } from './../global-validator';
 import { AnalyticsService } from './../../services/analytics.service';
@@ -7,9 +7,10 @@ import { AnalyticsService } from './../../services/analytics.service';
 import {   
   Validators,  
   FormBuilder,  
-  FormGroup
+  FormGroup,
+  FormsModule
 } from '@angular/forms';
- 
+
 /**
  * Login component. Provides a login form with controlled and
  * emits a User ($event userLogged) on successful login.
@@ -136,3 +137,14 @@ export class LoginComponent {
   }
 
 }
+
+
+@NgModule({
+  declarations: [LoginComponent],
+  imports: [FormsModule, TranslateModule],
+  exports: [LoginComponent],
+  providers: [
+    TwAPIService
+  ],
+})
+export class LoginComponentModule { }

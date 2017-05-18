@@ -23,4 +23,24 @@ describe('String helper', () => {
         expect(analytics.screenview("a")).toBeUndefined();
     });
 
+    it("should get/set appName", () => {
+        analytics.appName = "appName";
+        expect(analytics.appName).toBe("appName");
+    });
+
+    it("should get/set appVersion", () => {
+        analytics.appVersion = "appVersion";
+        expect(analytics.appVersion).toBe("appVersion");
+    });
+
+    it("should get/set userName", () => {
+        analytics.userName = "userName";
+        expect(analytics.userName).toBe("userName");
+    });
+
+    it("should get/set userEmail", () => {
+        analytics.userEmail = "userEmail";
+        expect(analytics.userEmail).toBe("userEmail");
+    });
+
 });

@@ -2,7 +2,7 @@
   "name": "tw-core",
   "version": "2.2.0",
   "license": "MIT",
-  "main": "bundles/tw-core.umd.js",
+  "main": "bundles/core.umd.js",
   "module": "index.js",
   "typings": "index.d.ts",
   "scripts": {

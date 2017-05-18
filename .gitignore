@@ -8,6 +8,7 @@ build.xml
 node_modules/*
 npm-debug.log
 *.js
+!core.umd.js
 !config/*
 !karma.conf.js
 !webpack.config.js
@@ -17,7 +18,6 @@ npm-debug.log
 !examples/**/*.js
 coverage
 *.metadata.json
-bundles
 
 #################
 ## JetBrains

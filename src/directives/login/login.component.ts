@@ -142,7 +142,7 @@ export class LoginComponent {
 @NgModule({
   declarations: [LoginComponent],
   imports: [FormsModule, TranslateModule],
-  exports: [LoginComponent],
+  exports: [LoginComponent, TranslateModule],
   providers: [
     TwAPIService
   ],

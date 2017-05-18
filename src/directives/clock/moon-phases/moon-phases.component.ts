@@ -1,5 +1,5 @@
 import { Component, ElementRef, NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common'; 
 
 @Component({
   selector: 'moon-phases',
@@ -40,7 +40,7 @@ export class MoonPhasesComponent {
 
 @NgModule({
   declarations: [MoonPhasesComponent],
-  imports: [BrowserModule],
+  imports: [CommonModule],
   exports: [MoonPhasesComponent],
 })
 export class MoonPhasesComponentModule { }

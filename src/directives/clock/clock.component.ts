@@ -1,7 +1,6 @@
 import { Component, ElementRef, NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { MoonPhasesComponentModule } from './moon-phases/moon-phases.component'
-
+import { CommonModule } from '@angular/common'; 
 @Component({
     template: `
         <article class="clock">
@@ -96,7 +95,7 @@ export class ClockComponent {
 
 @NgModule({
   declarations: [ClockComponent],
-  imports: [BrowserModule, MoonPhasesComponentModule],
+  imports: [CommonModule, MoonPhasesComponentModule],
   exports: [ClockComponent]
 })
 export class ClockComponentModule { }

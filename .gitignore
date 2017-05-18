@@ -8,7 +8,7 @@ build.xml
 node_modules/*
 npm-debug.log
 *.js
-!core.umd.js
+bundles
 !config/*
 !karma.conf.js
 !webpack.config.js

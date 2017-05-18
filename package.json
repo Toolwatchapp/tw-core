@@ -1,6 +1,6 @@
 {
   "name": "tw-core",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "license": "MIT",
   "main": "bundles/core.umd.js",
   "module": "index.js",
@@ -10,8 +10,7 @@
     "test": "karma start",
     "test-watch": "karma start --singleRun=false --autoWatch=true",
     "commit": "npm run prepublish && npm test && git-cz",
-    "prepublish": "ngc && npm run build",
-    "build": "webpack",
+    "build": "ngc && webpack",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "coverage": "codecov -f coverage/*.json"
   },

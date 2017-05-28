@@ -68,8 +68,6 @@ export class Watch {
             this.next = WatchAction.Measure;
         }else if(historySize > this.measures.length) {
             this.status = WatchStatus.HaveMoreMeasures;
-        }else {
-            this.status = 0;
         }
 
         this.computeNext();

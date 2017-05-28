@@ -1,5 +1,5 @@
 import { Component, ElementRef, NgModule } from '@angular/core';
-import { MoonPhasesComponentModule } from './moon-phases/moon-phases.component'
+import { MoonPhasesComponentModule } from './moon-phases/moon-phases.component';
 import { CommonModule } from '@angular/common'; 
 @Component({
     template: `

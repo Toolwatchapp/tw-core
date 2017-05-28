@@ -18,7 +18,7 @@ describe('Watch model', () => {
         expect(model.id).toEqual(1);
         expect(model.brand).toEqual("a");
         expect(model.yearOfBuy).toEqual(null);
-        expect(model.status).toEqual(0);
+        expect(model.status).toEqual(undefined);
     });
 
     it("should properly construct a watch with measures", () => {

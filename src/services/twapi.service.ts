@@ -777,7 +777,7 @@ export class TwAPIService {
      * @param {any} error [description]
      */
     private handleError(error: any) {
-        return Promise.reject(error.message);
+        return Promise.reject(error.hasOwnProperty("message") ? error.message : error);
     }
 
 }

@@ -166,6 +166,22 @@ describe('TwAPI Service', () => {
         expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users", "should be consumed");
     }));
 
+    it('shouldn\'t log an user (bad cred + bad error)', fakeAsync(() => {
+
+        var user: User;
+        let error;
+
+        twAPIService.login("m@m.com", "qwerty").then(
+            response => { user = response; },
+            reject => { error = reject; }
+        );
+        lastConnection.mockError(new Error());
+        tick();
+        expect(user).toBeUndefined();
+        expect(error).toBeDefined();
+        expect(lastConnection.request.url).toEqual(twAPIService.config.getAPIUrl() + "users", "should be consumed");
+    }));
+
     it('should get an user', fakeAsync(() => {
 
         var user: User;
